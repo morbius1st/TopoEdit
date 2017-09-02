@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command TopoEdit</Text>
+    <Description>Some description for TopoEdit</Description>
+    <Assembly>TopoEdit.dll</Assembly>
+    <FullClassName>TopoEdit.Command</FullClassName>
+    <ClientId>25603fd4-481a-4843-95d1-4878e1aaec47</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application TopoEdit</Name>
+    <Assembly>TopoEdit.dll</Assembly>
+    <FullClassName>TopoEdit.App</FullClassName>
+    <ClientId>32a0ea86-7e2c-4294-8ea0-d1b3a2e01b64</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
