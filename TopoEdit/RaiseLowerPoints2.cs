@@ -25,67 +25,51 @@ namespace TopoEdit
 		internal static bool Process(UIDocument uiDoc, Document doc, TopoEditMainForm editForm, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
-			DialogResult result;
-
 			bool again = true;
-			bool allowCommit = false;
 
 			editForm.ResetLocalMods();
 
 			RaiseLowerPointsForm form = new RaiseLowerPointsForm();
 
-			TransactionGroup tg = null;
-
-			TransactionGroupStack tgStack = new TransactionGroupStack(perfs.MaxTransactions);
+			TransactionGroupStack tgStack = new TransactionGroupStack();
 
 			while (again)
 			{
-				result = form.ShowDialog();
+				DialogResult result = form.ShowDialog();
 
 				switch (result)
-				{
-				case DialogResult.OK:
-					if (allowCommit)
 					{
-						tg.Commit();
-						tg.Dispose();
+					case DialogResult.OK:
 
-					}
-
-					if (perfs.RaiseLowerDistance != 0)
-					{
-						tg = new TransactionGroup(doc, "Raise-Lower Points");
-						tg.Start();
-
-						RaiseLowerPts(uiDoc, doc, topoEdit,
-							topoSurface, perfs.RaiseLowerDistance);
-
-						editForm.IncrementMods();
-						form.btnUndo.Enabled = true;
-						allowCommit = true;
-					}
-
-					break;
-				case DialogResult.Retry:
-					tg.RollBack();
-					tg.Dispose();
-
-					editForm.DecrementMods();
-					form.btnUndo.Enabled = false;
-					allowCommit = false;
-
-					break;
-				case DialogResult.Cancel:
-					if (tg != null)
-					{
-						if (tg.IsValidObject && tg.HasStarted())
+						if (perfs.RaiseLowerDistance != 0)
 						{
-							tg.Commit();
-							tg.Dispose();
+							tgStack.Start(new TransactionGroup(doc, "Raise-Lower Points"));
+
+							RaiseLowerPts(uiDoc, doc, topoEdit,
+								topoSurface, perfs.RaiseLowerDistance);
+
+							editForm.IncrementMods();
+							form.btnUndo.Enabled = true;
 						}
-					}
-					again = false;
-					break;
+
+						break;
+					case DialogResult.Retry:
+						tgStack.RollBack();
+
+						editForm.DecrementMods();
+
+						if (tgStack.IsEmpty) form.btnUndo.Enabled = false;
+
+						break;
+					case DialogResult.Cancel:
+						// must process the whole list of TransactionGroups
+						// held by the stack
+						while (tgStack.HasItems)
+						{
+							tgStack.Commit();
+						}
+						again = false;
+						break;
 				}
 			}
 

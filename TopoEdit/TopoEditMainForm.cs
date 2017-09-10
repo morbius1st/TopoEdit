@@ -16,9 +16,9 @@ namespace TopoEdit
 	{
 		internal static enumFunctions function;
 
-		private int totalMods;
-		private int currentMods;
-		private int localMods;
+		private static int totalMods;
+		private static int currentMods;
+		private static int localMods;
 
 		public TopoEditMainForm()
 		{
@@ -123,10 +123,7 @@ namespace TopoEdit
 		
 
 		// modification tracking
-		internal int LocalMods => localMods;
-
-
-		
+		internal static int LocalMods => localMods;
 
 		internal void IncrementMods()
 		{
@@ -139,6 +136,7 @@ namespace TopoEdit
 		internal void DecrementMods()
 		{
 			currentMods--;
+			localMods--;
 			totalMods--;
 			UpdateModsDisplay();
 		}
@@ -176,5 +174,16 @@ namespace TopoEdit
 			localMods = 0;
 		}
 
+		private void TopoEditMainForm_Shown(object sender, EventArgs e)
+		{
+			if (totalMods > 0)
+			{
+				btnCancelAllAndExit.Text = "Cancel All\nand Exit";
+				return;
+			}
+
+			btnCancelAllAndExit.Text = "Exit";
+
+		}
 	}
 }

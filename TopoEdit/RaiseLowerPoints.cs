@@ -40,6 +40,8 @@ namespace TopoEdit
 			{
 				result = form.ShowDialog();
 
+				
+
 				switch (result)
 				{
 				case DialogResult.OK:

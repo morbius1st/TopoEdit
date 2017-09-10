@@ -19,62 +19,86 @@ using perfs = TopoEdit.PrefsAndSettings;
 
 namespace TopoEdit
 {
-	class TransactionGroupStack : IEnumerable
+	class TransactionGroupStack
 	{
 		private IList<TransactionGroup> TgStack;
-		private int MaxSize;
 
-		internal TransactionGroupStack(int MaxSize)
+		internal TransactionGroupStack()
 		{
-			this.MaxSize = MaxSize;
-			TgStack = new List<TransactionGroup>(MaxSize);
-		}
-
-		public IEnumerator GetEnumerator()
-		{
-			return TgStack.GetEnumerator();
+			TgStack = new List<TransactionGroup>(10);
 		}
 
 		public int Count => TgStack.Count;
 
-		public void push(TransactionGroup item)
-		{
-			TgStack.Add(item);
+		public bool HasItems => TgStack.Count > 0;
 
-			if (TgStack.Count > MaxSize)
-			{
-				TgStack.RemoveAt(0);
-			}
+		public bool IsEmpty => TgStack.Count == 0;
+
+		public void Start(TransactionGroup tg)
+		{
+			TgStack.Add(tg);
+			tg.Start();
 		}
 
-		public TransactionGroup pop()
-		{
-			if (TgStack.Count == 0) return null;
-
-			TransactionGroup result = TgStack[TgStack.Count - 1];
-
-			RemoveTop();
-
-			return result;
-		}
-
-		public TransactionGroup peek()
-		{
-			if (TgStack.Count == 0) return null;
-
-			TransactionGroup result = TgStack[TgStack.Count - 1];
-
-			return result;
-		}
-
-		public void RemoveTop()
+		public void Commit()
 		{
 			if (TgStack.Count == 0) return;
 
+			TgStack[TgStack.Count - 1].Commit();
+
+			Dispose();
+		}
+
+		public void RollBack()
+		{
+			if (TgStack.Count == 0) return;
+
+			TgStack[TgStack.Count - 1].RollBack();
+
+			Dispose();
+		}
+
+		private void Dispose()
+		{
+			TgStack[TgStack.Count - 1].Dispose();
 			TgStack.RemoveAt(TgStack.Count - 1);
 		}
 
-		public bool HasItems => TgStack.Count > 0;
+
+
+//		public void push(TransactionGroup tg)
+//		{
+//			TgStack.Add(tg);
+//		}
+//
+//		public TransactionGroup pop()
+//		{
+//			if (TgStack.Count == 0) return null;
+//
+//			TransactionGroup result = TgStack[TgStack.Count - 1];
+//
+//			RemoveTop();
+//
+//			return result;
+//		}
+//
+//		public TransactionGroup peek()
+//		{
+//			if (TgStack.Count == 0) return null;
+//
+//			TransactionGroup result = TgStack[TgStack.Count - 1];
+//
+//			return result;
+//		}
+//
+//		public void RemoveTop()
+//		{
+//			if (TgStack.Count == 0) return;
+//
+//			TgStack.RemoveAt(TgStack.Count - 1);
+//		}
+
+		
 
 	}
 }

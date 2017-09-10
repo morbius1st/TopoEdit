@@ -34,7 +34,7 @@ namespace TopoEdit
 
 		public static string FormatDelta(double delta)
 		{
-			return UnitFormatUtils.Format(docUnits,
+			return "  " + UnitFormatUtils.Format(docUnits,
 				UnitType.UT_Length, delta, true, false);
 		}
 

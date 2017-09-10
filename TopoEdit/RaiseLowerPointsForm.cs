@@ -62,5 +62,9 @@ namespace TopoEdit
 			this.Close();
 		}
 
+		private void RaiseLowerPointsForm_Shown(object sender, EventArgs e)
+		{
+			lblLocalMods.Text = TopoEditMainForm.LocalMods.ToString();
+		}
 	}
 }

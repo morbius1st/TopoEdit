@@ -89,7 +89,7 @@ namespace TopoEdit
 						{
 							case enumFunctions.Type.RAISELOWERPOINTS:
 
-								RaiseLowerPoints.Process(uiDoc, doc, editForm, topoEdit, topoSurface);
+								RaiseLowerPoints2.Process(uiDoc, doc, editForm, topoEdit, topoSurface);
 
 								break;
 						}
