@@ -37,6 +37,8 @@ namespace TopoEdit
 			TopographyEditScope topoEdit = null;
 			TransactionGroup transGroup = null;
 
+			IList<TransactionGroup> tgStack = new List<TransactionGroup>(perfs.MaxTransactions);
+
 			enumFunctions function = STARTALL;
 
 			DialogResult result;
@@ -44,10 +46,6 @@ namespace TopoEdit
 			Util.DocUnits = doc.GetUnits();
 
 			bool repeat;
-			bool again;
-			bool allowCommit;
-
-			int localModCount;
 
 			// get the toposurface to edit
 			TopographySurface topoSurface = GetTopoSurface(uiDoc);
@@ -86,69 +84,13 @@ namespace TopoEdit
 					// process "normal editing functions
 					if (function.Op >= STARTEDITING.Op)
 					{
-						allowCommit = false;
-						again = true;
-
 						//	process an editing function				
 						switch (function.EnumType)
 						{
 							case enumFunctions.Type.RAISELOWERPOINTS:
-								editForm.ResetLocalMods();
 
-								RaiseLowerPointsForm form = new RaiseLowerPointsForm();
+								RaiseLowerPoints.Process(uiDoc, doc, editForm, topoEdit, topoSurface);
 
-								TransactionGroup tg = null;
-								
-								while (again)
-								{
-									result = form.ShowDialog();
-
-									switch (result)
-									{
-										case DialogResult.OK:
-											if (allowCommit)
-											{
-												tg.Commit();
-												tg.Dispose();
-
-											}
-
-											if (perfs.RaiseLowerDistance != 0)
-											{
-												tg = new TransactionGroup(doc, "Raise-Lower Points");
-												tg.Start();
-
-												RaiseLowerPoints(uiDoc, doc, topoEdit,
-													topoSurface, perfs.RaiseLowerDistance);
-
-												editForm.IncrementMods();
-												form.btnUndo.Enabled = true;
-												allowCommit = true;
-											}
-
-											break;
-										case DialogResult.Retry:
-											tg.RollBack();
-											tg.Dispose();
-
-											editForm.DecrementMods();
-											form.btnUndo.Enabled = false;
-											allowCommit = false;
-
-											break;
-										case DialogResult.Cancel:
-											if (tg != null)
-											{
-												if (tg.IsValidObject && tg.HasStarted())
-												{
-													tg.Commit();
-													tg.Dispose();
-												}
-											}
-											again = false;
-											break;
-									}
-								}
 								break;
 						}
 						
@@ -292,36 +234,6 @@ namespace TopoEdit
 			}
 			return topoSurface;
 		}
-
-
-		// raise lower points by the given distance
-		private bool RaiseLowerPoints(UIDocument uiDoc, Document doc, 
-			TopographyEditScope topoEdit, TopographySurface topoSurface, double distance)
-		{
-			PickedBox2 picked = Util.getPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
-
-			Outline ol = new Outline(picked.Min, picked.Max);
-
-			IList<XYZ> points = topoSurface.FindPoints(ol);
-
-			if (distance != 0)
-			{
-				XYZ delta = distance * XYZ.BasisZ;
-
-				if (points.Count > 0)
-				{
-					using (Transaction t = new Transaction(doc, "raise-lower points"))
-					{
-						t.Start();
-						topoSurface.MovePoints(points, delta);
-						t.Commit();
-					}
-				}
-			}
-
-			return true;
-		}
-
 	}
 
 }

@@ -63,6 +63,8 @@
   <ItemGroup>
     <Compile Include="enumFunctions.cs" />
     <Compile Include="PrefsAndSettings.cs" />
+    <Compile Include="RaiseLowerPoints2.cs" />
+    <Compile Include="RaiseLowerPoints.cs" />
     <Compile Include="RaiseLowerPointsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteUiUtils.cs" />
     <Compile Include="TopographyEditFailuresPreprocessor.cs" />
+    <Compile Include="TransactionGroupStack.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

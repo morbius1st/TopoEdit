@@ -20,5 +20,7 @@ namespace TopoEdit
 	class PrefsAndSettings
 	{
 		internal static double RaiseLowerDistance { get; set; }
+
+		internal static int MaxTransactions = 20;
 	}
 }

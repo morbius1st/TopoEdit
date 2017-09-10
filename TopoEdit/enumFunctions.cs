@@ -35,6 +35,7 @@ namespace TopoEdit
 			// editing functions
 			STARTEDITING,
 			RAISELOWERPOINTS,
+			RAISELOWERPOINTS2,
 			DELETEPOINTS
 		}
 
@@ -72,13 +73,14 @@ namespace TopoEdit
 		// editing functions
 		public static readonly enumFunctions STARTEDITING = new enumFunctions(Type.STARTEDITING, 10);
 		public static readonly enumFunctions RAISELOWERPOINTS = new enumFunctions(Type.RAISELOWERPOINTS, 10);
-		public static readonly enumFunctions DELETEPOINTS = new enumFunctions(Type.DELETEPOINTS, 11);
+		public static readonly enumFunctions RAISELOWERPOINTS2 = new enumFunctions(Type.RAISELOWERPOINTS2, 11);
+		public static readonly enumFunctions DELETEPOINTS = new enumFunctions(Type.DELETEPOINTS, 15);
 
 		private static List<enumFunctions> list = new List<enumFunctions>() {STARTALL, STARTGROUP,
 				STARTCONTROL,
 					CANCELALLEXIT, CANCELALLCONT, CANCELCURRENTANDCONT, COMMITALLCONTINUE, COMMITALLEXIT,
 				STARTEDITING,
-					RAISELOWERPOINTS, DELETEPOINTS };
+					RAISELOWERPOINTS, RAISELOWERPOINTS2, DELETEPOINTS };
 
 		public enumFunctions this[long index]
 		{
