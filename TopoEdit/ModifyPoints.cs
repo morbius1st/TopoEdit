@@ -110,6 +110,7 @@ namespace TopoEdit
 											{
 												tg.Commit();
 												tg.Dispose();
+
 											}
 
 											if (perfs.RaiseLowerDistance != 0)
