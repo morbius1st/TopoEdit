@@ -63,14 +63,15 @@
   <ItemGroup>
     <Compile Include="enumFunctions.cs" />
     <Compile Include="PrefsAndSettings.cs" />
-    <Compile Include="RaiseLowerPoints2.cs" />
     <Compile Include="RaiseLowerPoints.cs" />
+    <Compile Include="RaiseLowerPoints_Save.cs" />
     <Compile Include="RaiseLowerPointsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RaiseLowerPointsForm.Designer.cs">
       <DependentUpon>RaiseLowerPointsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SiteUtil.cs" />
     <Compile Include="TopoEditMainForm.cs">
       <SubType>Form</SubType>
     </Compile>

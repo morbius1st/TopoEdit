@@ -31,7 +31,6 @@ namespace TopoEdit
 		{
 			this.DialogResult = DialogResult.OK;
 			if (function.Op < 0) { this.DialogResult = DialogResult.Cancel; }
-
 		}
 
 		internal string TopoSurfaceName

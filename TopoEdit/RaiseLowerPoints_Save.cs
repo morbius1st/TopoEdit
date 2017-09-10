@@ -20,56 +20,72 @@ using Autodesk.Revit.UI.Selection;
 
 namespace TopoEdit
 {
-	class RaiseLowerPoints2
+	class RaiseLowerPoints_Save
 	{
 		internal static bool Process(UIDocument uiDoc, Document doc, TopoEditMainForm editForm, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
+			DialogResult result;
+
 			bool again = true;
+			bool allowCommit = false;
 
 			editForm.ResetLocalMods();
 
 			RaiseLowerPointsForm form = new RaiseLowerPointsForm();
 
-			TransactionGroupStack tgStack = new TransactionGroupStack();
+			TransactionGroup tg = null;
 
 			while (again)
 			{
-				DialogResult result = form.ShowDialog();
+				result = form.ShowDialog();
+
+				
 
 				switch (result)
+				{
+				case DialogResult.OK:
+					if (allowCommit)
 					{
-					case DialogResult.OK:
+						tg.Commit();
+						tg.Dispose();
 
-						if (perfs.RaiseLowerDistance != 0)
+					}
+
+					if (perfs.RaiseLowerDistance != 0)
+					{
+						tg = new TransactionGroup(doc, "Raise-Lower Points");
+						tg.Start();
+
+						RaiseLowerPts(uiDoc, doc, topoEdit,
+							topoSurface, perfs.RaiseLowerDistance);
+
+						editForm.IncrementMods();
+						form.btnUndo.Enabled = true;
+						allowCommit = true;
+					}
+
+					break;
+				case DialogResult.Retry:
+					tg.RollBack();
+					tg.Dispose();
+
+					editForm.DecrementMods();
+					form.btnUndo.Enabled = false;
+					allowCommit = false;
+
+					break;
+				case DialogResult.Cancel:
+					if (tg != null)
+					{
+						if (tg.IsValidObject && tg.HasStarted())
 						{
-							tgStack.Start(new TransactionGroup(doc, "Raise-Lower Points"));
-
-							RaiseLowerPts(uiDoc, doc, topoEdit,
-								topoSurface, perfs.RaiseLowerDistance);
-
-							editForm.IncrementMods();
-							form.btnUndo.Enabled = true;
+							tg.Commit();
+							tg.Dispose();
 						}
-
-						break;
-					case DialogResult.Retry:
-						tgStack.RollBack();
-
-						editForm.DecrementMods();
-
-						if (tgStack.IsEmpty) form.btnUndo.Enabled = false;
-
-						break;
-					case DialogResult.Cancel:
-						// must process the whole list of TransactionGroups
-						// held by the stack
-						while (tgStack.HasItems)
-						{
-							tgStack.Commit();
-						}
-						again = false;
-						break;
+					}
+					again = false;
+					break;
 				}
 			}
 

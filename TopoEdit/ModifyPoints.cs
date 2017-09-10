@@ -14,6 +14,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 
 using static TopoEdit.enumFunctions;
+using static TopoEdit.SiteUIUtils;
 using perfs = TopoEdit.PrefsAndSettings;
 
 
@@ -48,7 +49,7 @@ namespace TopoEdit
 			bool repeat;
 
 			// get the toposurface to edit
-			TopographySurface topoSurface = GetTopoSurface(uiDoc);
+			TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
 			if (topoSurface == null) { return Result.Failed; }
 
 			try
@@ -89,7 +90,8 @@ namespace TopoEdit
 						{
 							case enumFunctions.Type.RAISELOWERPOINTS:
 
-								RaiseLowerPoints2.Process(uiDoc, doc, editForm, topoEdit, topoSurface);
+								RaiseLowerPoints.Process(uiDoc, doc, editForm, 
+									topoEdit, topoSurface);
 
 								break;
 						}
@@ -198,42 +200,6 @@ namespace TopoEdit
 			return Result.Succeeded;
 		}
 
-
-		private TopographySurface GetTopoSurface(UIDocument uiDoc)
-		{
-			Document doc = uiDoc.Document;
-
-			TopographySurface topoSurface;
-
-			if (editForm.topoSurface == null)
-			{
-				// Find toposurfaces
-				FilteredElementCollector tsCollector = new FilteredElementCollector(doc);
-				tsCollector.OfClass(typeof(TopographySurface));
-				IEnumerable<TopographySurface> tsEnumerable = tsCollector.Cast<TopographySurface>().Where<TopographySurface>(ts => !ts.IsSiteSubRegion);
-				int count = tsEnumerable.Count<TopographySurface>();
-
-				// If there is only on surface, use it.  If there is more than one, let the user select the target.
-				
-				if (count > 1) // tmp
-				{
-					topoSurface = SiteUIUtils.PickTopographySurface(uiDoc);
-				}
-				else
-				{
-					topoSurface = tsEnumerable.First<TopographySurface>();
-				}
-
-				editForm.topoSurface = topoSurface;
-				editForm.TopoSurfaceName = Util.GetParameter(topoSurface, "Name", BuiltInParameterGroup.PG_IDENTITY_DATA,
-				ParameterType.Text);
-			}
-			else
-			{
-				topoSurface = editForm.topoSurface;
-			}
-			return topoSurface;
-		}
 	}
 
 }
