@@ -16,15 +16,9 @@ namespace TopoEdit
 	{
 		internal static enumFunctions function;
 
-		private static int totalMods;
-		private static int currentMods;
-		private static int localMods;
-
 		public TopoEditMainForm()
 		{
 			InitializeComponent();
-
-			ConfigureButtons();
 		}
 
 		private void TopoEditMainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -42,44 +36,6 @@ namespace TopoEdit
 
 		internal TopographySurface topoSurface { get; set; }
 
-		// button management
-		private void ConfigureButtons()
-		{
-			// cancel all & exit is always enabled - this is the 
-			// primary exit point
-
-			// cancel all & continue - enable if total mods > 0
-
-			// cancel current & continue - enable if current mods > 0
-
-			// commit all & continue - enable if total mods > 0
-
-			// comit all & exit - enable if total mods > 0
-
-			if (totalMods > 0)
-			{
-				btnCancelAllAndCont.Enabled = true;
-				btnCommitAllContinue.Enabled = true;
-				btnCommitAllExit.Enabled = true;
-			}
-			else
-			{
-				btnCancelAllAndCont.Enabled = false;
-				btnCommitAllContinue.Enabled = false;
-				btnCommitAllExit.Enabled = false;
-			}
-
-			if (currentMods > 0)
-			{
-				btnCancelCurrentAndContinue.Enabled = true;
-			}
-			else
-			{
-				btnCancelCurrentAndContinue.Enabled = false;
-			}
-		}
-
-
 		
 		// buttons
 		private void btnRaiseLower_Click(object sender, EventArgs e)
@@ -88,101 +44,26 @@ namespace TopoEdit
 			this.Close();
 		}
 
+		// ************
 		private void btnCancelAllAndExit_Click(object sender, EventArgs e)
 		{
 			function = CANCELALLEXIT;
 			this.Close();
 		}
 
-		private void btnCancelCurrentAndContinue_Click(object sender, EventArgs e)
-		{
-			function = CANCELCURRENTANDCONT;
-			this.Close();
-		}
-
-		private void btnCancelAllAndCont_Click(object sender, EventArgs e)
-		{
-			function = CANCELALLCONT;
-			this.Close();
-		}
-
-		private void btnCommitAllContinue_Click(object sender, EventArgs e)
-		{
-			function = COMMITALLCONTINUE;
-			this.Close();
-		}
-
+		// ***********
 		private void btnCommitAllExit_Click(object sender, EventArgs e)
 		{
 			function = COMMITALLEXIT;
 			this.Close();
 		}
 
-
+		// ***********
+		private void btnUndoMain_Click(object sender, EventArgs e)
+		{
+			function = UNDO;
+			this.Close();
+		}
 		
-
-		// modification tracking
-		internal static int LocalMods => localMods;
-
-		internal void IncrementMods()
-		{
-			currentMods++;
-			localMods++;
-			totalMods++;
-			UpdateModsDisplay();
-		}
-
-		internal void DecrementMods()
-		{
-			currentMods--;
-			localMods--;
-			totalMods--;
-			UpdateModsDisplay();
-		}
-
-		private void UpdateModsDisplay()
-		{
-			lblCurrentModsCount.Text = currentMods.ToString();
-			lblTotalModsCount.Text = totalMods.ToString();
-			ConfigureButtons();
-		}
-
-		internal void ResetMods()
-		{
-			ResetCurrentMods();
-			ResetLocalMods();
-			ResetTotalMods();
-		}
-
-		internal void ResetTotalMods()
-		{
-			totalMods = 0;
-			lblTotalModsCount.Text = totalMods.ToString();
-			ConfigureButtons();
-		}
-
-		internal void ResetCurrentMods()
-		{
-			currentMods = 0;
-			lblCurrentModsCount.Text = currentMods.ToString();
-			ConfigureButtons();
-		}
-
-		internal void ResetLocalMods()
-		{
-			localMods = 0;
-		}
-
-		private void TopoEditMainForm_Shown(object sender, EventArgs e)
-		{
-			if (totalMods > 0)
-			{
-				btnCancelAllAndExit.Text = "Cancel All\nand Exit";
-				return;
-			}
-
-			btnCancelAllAndExit.Text = "Exit";
-
-		}
 	}
 }

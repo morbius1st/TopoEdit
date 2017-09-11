@@ -23,17 +23,23 @@ namespace TopoEdit
 	{
 		public enum Type
 		{
+			// process control
 			STARTALL,
 			STARTGROUP,
-			// control functions
 			STARTCONTROL,
+			STARTEDITING,
+
+			// undo
+			UNDO,
+
+			// control functions
 			CANCELALLEXIT,
 			CANCELALLCONT,
 			CANCELCURRENTANDCONT,
 			COMMITALLCONTINUE,
 			COMMITALLEXIT,
+			
 			// editing functions
-			STARTEDITING,
 			RAISELOWERPOINTS,
 			RAISELOWERPOINTS2,
 			DELETEPOINTS
@@ -62,6 +68,9 @@ namespace TopoEdit
 		public static readonly enumFunctions STARTALL = new enumFunctions(Type.STARTALL, 0);
 		public static readonly enumFunctions STARTGROUP = new enumFunctions(Type.STARTGROUP, 1);
 
+		// undo
+		public static readonly enumFunctions UNDO = new enumFunctions(Type.UNDO, -1);
+
 		// control functions
 		public static readonly enumFunctions STARTCONTROL		= new enumFunctions(Type.STARTCONTROL, -10);
 		public static readonly enumFunctions CANCELALLEXIT		= new enumFunctions(Type.CANCELALLEXIT, -10);
@@ -76,7 +85,7 @@ namespace TopoEdit
 		public static readonly enumFunctions RAISELOWERPOINTS2 = new enumFunctions(Type.RAISELOWERPOINTS2, 11);
 		public static readonly enumFunctions DELETEPOINTS = new enumFunctions(Type.DELETEPOINTS, 15);
 
-		private static List<enumFunctions> list = new List<enumFunctions>() {STARTALL, STARTGROUP,
+		private static List<enumFunctions> list = new List<enumFunctions>() {STARTALL, STARTGROUP, UNDO,
 				STARTCONTROL,
 					CANCELALLEXIT, CANCELALLCONT, CANCELCURRENTANDCONT, COMMITALLCONTINUE, COMMITALLEXIT,
 				STARTEDITING,

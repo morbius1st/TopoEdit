@@ -22,7 +22,7 @@ namespace TopoEdit
 {
 	class RaiseLowerPoints_Save
 	{
-		internal static bool Process(UIDocument uiDoc, Document doc, TopoEditMainForm editForm, 
+		internal static bool Process(UIDocument uiDoc, Document doc, TopoEditMainForm2 editForm, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
 			DialogResult result;

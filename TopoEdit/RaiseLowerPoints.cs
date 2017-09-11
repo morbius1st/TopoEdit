@@ -27,8 +27,6 @@ namespace TopoEdit
 		{
 			bool again = true;
 
-			editForm.ResetLocalMods();
-
 			RaiseLowerPointsForm form = new RaiseLowerPointsForm();
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
@@ -48,15 +46,12 @@ namespace TopoEdit
 							RaiseLowerPts(uiDoc, doc, topoEdit,
 								topoSurface, perfs.RaiseLowerDistance);
 
-							editForm.IncrementMods();
 							form.btnUndo.Enabled = true;
 						}
 
 						break;
 					case DialogResult.Retry:
 						tgStack.RollBack();
-
-						editForm.DecrementMods();
 
 						if (tgStack.IsEmpty) form.btnUndo.Enabled = false;
 

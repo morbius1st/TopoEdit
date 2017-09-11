@@ -139,7 +139,6 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Raise / Lower Points";
-			this.Shown += new System.EventHandler(this.RaiseLowerPointsForm_Shown);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
