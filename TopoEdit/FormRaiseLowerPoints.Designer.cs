@@ -1,6 +1,6 @@
 ﻿namespace TopoEdit
 {
-	partial class RaiseLowerPointsForm
+	partial class FormRaiseLowerPoints
 	{
 		/// <summary>
 		/// Required designer variable.

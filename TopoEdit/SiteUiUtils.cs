@@ -27,43 +27,8 @@ namespace TopoEdit
             return toposurface;
         }
 
-		internal static TopographySurface GetTopoSurface(UIDocument uiDoc,
-			Document doc, TopoEditMainForm2 form)
-		{
-			TopographySurface topoSurface;
-
-			if (form.topoSurface == null)
-			{
-				// Find toposurfaces
-				FilteredElementCollector tsCollector = new FilteredElementCollector(doc);
-				tsCollector.OfClass(typeof(TopographySurface));
-				IEnumerable<TopographySurface> tsEnumerable = tsCollector.Cast<TopographySurface>().Where<TopographySurface>(ts => !ts.IsSiteSubRegion);
-				int count = tsEnumerable.Count<TopographySurface>();
-
-				// If there is only on surface, use it.  If there is more than one, let the user select the target.
-				
-				if (count > 1) // tmp
-				{
-					topoSurface = SiteUIUtils.PickTopographySurface(uiDoc);
-				}
-				else
-				{
-					topoSurface = tsEnumerable.First<TopographySurface>();
-				}
-
-				form.topoSurface = topoSurface;
-				form.TopoSurfaceName = Util.GetParameter(topoSurface, "Name", BuiltInParameterGroup.PG_IDENTITY_DATA,
-				ParameterType.Text);
-			}
-			else
-			{
-				topoSurface = form.topoSurface;
-			}
-			return topoSurface;
-		}
-
 		internal static TopographySurface GetTopoSurface(UIDocument uiDoc, 
-			Document doc, TopoEditMainForm form)
+			Document doc, FormTopoEditMain form)
 		{
 			TopographySurface topoSurface;
 

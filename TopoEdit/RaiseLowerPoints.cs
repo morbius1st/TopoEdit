@@ -22,12 +22,12 @@ namespace TopoEdit
 {
 	class RaiseLowerPoints
 	{
-		internal static bool Process(UIDocument uiDoc, Document doc, TopoEditMainForm editForm, 
+		internal static bool Process(UIDocument uiDoc, Document doc, FormTopoEditMain editForm, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
 			bool again = true;
 
-			RaiseLowerPointsForm form = new RaiseLowerPointsForm();
+			FormRaiseLowerPoints form = new FormRaiseLowerPoints();
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 

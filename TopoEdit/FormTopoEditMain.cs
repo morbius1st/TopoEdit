@@ -12,11 +12,11 @@ using static TopoEdit.enumFunctions;
 
 namespace TopoEdit
 {
-	public partial class TopoEditMainForm : Form
+	public partial class FormTopoEditMain : Form
 	{
 		internal static enumFunctions function;
 
-		public TopoEditMainForm()
+		public FormTopoEditMain()
 		{
 			InitializeComponent();
 		}
@@ -47,14 +47,14 @@ namespace TopoEdit
 		// ************
 		private void btnCancelAllAndExit_Click(object sender, EventArgs e)
 		{
-			function = CANCELALLEXIT;
+			function = CANCEL;
 			this.Close();
 		}
 
 		// ***********
 		private void btnCommitAllExit_Click(object sender, EventArgs e)
 		{
-			function = COMMITALLEXIT;
+			function = SAVE;
 			this.Close();
 		}
 

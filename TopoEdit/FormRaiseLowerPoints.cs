@@ -14,9 +14,9 @@ using perfs = TopoEdit.PrefsAndSettings;
 
 namespace TopoEdit
 {
-	public partial class RaiseLowerPointsForm : Form
+	public partial class FormRaiseLowerPoints : Form
 	{
-		public RaiseLowerPointsForm()
+		public FormRaiseLowerPoints()
 		{
 			InitializeComponent();
 

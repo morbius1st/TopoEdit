@@ -1,6 +1,6 @@
 ﻿namespace TopoEdit
 {
-	partial class TopoEditMainForm
+	partial class FormTopoEditMain
 	{
 		/// <summary>
 		/// Required designer variable.

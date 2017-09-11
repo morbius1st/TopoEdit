@@ -26,7 +26,7 @@ namespace TopoEdit
 	[Transaction(TransactionMode.Manual)]
 	public class ModifyPoints : IExternalCommand
 	{
-		private TopoEditMainForm editForm = new TopoEditMainForm();
+		private FormTopoEditMain editForm = new FormTopoEditMain();
 
 		public Result Execute(
 			ExternalCommandData commandData,
@@ -39,7 +39,7 @@ namespace TopoEdit
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 
-			enumFunctions function = STARTALL;
+			enumFunctions function;
 
 			Util.DocUnits = doc.GetUnits();
 
@@ -59,7 +59,7 @@ namespace TopoEdit
 				do
 				{
 					editForm.ShowDialog(new Util.JtWinHandle(Util.GetWinHandle()));
-					function = TopoEditMainForm.function;
+					function = FormTopoEditMain.function;
 
 					// process "normal editing functions
 					if (function.Op >= STARTEDITING.Op)
@@ -85,7 +85,6 @@ namespace TopoEdit
 						if (tgStack.HasItems)
 						{
 							tgStack.RollBack();
-
 						}
 
 						if (tgStack.HasItems)
@@ -99,7 +98,7 @@ namespace TopoEdit
 						// process one of the completion functions
 						switch (function.EnumType)
 						{
-						case enumFunctions.Type.CANCELALLEXIT:
+						case enumFunctions.Type.CANCEL:
 							// rollback & dispose the trans group 
 							// rollback & dispose the topoedit
 							// function = does not matter
@@ -119,7 +118,7 @@ namespace TopoEdit
 							repeat = false;
 							break;
 
-						case enumFunctions.Type.COMMITALLEXIT:
+						case enumFunctions.Type.SAVE:
 							// commit the trans group 
 							// commit the topoedit
 							// function = does not matter

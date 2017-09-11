@@ -24,8 +24,6 @@ namespace TopoEdit
 		public enum Type
 		{
 			// process control
-			STARTALL,
-			STARTGROUP,
 			STARTCONTROL,
 			STARTEDITING,
 
@@ -33,15 +31,11 @@ namespace TopoEdit
 			UNDO,
 
 			// control functions
-			CANCELALLEXIT,
-			CANCELALLCONT,
-			CANCELCURRENTANDCONT,
-			COMMITALLCONTINUE,
-			COMMITALLEXIT,
+			CANCEL,
+			SAVE,
 			
 			// editing functions
 			RAISELOWERPOINTS,
-			RAISELOWERPOINTS2,
 			DELETEPOINTS
 		}
 
@@ -64,32 +58,24 @@ namespace TopoEdit
 			Ordinal = -1;
 		}
 
-		// start function
-		public static readonly enumFunctions STARTALL = new enumFunctions(Type.STARTALL, 0);
-		public static readonly enumFunctions STARTGROUP = new enumFunctions(Type.STARTGROUP, 1);
-
 		// undo
 		public static readonly enumFunctions UNDO = new enumFunctions(Type.UNDO, -1);
 
 		// control functions
 		public static readonly enumFunctions STARTCONTROL		= new enumFunctions(Type.STARTCONTROL, -10);
-		public static readonly enumFunctions CANCELALLEXIT		= new enumFunctions(Type.CANCELALLEXIT, -10);
-		public static readonly enumFunctions CANCELALLCONT		= new enumFunctions(Type.CANCELALLCONT, -11);
-		public static readonly enumFunctions CANCELCURRENTANDCONT		= new enumFunctions(Type.CANCELCURRENTANDCONT, -12);
-		public static readonly enumFunctions COMMITALLCONTINUE	= new enumFunctions(Type.COMMITALLCONTINUE, -13);
-		public static readonly enumFunctions COMMITALLEXIT		= new enumFunctions(Type.COMMITALLEXIT, -14);
+		public static readonly enumFunctions CANCEL		= new enumFunctions(Type.CANCEL, -10);
+		public static readonly enumFunctions SAVE		= new enumFunctions(Type.SAVE, -11);
 
 		// editing functions
 		public static readonly enumFunctions STARTEDITING = new enumFunctions(Type.STARTEDITING, 10);
 		public static readonly enumFunctions RAISELOWERPOINTS = new enumFunctions(Type.RAISELOWERPOINTS, 10);
-		public static readonly enumFunctions RAISELOWERPOINTS2 = new enumFunctions(Type.RAISELOWERPOINTS2, 11);
 		public static readonly enumFunctions DELETEPOINTS = new enumFunctions(Type.DELETEPOINTS, 15);
 
-		private static List<enumFunctions> list = new List<enumFunctions>() {STARTALL, STARTGROUP, UNDO,
+		private static List<enumFunctions> list = new List<enumFunctions>() {UNDO,
 				STARTCONTROL,
-					CANCELALLEXIT, CANCELALLCONT, CANCELCURRENTANDCONT, COMMITALLCONTINUE, COMMITALLEXIT,
+					CANCEL, SAVE,
 				STARTEDITING,
-					RAISELOWERPOINTS, RAISELOWERPOINTS2, DELETEPOINTS };
+					RAISELOWERPOINTS, DELETEPOINTS };
 
 		public enumFunctions this[long index]
 		{
