@@ -22,7 +22,7 @@ namespace TopoEdit
 {
 	class RaiseLowerPoints
 	{
-		internal static bool Process(UIDocument uiDoc, Document doc, FormTopoEditMain editForm, 
+		internal static bool Process(UIDocument uiDoc, Document doc, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
 			bool again = true;
@@ -43,7 +43,7 @@ namespace TopoEdit
 						{
 							tgStack.Start(new TransactionGroup(doc, "Raise-Lower Points"));
 
-							RaiseLowerPts(uiDoc, doc, topoEdit,
+							RaiseLowerPts(uiDoc, doc,
 								topoSurface, perfs.RaiseLowerDistance);
 
 							form.btnUndo.Enabled = true;
@@ -73,8 +73,8 @@ namespace TopoEdit
 
 		
 		// raise lower points by the given distance
-		private static bool RaiseLowerPts(UIDocument uiDoc, Document doc, 
-			TopographyEditScope topoEdit, TopographySurface topoSurface, double distance)
+		private static void RaiseLowerPts(UIDocument uiDoc, Document doc, 
+			TopographySurface topoSurface, double distance)
 		{
 			PickedBox2 picked = Util.getPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 
@@ -96,8 +96,6 @@ namespace TopoEdit
 					}
 				}
 			}
-
-			return true;
 		}
 	}
 }

@@ -1,9 +1,11 @@
 ﻿#region Using directives
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 #endregion
 
@@ -22,5 +24,7 @@ namespace TopoEdit
 		internal static double RaiseLowerDistance { get; set; }
 
 		internal static int MaxTransactions = 20;
+
+		internal static Point MainFormPosition { get; set; }
 	}
 }

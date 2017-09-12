@@ -64,6 +64,11 @@
     <Compile Include="enumFunctions.cs" />
     <Compile Include="ModifyPoints.cs" />
     <Compile Include="PrefsAndSettings.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RaiseLowerPoints.cs" />
     <Compile Include="FormRaiseLowerPoints.cs">
       <SubType>Form</SubType>
@@ -91,6 +96,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormTopoEditMain.resx">
       <DependentUpon>FormTopoEditMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Images\information16.png" />
     <EmbeddedResource Include="Resources\Images\information32.png" />

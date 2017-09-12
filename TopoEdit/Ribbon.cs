@@ -8,8 +8,11 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
+
+using perfs = TopoEdit.PrefsAndSettings;
 
 #endregion
 
@@ -29,6 +32,9 @@ namespace TopoEdit
 		private const string SMALLICON = "information16.png";
 		private const string LARGEICON = "information32.png";
 
+		internal UIApplication uiApp;
+//		internal UIControlledApplication uiCtrlApp;
+
 //		public static PulldownButton pb;
 //		public static SplitButton sb;
 
@@ -37,6 +43,11 @@ namespace TopoEdit
 		{
 			try
 			{
+//				uiCtrlApp = app;
+
+				app.ControlledApplication.ApplicationInitialized += OnAppInitalized;
+
+
 				// create the ribbon tab first - this is the top level
 				// ui item.  below this will be the panel that is "on" the tab
 				// and below this will be a pull down or split button that is "on" the panel;
@@ -130,6 +141,15 @@ namespace TopoEdit
 			}
 
 			return Result.Succeeded;
+		}
+
+		private void OnAppInitalized(object sender, ApplicationInitializedEventArgs e)
+		{
+			Autodesk.Revit.ApplicationServices.Application app = 
+				sender as Autodesk.Revit.ApplicationServices.Application;
+
+			uiApp = new UIApplication(app);
+
 		}
 
 		

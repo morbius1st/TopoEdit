@@ -70,6 +70,7 @@ namespace TopoEdit
 			return Process.GetCurrentProcess().MainWindowHandle;
 		}
 
+		
 		public class JtWinHandle : IWin32Window
 		{
 			public JtWinHandle(IntPtr h)
@@ -78,7 +79,6 @@ namespace TopoEdit
 				{
 					throw new NullReferenceException();
 				}
-
 				Handle = h;
 			}
 

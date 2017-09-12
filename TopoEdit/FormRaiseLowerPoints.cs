@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using perfs = TopoEdit.PrefsAndSettings;
 
 
-
 namespace TopoEdit
 {
 	public partial class FormRaiseLowerPoints : Form
@@ -22,7 +21,6 @@ namespace TopoEdit
 
 			FormatRaiseLowerDelta();
 		}
-
 
 		// raise lower text box methods
 		private void tbRaiseLowerDelta_Leave(object sender, EventArgs e)
