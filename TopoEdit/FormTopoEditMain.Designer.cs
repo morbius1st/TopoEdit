@@ -34,10 +34,8 @@
 			this.lblTopoNameLable = new System.Windows.Forms.Label();
 			this.lblTopoName = new System.Windows.Forms.Label();
 			this.btnUndoMain = new System.Windows.Forms.Button();
-			this.picLogoControl = new System.Windows.Forms.PictureBox();
 			this.btnDeletePoints = new System.Windows.Forms.Button();
 			this.btnQuery = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.picLogoControl)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// RaiseLower
@@ -91,7 +89,6 @@
 			this.lblTopoNameLable.TabIndex = 7;
 			this.lblTopoNameLable.Text = "Toposurface Name:";
 			this.lblTopoNameLable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.lblTopoNameLable.Click += new System.EventHandler(this.lblTopoNameLable_Click);
 			// 
 			// lblTopoName
 			// 
@@ -122,23 +119,6 @@
 			this.btnUndoMain.UseVisualStyleBackColor = false;
 			this.btnUndoMain.Click += new System.EventHandler(this.btnUndoMain_Click);
 			// 
-			// picLogoControl
-			// 
-			this.picLogoControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.picLogoControl.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.picLogoControl.ErrorImage = null;
-			this.picLogoControl.InitialImage = null;
-			this.picLogoControl.Location = new System.Drawing.Point(0, 0);
-			this.picLogoControl.Margin = new System.Windows.Forms.Padding(0);
-			this.picLogoControl.Name = "picLogoControl";
-			this.picLogoControl.Size = new System.Drawing.Size(24, 439);
-			this.picLogoControl.TabIndex = 15;
-			this.picLogoControl.TabStop = false;
-			this.picLogoControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picLogoControl_MouseDown);
-			this.picLogoControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picLogoControl_MouseMove);
-			this.picLogoControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picLogoControl_MouseUp);
-			// 
 			// btnDeletePoints
 			// 
 			this.btnDeletePoints.Location = new System.Drawing.Point(32, 155);
@@ -159,6 +139,7 @@
 			this.btnQuery.TabIndex = 17;
 			this.btnQuery.Text = "Query Points";
 			this.btnQuery.UseVisualStyleBackColor = true;
+			this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
 			// 
 			// FormTopoEditMain
 			// 
@@ -168,21 +149,20 @@
 			this.ControlBox = false;
 			this.Controls.Add(this.btnQuery);
 			this.Controls.Add(this.btnDeletePoints);
-			this.Controls.Add(this.picLogoControl);
 			this.Controls.Add(this.btnUndoMain);
 			this.Controls.Add(this.lblTopoName);
 			this.Controls.Add(this.lblTopoNameLable);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.btnCancelAll);
 			this.Controls.Add(this.RaiseLower);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.MinimumSize = new System.Drawing.Size(440, 400);
 			this.Name = "FormTopoEditMain";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Edit Toposurface";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTopoEditMain_FormClosing);
 			this.Load += new System.EventHandler(this.FormTopoEditMain_Load);
-			((System.ComponentModel.ISupportInitialize)(this.picLogoControl)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -195,7 +175,6 @@
 		private System.Windows.Forms.Label lblTopoName;
 		internal System.Windows.Forms.Button btnUndoMain;
 		internal System.Windows.Forms.Button btnSave;
-		private System.Windows.Forms.PictureBox picLogoControl;
 		private System.Windows.Forms.Button btnDeletePoints;
 		private System.Windows.Forms.Button btnQuery;
 	}

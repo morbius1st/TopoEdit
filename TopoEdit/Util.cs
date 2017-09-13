@@ -110,7 +110,8 @@ namespace TopoEdit
 			return null;
 		}
 
-		void GetElementParameterInformation(Document document, Element element)
+		// show the parameter information for the element
+		internal static void GetElementParameterInformation(Document document, Element element)
 		{
 			// Format the prompt information string
 			String prompt = "Show parameters in selected Element:";
@@ -129,7 +130,7 @@ namespace TopoEdit
 			MessageBox.Show(st.ToString(), "Revit", MessageBoxButtons.OK);
 		}
 
-		String GetParameterInformation(Parameter para, Document document)
+		private static String GetParameterInformation(Parameter para, Document document)
 		{
 			string defName = para.Definition.Name + "\t";
 			// Use different method to get parameter data according to the storage type

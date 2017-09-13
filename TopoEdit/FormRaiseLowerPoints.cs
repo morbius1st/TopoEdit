@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using TopoEdit.Properties;
 using perfs = TopoEdit.PrefsAndSettings;
 
 
@@ -15,6 +15,8 @@ namespace TopoEdit
 {
 	public partial class FormRaiseLowerPoints : Form
 	{
+		private double RaiseLowerDistance;
+
 		public FormRaiseLowerPoints()
 		{
 			InitializeComponent();
@@ -39,15 +41,16 @@ namespace TopoEdit
 
 		private void tbRaiseLowerDeltaLeave()
 		{
-			perfs.RaiseLowerDistance = Util.ParseDelta(tbRaiseLowerDelta.Text);
+			RaiseLowerDistance = 
+				Util.ParseDelta(tbRaiseLowerDelta.Text);
+
 			FormatRaiseLowerDelta();
 		}
 
 		private void FormatRaiseLowerDelta()
 		{
-			tbRaiseLowerDelta.Text = Util.FormatDelta(perfs.RaiseLowerDistance);
+			tbRaiseLowerDelta.Text = Util.FormatDelta(RaiseLowerDistance);
 		}
-
 
 		// button methods
 		private void btnRaiseLowerCancel_Click(object sender, EventArgs e)
@@ -58,6 +61,28 @@ namespace TopoEdit
 		private void btnApplyRaiseLower_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void FormRaiseLowerPoints_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Settings.Default.FormRaiseLowerLocation = this.Location;
+			Settings.Default.RaiseLowerDistance = RaiseLowerDistance;
+
+			Settings.Default.Save();
+		}
+
+		private void FormRaiseLowerPoints_Load(object sender, EventArgs e)
+		{
+			RaiseLowerDistance = Settings.Default.RaiseLowerDistance;
+
+			if (!Settings.Default.FormRaiseLowerLocation.Equals(new Point(0, 0)))
+			{
+				this.Location = Settings.Default.FormRaiseLowerLocation;
+			}
+			else
+			{
+				CenterToParent();
+			}
 		}
 	}
 }

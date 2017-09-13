@@ -20,7 +20,7 @@ using Autodesk.Revit.UI.Selection;
 
 namespace TopoEdit
 {
-	class RaiseLowerPoints
+	class PointsRaiseLower
 	{
 		internal static bool Process(UIDocument uiDoc, Document doc, 
 			TopographyEditScope topoEdit, TopographySurface topoSurface)

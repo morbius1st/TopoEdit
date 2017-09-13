@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
+using TopoEdit.Properties;
 using static TopoEdit.enumFunctions;
 using static TopoEdit.Util;
 using perfs = TopoEdit.PrefsAndSettings;
@@ -28,11 +29,7 @@ namespace TopoEdit
 			InitializeComponent();
 		}
 
-		private void TopoEditMainForm_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			this.DialogResult = DialogResult.OK;
-			if (function.Op < 0) { this.DialogResult = DialogResult.Cancel; }
-		}
+		internal TopographySurface topoSurface { get; set; }
 
 		internal string TopoSurfaceName
 		{
@@ -41,49 +38,17 @@ namespace TopoEdit
 			set { lblTopoName.Text = value; }
 		}
 
-		internal TopographySurface topoSurface { get; set; }
-		
-		private void picLogoControl_MouseDown(object sender, MouseEventArgs e)
-		{
-			moving = true;
-			lastPos = MousePosition;
-		}
-
-		private void picLogoControl_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (moving)
-			{
-				int xOffset = MousePosition.X - lastPos.X;
-				int yOffset = MousePosition.Y - lastPos.Y;
-
-				Left += xOffset;
-				Top += yOffset;
-
-				lastPos = MousePosition;
-				
-			}
-		}
-
-		private void picLogoControl_MouseUp(object sender, MouseEventArgs e)
-		{
-			moving = false;
-			perfs.MainFormPosition = new Point(Left, Top);
-		}
-
 		private void FormTopoEditMain_Load(object sender, EventArgs e)
 		{
-			if (perfs.MainFormPosition.X == 0 && perfs.MainFormPosition.Y == 0)
+			if (Settings.Default.FormMainLocation.Equals(new Point(0, 0)))
 			{
-				CenterToScreen();
-				perfs.MainFormPosition = new Point(Left, Top);
+				CenterToParent();
 			}
 			else
 			{
-				Left = perfs.MainFormPosition.X;
-				Top = perfs.MainFormPosition.Y;
+				this.Location = Settings.Default.FormMainLocation;
 			}
 		}
-
 
 		// buttons
 		private void btnCancelAllAndExit_Click(object sender, EventArgs e)
@@ -116,9 +81,17 @@ namespace TopoEdit
 			this.Close();
 		}
 
-		private void lblTopoNameLable_Click(object sender, EventArgs e)
+		private void btnQuery_Click(object sender, EventArgs e)
 		{
+			function = QUERYPOINTS;
+			this.Close();
+		}
 
+		private void FormTopoEditMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Settings.Default.FormMainLocation = this.Location;
+
+			Settings.Default.Save();
 		}
 	}
 }

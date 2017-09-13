@@ -118,7 +118,7 @@
 			this.lblLocalMods.Text = "0";
 			this.lblLocalMods.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// RaiseLowerPointsForm
+			// FormRaiseLowerPoints
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -132,13 +132,15 @@
 			this.Controls.Add(this.tbRaiseLowerDelta);
 			this.Controls.Add(this.lblRaiseLowerLable);
 			this.Controls.Add(this.lblBogusBackground);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "RaiseLowerPointsForm";
+			this.Name = "FormRaiseLowerPoints";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Raise / Lower Points";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRaiseLowerPoints_FormClosing);
+			this.Load += new System.EventHandler(this.FormRaiseLowerPoints_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
