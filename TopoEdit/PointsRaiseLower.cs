@@ -26,6 +26,7 @@ namespace TopoEdit
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
 			bool again = true;
+			bool success = true;
 
 			FormRaiseLowerPoints form = new FormRaiseLowerPoints();
 
@@ -39,14 +40,14 @@ namespace TopoEdit
 					{
 					case DialogResult.OK:
 
-						if (perfs.RaiseLowerDistance != 0)
+						if (form.RaiseLowerDistance != 0)
 						{
 							tgStack.Start(new TransactionGroup(doc, "Raise-Lower Points"));
 
-							RaiseLowerPts(uiDoc, doc,
-								topoSurface, perfs.RaiseLowerDistance);
+							success = RaiseLowerPts(uiDoc, doc,
+								topoSurface, form.RaiseLowerDistance);
 
-							form.btnUndo.Enabled = true;
+							if (success) form.btnUndo.Enabled = true;
 						}
 
 						break;
@@ -73,10 +74,19 @@ namespace TopoEdit
 
 		
 		// raise lower points by the given distance
-		private static void RaiseLowerPts(UIDocument uiDoc, Document doc, 
+		static bool RaiseLowerPts(UIDocument uiDoc, Document doc, 
 			TopographySurface topoSurface, double distance)
 		{
-			PickedBox2 picked = Util.getPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			PickedBox2 picked;
+
+			try
+			{
+				picked = Util.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
 
 			Outline ol = new Outline(picked.Min, picked.Max);
 
@@ -96,6 +106,8 @@ namespace TopoEdit
 					}
 				}
 			}
+
+			return true;
 		}
 	}
 }

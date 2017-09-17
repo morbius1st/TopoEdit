@@ -15,7 +15,7 @@ namespace TopoEdit
 {
 	public partial class FormRaiseLowerPoints : Form
 	{
-		private double RaiseLowerDistance;
+		internal double RaiseLowerDistance;
 
 		public FormRaiseLowerPoints()
 		{

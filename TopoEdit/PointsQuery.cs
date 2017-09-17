@@ -58,9 +58,9 @@ namespace TopoEdit
 		{
 			string nl = Environment.NewLine;
 
-			_form.tbInfo.Clear();
+			_form.lblPointsInfo.ResetText();
 
-			PickedBox2 picked = Util.getPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			PickedBox2 picked = Util.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 
 			Outline ol = new Outline(picked.Min, picked.Max);
 
@@ -95,11 +95,11 @@ namespace TopoEdit
 				sb.AppendFormat("maximum Z | {0,12:F4}", maxZ).Append(nl);
 				sb.AppendFormat("average Z | {0,12:F4}", avgZ).Append(nl);
 
-				_form.tbInfo.Text = sb.ToString();
+				_form.lblPointsInfo.Text = sb.ToString();
 			}
 			else
 			{
-				_form.tbInfo.Text = "no points selected";
+				_form.lblPointsInfo.Text = "no points selected";
 			}
 
 			

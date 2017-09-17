@@ -36,11 +36,12 @@
 			this.btnUndoMain = new System.Windows.Forms.Button();
 			this.btnDeletePoints = new System.Windows.Forms.Button();
 			this.btnQuery = new System.Windows.Forms.Button();
+			this.btnPlacePointsNewLine = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// RaiseLower
 			// 
-			this.RaiseLower.Location = new System.Drawing.Point(32, 104);
+			this.RaiseLower.Location = new System.Drawing.Point(17, 104);
 			this.RaiseLower.Margin = new System.Windows.Forms.Padding(8);
 			this.RaiseLower.Name = "RaiseLower";
 			this.RaiseLower.Size = new System.Drawing.Size(110, 35);
@@ -82,7 +83,7 @@
 			// 
 			// lblTopoNameLable
 			// 
-			this.lblTopoNameLable.Location = new System.Drawing.Point(29, 17);
+			this.lblTopoNameLable.Location = new System.Drawing.Point(17, 17);
 			this.lblTopoNameLable.Margin = new System.Windows.Forms.Padding(8);
 			this.lblTopoNameLable.Name = "lblTopoNameLable";
 			this.lblTopoNameLable.Size = new System.Drawing.Size(124, 20);
@@ -121,7 +122,7 @@
 			// 
 			// btnDeletePoints
 			// 
-			this.btnDeletePoints.Location = new System.Drawing.Point(32, 155);
+			this.btnDeletePoints.Location = new System.Drawing.Point(17, 155);
 			this.btnDeletePoints.Margin = new System.Windows.Forms.Padding(8);
 			this.btnDeletePoints.Name = "btnDeletePoints";
 			this.btnDeletePoints.Size = new System.Drawing.Size(110, 35);
@@ -132,7 +133,7 @@
 			// 
 			// btnQuery
 			// 
-			this.btnQuery.Location = new System.Drawing.Point(32, 53);
+			this.btnQuery.Location = new System.Drawing.Point(17, 53);
 			this.btnQuery.Margin = new System.Windows.Forms.Padding(8);
 			this.btnQuery.Name = "btnQuery";
 			this.btnQuery.Size = new System.Drawing.Size(110, 35);
@@ -141,12 +142,24 @@
 			this.btnQuery.UseVisualStyleBackColor = true;
 			this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
 			// 
+			// btnPlacePointsNewLine
+			// 
+			this.btnPlacePointsNewLine.Location = new System.Drawing.Point(17, 206);
+			this.btnPlacePointsNewLine.Margin = new System.Windows.Forms.Padding(8);
+			this.btnPlacePointsNewLine.Name = "btnPlacePointsNewLine";
+			this.btnPlacePointsNewLine.Size = new System.Drawing.Size(110, 35);
+			this.btnPlacePointsNewLine.TabIndex = 18;
+			this.btnPlacePointsNewLine.Text = "Place Points\r\nin a Line";
+			this.btnPlacePointsNewLine.UseVisualStyleBackColor = true;
+			this.btnPlacePointsNewLine.Click += new System.EventHandler(this.btnPlacePointsNewLine_Click);
+			// 
 			// FormTopoEditMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(457, 400);
 			this.ControlBox = false;
+			this.Controls.Add(this.btnPlacePointsNewLine);
 			this.Controls.Add(this.btnQuery);
 			this.Controls.Add(this.btnDeletePoints);
 			this.Controls.Add(this.btnUndoMain);
@@ -177,5 +190,6 @@
 		internal System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Button btnDeletePoints;
 		private System.Windows.Forms.Button btnQuery;
+		private System.Windows.Forms.Button btnPlacePointsNewLine;
 	}
 }

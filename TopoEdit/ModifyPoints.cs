@@ -1,21 +1,21 @@
 #region Namespaces
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using Autodesk.Revit.Attributes;
-using Autodesk.Revit.Creation;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-
-
-using static TopoEdit.enumFunctions;
 using static TopoEdit.SiteUIUtils;
 using Document = Autodesk.Revit.DB.Document;
 using perfs = TopoEdit.PrefsAndSettings;
 
-using static TopoEdit.enumFunctions.Category;
-
+using static TopoEdit.EnumFunctions.Category;
+using Application = Autodesk.Revit.Creation.Application;
 
 #endregion
 
@@ -39,11 +39,13 @@ namespace TopoEdit
 
 			app = doc.Application.Create;
 
+			
+
 			TopographyEditScope topoEdit = null;
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 
-			enumFunctions function;
+			EnumFunctions function;
 
 			Util.DocUnits = doc.GetUnits();
 
@@ -53,7 +55,19 @@ namespace TopoEdit
 			TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
 			if (topoSurface == null) { return Result.Failed; }
 
-			Util.GetElementParameterInformation(doc, topoSurface);
+			if (!CanEditTopo(doc, topoSurface))
+			{
+				TaskDialog td = new TaskDialog("TopoSurface Edit");
+				td.CommonButtons = TaskDialogCommonButtons.Close;
+				td.MainInstruction = "TopoEdit cannot proceed";
+				td.MainContent = "A valid topography surface is not visible " +
+					"in this view.  Please select a view with the topography " +
+					"surface visible and try again";
+				td.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+
+				td.Show();
+			}
+
 
 			try
 			{
@@ -74,24 +88,27 @@ namespace TopoEdit
 
 							editForm.btnUndoMain.Enabled = true;
 							editForm.btnSave.Enabled = true;
-
-							//	process an editing function				
-							switch (function.EnumType)
-							{
-								case enumFunctions.Type.RAISELOWERPOINTS:
-
+								//	process an editing function				
+								switch (function.EnumType)
+								{
+								case EnumFunctions.Type.RAISELOWERPOINTS:
 									PointsRaiseLower.Process(uiDoc, doc, topoEdit, topoSurface);
 									break;
 
-								case enumFunctions.Type.DELETEPOINTS:
+								case EnumFunctions.Type.DELETEPOINTS:
 									PointsDelete.Process(uiDoc, doc, topoSurface);
 									break;
-							}
+
+								case EnumFunctions.Type.PLACEPOINTSNEWLINE:
+									PointsPlaceInANewLine.Process(uiDoc, doc, topoSurface);
+									break;
+								}
+	
 							break;
 						case FUNCTION:
 							switch (function.EnumType)
 							{
-							case Type.UNDO:
+							case EnumFunctions.Type.UNDO:
 								if (tgStack.HasItems)
 								{
 									tgStack.RollBack();
@@ -113,7 +130,7 @@ namespace TopoEdit
 						case CONTROL:
 							switch (function.EnumType)
 							{
-								case enumFunctions.Type.CANCEL:
+								case EnumFunctions.Type.CANCEL:
 									while (tgStack.HasItems)
 									{
 										tgStack.RollBack();
@@ -125,7 +142,7 @@ namespace TopoEdit
 									repeat = false;
 									break;
 
-								case enumFunctions.Type.SAVE:
+								case EnumFunctions.Type.SAVE:
 									while (tgStack.HasItems)
 									{
 										tgStack.Commit();
@@ -153,6 +170,14 @@ namespace TopoEdit
 			}
 
 			return Result.Succeeded;
+		}
+
+		bool CanEditTopo(Document doc, TopographySurface topoSurface)
+		{
+			return doc.ActiveView.IsElementVisibleInView(topoSurface)
+				&& (doc.ActiveView.ViewType == ViewType.FloorPlan
+					|| doc.ActiveView.ViewType == ViewType.ThreeD);
+
 		}
 
 

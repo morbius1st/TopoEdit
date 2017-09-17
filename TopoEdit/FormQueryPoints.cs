@@ -37,9 +37,5 @@ namespace TopoEdit
 			}
 		}
 
-		private void tbInfo_TextChanged(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

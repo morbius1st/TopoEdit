@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using TopoEdit.Properties;
-using static TopoEdit.enumFunctions;
+using static TopoEdit.EnumFunctions;
 using static TopoEdit.Util;
 using perfs = TopoEdit.PrefsAndSettings;
 
@@ -19,7 +19,7 @@ namespace TopoEdit
 {
 	public partial class FormTopoEditMain : Form
 	{
-		internal static enumFunctions function;
+		internal static EnumFunctions function;
 
 		private bool moving = false;
 		private Point lastPos;
@@ -49,6 +49,14 @@ namespace TopoEdit
 				this.Location = Settings.Default.FormMainLocation;
 			}
 		}
+		
+		private void FormTopoEditMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Settings.Default.FormMainLocation = this.Location;
+
+			Settings.Default.Save();
+		}
+
 
 		// buttons
 		private void btnCancelAllAndExit_Click(object sender, EventArgs e)
@@ -87,11 +95,10 @@ namespace TopoEdit
 			this.Close();
 		}
 
-		private void FormTopoEditMain_FormClosing(object sender, FormClosingEventArgs e)
+		private void btnPlacePointsNewLine_Click(object sender, EventArgs e)
 		{
-			Settings.Default.FormMainLocation = this.Location;
-
-			Settings.Default.Save();
+			function = PLACEPOINTSNEWLINE;
+			this.Close();
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static TopoEdit.enumFunctions.Category;
+using static TopoEdit.EnumFunctions.Category;
 
 #endregion
 
@@ -21,7 +21,7 @@ using static TopoEdit.enumFunctions.Category;
 // java like enum class
 namespace TopoEdit
 {
-	class enumFunctions  : IEnumerable<enumFunctions>
+	class EnumFunctions : IEnumerable
 	{
 		public enum Type
 		{
@@ -37,7 +37,8 @@ namespace TopoEdit
 			
 			// editing functions
 			RAISELOWERPOINTS,
-			DELETEPOINTS
+			DELETEPOINTS,
+			PLACEPOINTSNEWLINE
 		}
 
 		public enum Category
@@ -49,44 +50,42 @@ namespace TopoEdit
 		}
 
 
-		private static int count = 0;
+		static int count = 0;
 
 		// define member information
-		public readonly int Ordinal;
+		internal readonly int Ordinal;
 
-		public readonly int Op;
-
-		private enumFunctions(Type type, Category cat, int op)
+		EnumFunctions(Category cat, Type type)
 		{
 			Ordinal = count++;
-			this.EnumCat = cat;
-			Op = op;
-			this.EnumType = type;
+			EnumCat = cat;
+			EnumType = type;
 		}
 
-		public enumFunctions()
+		public EnumFunctions()
 		{
 			Ordinal = -1;
 		}
 
 		// control functions
-		public static readonly enumFunctions CANCEL			= new enumFunctions(Type.CANCEL, CONTROL, 1);
-		public static readonly enumFunctions SAVE			= new enumFunctions(Type.SAVE, CONTROL, 2);
+		public static readonly EnumFunctions CANCEL					= new EnumFunctions(CONTROL, Type.CANCEL);
+		public static readonly EnumFunctions SAVE					= new EnumFunctions(CONTROL, Type.SAVE);
 		// undo
-		public static readonly enumFunctions UNDO			= new enumFunctions(Type.UNDO, FUNCTION, 1);
+		public static readonly EnumFunctions UNDO					= new EnumFunctions(FUNCTION, Type.UNDO);
 		// info functions
-		public static readonly enumFunctions QUERYPOINTS	= new enumFunctions(Type.QUERYPOINTS, INFO, 1);
+		public static readonly EnumFunctions QUERYPOINTS			= new EnumFunctions(INFO, Type.QUERYPOINTS);
 		// editing functions
-		public static readonly enumFunctions RAISELOWERPOINTS = new enumFunctions(Type.RAISELOWERPOINTS, EDIT, 1);
-		public static readonly enumFunctions DELETEPOINTS	= new enumFunctions(Type.DELETEPOINTS, EDIT, 2);
+		public static readonly EnumFunctions RAISELOWERPOINTS		= new EnumFunctions(EDIT, Type.RAISELOWERPOINTS);
+		public static readonly EnumFunctions DELETEPOINTS			= new EnumFunctions(EDIT, Type.DELETEPOINTS);
+		public static readonly EnumFunctions PLACEPOINTSNEWLINE		= new EnumFunctions(EDIT, Type.PLACEPOINTSNEWLINE);
 
-		private static List<enumFunctions> list = new List<enumFunctions>() {
+		private static List<EnumFunctions> list = new List<EnumFunctions>() {
 			CANCEL, SAVE,
 			UNDO,
 			QUERYPOINTS,
-			RAISELOWERPOINTS, DELETEPOINTS};
+			RAISELOWERPOINTS, DELETEPOINTS, PLACEPOINTSNEWLINE};
 
-		public enumFunctions this[long index]
+		public EnumFunctions this[long index]
 		{
 			get
 			{
@@ -103,17 +102,17 @@ namespace TopoEdit
 
 		public static int Size => count;
 
-		internal Type EnumType { get; }
+		internal Type EnumType { get; set;  }
 
-		internal Category EnumCat { get; }
+		internal Category EnumCat { get; set;  }
 
-		public IEnumerator<enumFunctions> GetEnumerator() => list.GetEnumerator();
+		public IEnumerator<EnumFunctions> GetEnumerator() => list.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-		public static enumFunctions Find(string name)
+		public static EnumFunctions Find(string name)
 		{
-			return list.Find(s => s.EnumType.ToString().Equals(name)) ?? new enumFunctions();
+			return list.Find(s => s.EnumType.ToString().Equals(name)) ?? new EnumFunctions();
 		}
 
 		public static bool IsMember(string name)

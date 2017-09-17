@@ -20,56 +20,19 @@ namespace TopoEdit
 {
 	class PointsDelete
 	{
-		internal static void DrawLine(UIDocument uiDoc, Document doc,
-			TopographyEditScope topoEdit, TopographySurface topoSurface)
-		{
-			//			DeletePts(uiDoc, doc, topoSurface);
-			using (Transaction t = new Transaction(doc, "test"))
-			{
-				t.Start();
-				Autodesk.Revit.DB.View view = doc.ActiveView;
-
-				// Create a geometry line
-				XYZ startPoint = new XYZ(-50, -50, 0);
-				XYZ endPoint = new XYZ(100, 100, 0);
-
-				Line geomLine = Line.CreateBound(startPoint, endPoint);
-
-				// Create a geometry arc
-				XYZ end0 = new XYZ(1, 0, 0);
-				XYZ end1 = new XYZ(10, 10, 0);
-				XYZ pointOnCurve = new XYZ(10, 0, 0);
-
-				Arc geomArc = Arc.Create(end0, end1, pointOnCurve);
-
-				// Create a geometry plane
-				XYZ origin = new XYZ(0, 0, 0);
-				XYZ normal = new XYZ(1, 1, 0);
-
-				Plane geomPlane = Plane.Create(new Frame());
-
-				// Create a sketch plane in current document
-				SketchPlane sketch = SketchPlane.Create(doc, geomPlane);
-
-				// Create a DetailLine element using the 
-				// created geometry line and sketch plane
-				DetailLine line = doc.Create.NewDetailCurve(
-					view, geomLine) as DetailLine;
-
-				// Create a DetailArc element using the 
-				// created geometry arc and sketch plane
-				DetailArc arc = doc.Create.NewDetailCurve(
-					view, geomArc) as DetailArc;
-
-				t.Commit();
-			}
-
-		}
-
-		internal static void Process(UIDocument uiDoc, Document doc,
+		internal static bool Process(UIDocument uiDoc, Document doc,
 			TopographySurface topoSurface)
 		{
-			PickedBox2 picked = Util.getPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			PickedBox2 picked;
+
+			try
+			{
+				picked = Util.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
 
 			Outline ol = new Outline(picked.Min, picked.Max);
 
@@ -84,6 +47,8 @@ namespace TopoEdit
 					t.Commit();
 				}
 			}
+
+			return true;
 		}
 	}
 }
