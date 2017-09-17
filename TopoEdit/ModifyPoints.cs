@@ -12,7 +12,6 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using static TopoEdit.SiteUIUtils;
 using Document = Autodesk.Revit.DB.Document;
-using perfs = TopoEdit.PrefsAndSettings;
 
 using static TopoEdit.EnumFunctions.Category;
 using Application = Autodesk.Revit.Creation.Application;
@@ -101,6 +100,10 @@ namespace TopoEdit
 
 								case EnumFunctions.Type.PLACEPOINTSNEWLINE:
 									PointsPlaceInANewLine.Process(uiDoc, doc, topoSurface);
+									break;
+
+								case EnumFunctions.Type.PLACENEWPOINT:
+									PointPlaceNew.Process(uiDoc, doc, topoSurface);
 									break;
 								}
 	

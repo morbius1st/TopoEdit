@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
-using perfs = TopoEdit.PrefsAndSettings;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 
@@ -47,17 +46,17 @@ namespace TopoEdit
 							success = RaiseLowerPts(uiDoc, doc,
 								topoSurface, form.RaiseLowerDistance);
 
-							if (success) form.btnUndo.Enabled = true;
+							if (success) form.btnRaiseLowerUndo.Enabled = true;
 						}
 
 						break;
 					case DialogResult.Retry:
 						tgStack.RollBack();
 
-						if (tgStack.IsEmpty) form.btnUndo.Enabled = false;
+						if (tgStack.IsEmpty) form.btnRaiseLowerUndo.Enabled = false;
 
 						break;
-					case DialogResult.Cancel:
+					case DialogResult.Yes:
 						// must process the whole list of TransactionGroups
 						// held by the stack
 						while (tgStack.HasItems)

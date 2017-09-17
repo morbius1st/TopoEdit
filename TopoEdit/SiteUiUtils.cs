@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
@@ -62,10 +63,54 @@ namespace TopoEdit
 			return topoSurface;
 		}
 
-		internal static void test()
+		internal static XYZ GetPoint(UIDocument uiDoc, 
+			TopographySurface topoSurface, string message)
 		{
-			return;
+			bool again;
+			bool isWithIn = false;
+			DialogResult result;
+			XYZ point;
+
+			do
+			{
+				again = false;
+
+				point = uiDoc.Selection.PickPoint(message);
+
+				if (!topoSurface.IsInteriorPoint(point))
+				{
+					result = MessageBox.Show("You must select a point within " +
+						"the perimeter of the Topography Surface", "Not an Acceptable Point", 
+						MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+					if (result == DialogResult.Cancel)
+					{
+						return null;
+					}
+
+					again = true;
+				}
+			}
+			while (again);
+
+			return point;
 		}
+
+		internal static bool AddPoints(TopographySurface topoSurface, 
+			IList<XYZ> points)
+		{
+			try
+			{
+				topoSurface.AddPoints(points);
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
+			return true;
+		}
+
+
 	}
 
 	class BoundingCube

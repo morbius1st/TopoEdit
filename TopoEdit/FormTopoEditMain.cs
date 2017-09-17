@@ -12,8 +12,6 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using TopoEdit.Properties;
 using static TopoEdit.EnumFunctions;
-using static TopoEdit.Util;
-using perfs = TopoEdit.PrefsAndSettings;
 
 namespace TopoEdit
 {
@@ -98,6 +96,12 @@ namespace TopoEdit
 		private void btnPlacePointsNewLine_Click(object sender, EventArgs e)
 		{
 			function = PLACEPOINTSNEWLINE;
+			this.Close();
+		}
+
+		private void btnNewPoint_Click(object sender, EventArgs e)
+		{
+			function = PLACENEWPOINT;
 			this.Close();
 		}
 	}

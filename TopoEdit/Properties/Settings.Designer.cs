@@ -70,5 +70,29 @@ namespace TopoEdit.Properties {
                 this["RaiseLowerDistance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FormOneElevationLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FormOneElevationLocation"]));
+            }
+            set {
+                this["FormOneElevationLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double OneElevation {
+            get {
+                return ((double)(this["OneElevation"]));
+            }
+            set {
+                this["OneElevation"] = value;
+            }
+        }
     }
 }

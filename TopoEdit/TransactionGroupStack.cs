@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 
-using perfs = TopoEdit.PrefsAndSettings;
-
 #endregion
 
 // itemname:	TransactionGroupStack
@@ -33,6 +31,9 @@ namespace TopoEdit
 		public bool HasItems => TgStack.Count > 0;
 
 		public bool IsEmpty => TgStack.Count == 0;
+
+		public bool HasStarted => TgStack.Count > 0 &&
+			TgStack[TgStack.Count - 1].HasStarted();
 
 		public void Start(TransactionGroup tg)
 		{
@@ -63,42 +64,6 @@ namespace TopoEdit
 			TgStack[TgStack.Count - 1].Dispose();
 			TgStack.RemoveAt(TgStack.Count - 1);
 		}
-
-
-
-//		public void push(TransactionGroup tg)
-//		{
-//			TgStack.Add(tg);
-//		}
-//
-//		public TransactionGroup pop()
-//		{
-//			if (TgStack.Count == 0) return null;
-//
-//			TransactionGroup result = TgStack[TgStack.Count - 1];
-//
-//			RemoveTop();
-//
-//			return result;
-//		}
-//
-//		public TransactionGroup peek()
-//		{
-//			if (TgStack.Count == 0) return null;
-//
-//			TransactionGroup result = TgStack[TgStack.Count - 1];
-//
-//			return result;
-//		}
-//
-//		public void RemoveTop()
-//		{
-//			if (TgStack.Count == 0) return;
-//
-//			TgStack.RemoveAt(TgStack.Count - 1);
-//		}
-
-		
 
 	}
 }

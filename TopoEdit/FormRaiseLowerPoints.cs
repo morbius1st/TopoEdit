@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TopoEdit.Properties;
-using perfs = TopoEdit.PrefsAndSettings;
 
 
 namespace TopoEdit
@@ -35,7 +34,7 @@ namespace TopoEdit
 			if (e.KeyChar == (char) Keys.Enter)
 			{
 				tbRaiseLowerDeltaLeave();
-				btnApplyRaiseLower.Select();
+				btnRaiseLowerApply.Select();
 			}
 		}
 

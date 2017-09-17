@@ -51,11 +51,11 @@ namespace TopoEdit
 
 			try
 			{
-				startPoint = GetPoint(uiDoc, doc, topoSurface,
+				startPoint = SiteUIUtils.GetPoint(uiDoc, topoSurface,
 					"Enter start point");
 				if (startPoint == null) return null;
 
-				endPoint = GetPoint(uiDoc, doc, topoSurface,
+				endPoint = SiteUIUtils.GetPoint(uiDoc, topoSurface,
 					"Enter end point");
 				if (endPoint == null) return null;
 			}
@@ -83,46 +83,39 @@ namespace TopoEdit
 			}
 
 		}
-
-		private static XYZ GetPoint(UIDocument uiDoc, Document doc, 
-			TopographySurface topoSurface, string message)
-		{
-			bool again;
-			bool isWithIn = false;
-			DialogResult result;
-			XYZ point;
-
-			do
-			{
-				again = false;
-
-				point = uiDoc.Selection.PickPoint(message);
-
-				if (!topoSurface.IsInteriorPoint(point))
-				{
-					result = MessageBox.Show("You must select a point within " +
-						"the perimeter of the Topography Surface", "Invalid Point", 
-						MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-
-					if (result == DialogResult.Cancel)
-					{
-						return null;
-					}
-
-					again = true;
-				}
-			}
-			while (again);
-
-			return point;
-		}
-
-		
-
-		
-
-
-
+		//
+		//		private static XYZ GetPoint(UIDocument uiDoc, 
+		//			TopographySurface topoSurface, string message)
+		//		{
+		//			bool again;
+		//			bool isWithIn = false;
+		//			DialogResult result;
+		//			XYZ point;
+		//
+		//			do
+		//			{
+		//				again = false;
+		//
+		//				point = uiDoc.Selection.PickPoint(message);
+		//
+		//				if (!topoSurface.IsInteriorPoint(point))
+		//				{
+		//					result = MessageBox.Show("You must select a point within " +
+		//						"the perimeter of the Topography Surface", "Invalid Point", 
+		//						MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+		//
+		//					if (result == DialogResult.Cancel)
+		//					{
+		//						return null;
+		//					}
+		//
+		//					again = true;
+		//				}
+		//			}
+		//			while (again);
+		//
+		//			return point;
+		//		}
 
 	}
 }

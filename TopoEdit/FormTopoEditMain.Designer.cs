@@ -37,6 +37,7 @@
 			this.btnDeletePoints = new System.Windows.Forms.Button();
 			this.btnQuery = new System.Windows.Forms.Button();
 			this.btnPlacePointsNewLine = new System.Windows.Forms.Button();
+			this.btnNewPoint = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// RaiseLower
@@ -83,10 +84,10 @@
 			// 
 			// lblTopoNameLable
 			// 
-			this.lblTopoNameLable.Location = new System.Drawing.Point(17, 17);
+			this.lblTopoNameLable.Location = new System.Drawing.Point(14, 17);
 			this.lblTopoNameLable.Margin = new System.Windows.Forms.Padding(8);
 			this.lblTopoNameLable.Name = "lblTopoNameLable";
-			this.lblTopoNameLable.Size = new System.Drawing.Size(124, 20);
+			this.lblTopoNameLable.Size = new System.Drawing.Size(113, 20);
 			this.lblTopoNameLable.TabIndex = 7;
 			this.lblTopoNameLable.Text = "Toposurface Name:";
 			this.lblTopoNameLable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -96,10 +97,10 @@
 			this.lblTopoName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTopoName.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.lblTopoName.Location = new System.Drawing.Point(155, 17);
+			this.lblTopoName.Location = new System.Drawing.Point(143, 17);
 			this.lblTopoName.Margin = new System.Windows.Forms.Padding(8);
 			this.lblTopoName.Name = "lblTopoName";
-			this.lblTopoName.Size = new System.Drawing.Size(285, 20);
+			this.lblTopoName.Size = new System.Drawing.Size(297, 20);
 			this.lblTopoName.TabIndex = 8;
 			this.lblTopoName.Text = "Name";
 			this.lblTopoName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -153,12 +154,24 @@
 			this.btnPlacePointsNewLine.UseVisualStyleBackColor = true;
 			this.btnPlacePointsNewLine.Click += new System.EventHandler(this.btnPlacePointsNewLine_Click);
 			// 
+			// btnNewPoint
+			// 
+			this.btnNewPoint.Location = new System.Drawing.Point(17, 257);
+			this.btnNewPoint.Margin = new System.Windows.Forms.Padding(8);
+			this.btnNewPoint.Name = "btnNewPoint";
+			this.btnNewPoint.Size = new System.Drawing.Size(110, 35);
+			this.btnNewPoint.TabIndex = 19;
+			this.btnNewPoint.Text = "Place A New Point";
+			this.btnNewPoint.UseVisualStyleBackColor = true;
+			this.btnNewPoint.Click += new System.EventHandler(this.btnNewPoint_Click);
+			// 
 			// FormTopoEditMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(457, 400);
 			this.ControlBox = false;
+			this.Controls.Add(this.btnNewPoint);
 			this.Controls.Add(this.btnPlacePointsNewLine);
 			this.Controls.Add(this.btnQuery);
 			this.Controls.Add(this.btnDeletePoints);
@@ -191,5 +204,6 @@
 		private System.Windows.Forms.Button btnDeletePoints;
 		private System.Windows.Forms.Button btnQuery;
 		private System.Windows.Forms.Button btnPlacePointsNewLine;
+		private System.Windows.Forms.Button btnNewPoint;
 	}
 }

@@ -68,11 +68,17 @@
     <Compile Include="FormQueryPoints.Designer.cs">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormOneElevation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOneElevation.Designer.cs">
+      <DependentUpon>FormOneElevation.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModifyPoints.cs" />
+    <Compile Include="PointPlaceNew.cs" />
     <Compile Include="PointsPlaceInANewLine.cs" />
     <Compile Include="PointsDelete.cs" />
     <Compile Include="PointsQuery.cs" />
-    <Compile Include="PrefsAndSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -107,6 +113,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FormQueryPoints.resx">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormOneElevation.resx">
+      <DependentUpon>FormOneElevation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRaiseLowerPoints.resx">
       <DependentUpon>FormRaiseLowerPoints.cs</DependentUpon>

@@ -30,11 +30,10 @@
 		{
 			this.lblRaiseLowerLable = new System.Windows.Forms.Label();
 			this.tbRaiseLowerDelta = new System.Windows.Forms.TextBox();
-			this.btnApplyRaiseLower = new System.Windows.Forms.Button();
+			this.btnRaiseLowerApply = new System.Windows.Forms.Button();
 			this.btnRaiseLowerDone = new System.Windows.Forms.Button();
 			this.lblBogusBackground = new System.Windows.Forms.Label();
-			this.btnUndo = new System.Windows.Forms.Button();
-			this.lblLocalMods = new System.Windows.Forms.Label();
+			this.btnRaiseLowerUndo = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// lblRaiseLowerLable
@@ -45,7 +44,7 @@
 			this.lblRaiseLowerLable.Size = new System.Drawing.Size(165, 20);
 			this.lblRaiseLowerLable.TabIndex = 0;
 			this.lblRaiseLowerLable.Text = "Elevation Change Amount:";
-			this.lblRaiseLowerLable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.lblRaiseLowerLable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tbRaiseLowerDelta
 			// 
@@ -60,22 +59,22 @@
 			this.tbRaiseLowerDelta.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbRaiseLowerDelta_keyPress);
 			this.tbRaiseLowerDelta.Leave += new System.EventHandler(this.tbRaiseLowerDelta_Leave);
 			// 
-			// btnApplyRaiseLower
+			// btnRaiseLowerApply
 			// 
-			this.btnApplyRaiseLower.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnApplyRaiseLower.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnApplyRaiseLower.Location = new System.Drawing.Point(121, 92);
-			this.btnApplyRaiseLower.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
-			this.btnApplyRaiseLower.Name = "btnApplyRaiseLower";
-			this.btnApplyRaiseLower.Size = new System.Drawing.Size(90, 30);
-			this.btnApplyRaiseLower.TabIndex = 2;
-			this.btnApplyRaiseLower.Text = "Apply";
-			this.btnApplyRaiseLower.UseVisualStyleBackColor = true;
-			this.btnApplyRaiseLower.Click += new System.EventHandler(this.btnApplyRaiseLower_Click);
+			this.btnRaiseLowerApply.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnRaiseLowerApply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnRaiseLowerApply.Location = new System.Drawing.Point(121, 92);
+			this.btnRaiseLowerApply.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
+			this.btnRaiseLowerApply.Name = "btnRaiseLowerApply";
+			this.btnRaiseLowerApply.Size = new System.Drawing.Size(90, 30);
+			this.btnRaiseLowerApply.TabIndex = 2;
+			this.btnRaiseLowerApply.Text = "Apply";
+			this.btnRaiseLowerApply.UseVisualStyleBackColor = true;
+			this.btnRaiseLowerApply.Click += new System.EventHandler(this.btnApplyRaiseLower_Click);
 			// 
 			// btnRaiseLowerDone
 			// 
-			this.btnRaiseLowerDone.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.btnRaiseLowerDone.DialogResult = System.Windows.Forms.DialogResult.Yes;
 			this.btnRaiseLowerDone.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnRaiseLowerDone.Location = new System.Drawing.Point(227, 92);
 			this.btnRaiseLowerDone.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
@@ -95,28 +94,18 @@
 			this.lblBogusBackground.TabIndex = 4;
 			this.lblBogusBackground.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// btnUndo
+			// btnRaiseLowerUndo
 			// 
-			this.btnUndo.DialogResult = System.Windows.Forms.DialogResult.Retry;
-			this.btnUndo.Enabled = false;
-			this.btnUndo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnUndo.Location = new System.Drawing.Point(15, 92);
-			this.btnUndo.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
-			this.btnUndo.Name = "btnUndo";
-			this.btnUndo.Size = new System.Drawing.Size(90, 30);
-			this.btnUndo.TabIndex = 5;
-			this.btnUndo.Text = "Undo";
-			this.btnUndo.UseVisualStyleBackColor = true;
-			// 
-			// lblLocalMods
-			// 
-			this.lblLocalMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblLocalMods.Location = new System.Drawing.Point(311, 121);
-			this.lblLocalMods.Name = "lblLocalMods";
-			this.lblLocalMods.Size = new System.Drawing.Size(20, 10);
-			this.lblLocalMods.TabIndex = 6;
-			this.lblLocalMods.Text = "0";
-			this.lblLocalMods.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnRaiseLowerUndo.DialogResult = System.Windows.Forms.DialogResult.Retry;
+			this.btnRaiseLowerUndo.Enabled = false;
+			this.btnRaiseLowerUndo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnRaiseLowerUndo.Location = new System.Drawing.Point(15, 92);
+			this.btnRaiseLowerUndo.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
+			this.btnRaiseLowerUndo.Name = "btnRaiseLowerUndo";
+			this.btnRaiseLowerUndo.Size = new System.Drawing.Size(90, 30);
+			this.btnRaiseLowerUndo.TabIndex = 5;
+			this.btnRaiseLowerUndo.Text = "Undo";
+			this.btnRaiseLowerUndo.UseVisualStyleBackColor = true;
 			// 
 			// FormRaiseLowerPoints
 			// 
@@ -125,10 +114,9 @@
 			this.CancelButton = this.btnRaiseLowerDone;
 			this.ClientSize = new System.Drawing.Size(333, 134);
 			this.ControlBox = false;
-			this.Controls.Add(this.lblLocalMods);
-			this.Controls.Add(this.btnUndo);
+			this.Controls.Add(this.btnRaiseLowerUndo);
 			this.Controls.Add(this.btnRaiseLowerDone);
-			this.Controls.Add(this.btnApplyRaiseLower);
+			this.Controls.Add(this.btnRaiseLowerApply);
 			this.Controls.Add(this.tbRaiseLowerDelta);
 			this.Controls.Add(this.lblRaiseLowerLable);
 			this.Controls.Add(this.lblBogusBackground);
@@ -150,10 +138,9 @@
 
 		private System.Windows.Forms.Label lblRaiseLowerLable;
 		private System.Windows.Forms.TextBox tbRaiseLowerDelta;
-		private System.Windows.Forms.Button btnApplyRaiseLower;
+		private System.Windows.Forms.Button btnRaiseLowerApply;
 		private System.Windows.Forms.Button btnRaiseLowerDone;
 		private System.Windows.Forms.Label lblBogusBackground;
-		internal System.Windows.Forms.Button btnUndo;
-		internal System.Windows.Forms.Label lblLocalMods;
+		internal System.Windows.Forms.Button btnRaiseLowerUndo;
 	}
 }
