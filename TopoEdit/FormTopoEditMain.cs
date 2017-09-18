@@ -104,5 +104,12 @@ namespace TopoEdit
 			function = PLACENEWPOINT;
 			this.Close();
 		}
+
+		private void btnAddBoundaryPoint_Click(object sender, EventArgs e)
+		{
+			function = PLACEBOUNDARYPOINT;
+			this.Close();
+		}
+		
 	}
 }

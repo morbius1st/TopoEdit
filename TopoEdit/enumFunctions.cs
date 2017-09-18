@@ -39,7 +39,8 @@ namespace TopoEdit
 			RAISELOWERPOINTS,
 			DELETEPOINTS,
 			PLACEPOINTSNEWLINE,
-			PLACENEWPOINT
+			PLACENEWPOINT,
+			PLACEBOUNDARYPOINT
 		}
 
 		public enum Category
@@ -80,12 +81,14 @@ namespace TopoEdit
 		public static readonly EnumFunctions DELETEPOINTS			= new EnumFunctions(EDIT, Type.DELETEPOINTS);
 		public static readonly EnumFunctions PLACEPOINTSNEWLINE		= new EnumFunctions(EDIT, Type.PLACEPOINTSNEWLINE);
 		public static readonly EnumFunctions PLACENEWPOINT			= new EnumFunctions(EDIT, Type.PLACENEWPOINT);
+		public static readonly EnumFunctions PLACEBOUNDARYPOINT		= new EnumFunctions(EDIT, Type.PLACEBOUNDARYPOINT);
 
 		private static List<EnumFunctions> list = new List<EnumFunctions>() {
 			CANCEL, SAVE,
 			UNDO,
 			QUERYPOINTS,
-			RAISELOWERPOINTS, DELETEPOINTS, PLACEPOINTSNEWLINE, PLACENEWPOINT};
+			RAISELOWERPOINTS, DELETEPOINTS, PLACEPOINTSNEWLINE, PLACENEWPOINT,
+			PLACEBOUNDARYPOINT};
 
 		public EnumFunctions this[long index]
 		{

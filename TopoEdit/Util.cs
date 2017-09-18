@@ -55,6 +55,14 @@ namespace TopoEdit
 			return 0;
 		}
 
+		internal static double DistanceBetweenPoints(XYZ point1, XYZ point2)
+		{
+			double deltaX = point1.X - point2.X;
+			double deltaY = point1.Y - point2.Y;
+
+			return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+		}
+
 		// load an image from embeded resource
 		public static BitmapImage getBitmapImage(string imageName)
 		{
@@ -104,7 +112,7 @@ namespace TopoEdit
 			foreach (Parameter param in elem.Parameters)
 			{
 				if (param.Definition.Name.Equals(name) &&
-					param.Definition.ParameterGroup.Equals(group) &&
+					param.Definition.ParameterGroup.Equals(@group) &&
 					param.Definition.ParameterType.Equals(type))
 				{
 					return param.AsString();
@@ -233,7 +241,7 @@ namespace TopoEdit
 					Debug.WriteLine($"number of triangles {m.NumTriangles}");
 					Debug.WriteLine($"number of verticies {m.Vertices.Count}");
 
-					ListPoints( m.Vertices);
+					ListPointsDebug( m.Vertices);
 					continue;
 				}
 				Edge e = GeoObj as Edge;
@@ -248,7 +256,7 @@ namespace TopoEdit
 					Debug.WriteLine("GeoObj is a GeometryElement");
 					continue;
 				}
-				Autodesk.Revit.DB.Point p = GeoObj as Autodesk.Revit.DB.Point ;
+				Point p = GeoObj as Point ;
 				if (p != null)
 				{
 					Debug.WriteLine("GeoObj is a point");
@@ -260,7 +268,7 @@ namespace TopoEdit
 					Debug.WriteLine("GeoObj is a PolyLine");
 					Debug.WriteLine($"coordinates {pl.NumberOfCoordinates}");
 
-					ListPoints(pl.GetCoordinates());
+					ListPointsDebug(pl.GetCoordinates());
 
 					continue;
 				}
@@ -275,14 +283,33 @@ namespace TopoEdit
 			}
 		}
 
-		static void ListPoints(IList<XYZ> points)
+		internal static string ListPoints(IList<XYZ> points)
 		{
+			StringBuilder sb = new StringBuilder();
+
 			for (int i = 0; i < points.Count; i++)
 			{
-
-				Debug.WriteLine($"{i,-3:D}| x: {points[i].X,-8:F2} | " +
-					$"y: {points[i].Y,-8:F2} | z: {points[i].Z,-8:F2}");
+				sb.Append($"{i,-3:D}| " + ListPoint(points[i]));
+				sb.Append(Environment.NewLine);
 			}
+			return sb.ToString();
+		}
+
+		internal static string ListPoint(XYZ point)
+		{
+			return $"x: {point.X,-8:F2} | " +
+				$"y: {point.Y,-8:F2} | z: {point.Z,-8:F2}";
+		}
+
+		internal static void ListPointsDebug(IList<XYZ> points)
+		{
+			Debug.WriteLine(ListPoints(points));
+		}
+
+		internal static void ShowInformation(string message)
+		{
+			ModifyPoints.info.SetText = message;
+			ModifyPoints.info.Show();
 		}
 
 		// determine if the supplied list contains the supplied point
@@ -305,7 +332,6 @@ namespace TopoEdit
 			}
 			return false;
 		}
-
 	}
 
 	static class IListExtensions

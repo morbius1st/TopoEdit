@@ -24,6 +24,8 @@ namespace TopoEdit
 	[Transaction(TransactionMode.Manual)]
 	public class ModifyPoints : IExternalCommand
 	{
+		public static FormInformation info;
+
 		private FormTopoEditMain editForm = new FormTopoEditMain();
 
 		private Application app;
@@ -38,8 +40,6 @@ namespace TopoEdit
 
 			app = doc.Application.Create;
 
-			
-
 			TopographyEditScope topoEdit = null;
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
@@ -49,6 +49,10 @@ namespace TopoEdit
 			Util.DocUnits = doc.GetUnits();
 
 			bool repeat;
+
+			info = new FormInformation();
+			info.SetText = "starting\n";
+			info.Show();
 
 			// get the toposurface to edit
 			TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
@@ -66,7 +70,6 @@ namespace TopoEdit
 
 				td.Show();
 			}
-
 
 			try
 			{
@@ -104,6 +107,10 @@ namespace TopoEdit
 
 								case EnumFunctions.Type.PLACENEWPOINT:
 									PointPlaceNew.Process(uiDoc, doc, topoSurface);
+									break;
+
+								case EnumFunctions.Type.PLACEBOUNDARYPOINT:
+									PointBoundaryPlace.Process(uiDoc, doc, topoSurface);
 									break;
 								}
 	
@@ -171,6 +178,8 @@ namespace TopoEdit
 
 				topoEdit.Dispose();
 			}
+
+			info.Dispose();
 
 			return Result.Succeeded;
 		}

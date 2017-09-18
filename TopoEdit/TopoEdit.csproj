@@ -62,6 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumFunctions.cs" />
+    <Compile Include="FormInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormInformation.Designer.cs">
+      <DependentUpon>FormInformation.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormQueryPoints.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,7 @@
       <DependentUpon>FormOneElevation.cs</DependentUpon>
     </Compile>
     <Compile Include="ModifyPoints.cs" />
+    <Compile Include="PointBoundaryPlace.cs" />
     <Compile Include="PointPlaceNew.cs" />
     <Compile Include="PointsPlaceInANewLine.cs" />
     <Compile Include="PointsDelete.cs" />
@@ -111,6 +118,9 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FormInformation.resx">
+      <DependentUpon>FormInformation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormQueryPoints.resx">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </EmbeddedResource>

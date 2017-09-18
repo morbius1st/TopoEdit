@@ -53,8 +53,7 @@ namespace TopoEdit
 
 				form.topoSurface = topoSurface;
 
-
-				form.TopoSurfaceName = topoSurface.GetName();
+				form.TopoSurfaceName = topoSurface.GetName() + " ( " + topoSurface.Name + " )";
 			}
 			else
 			{
@@ -63,35 +62,42 @@ namespace TopoEdit
 			return topoSurface;
 		}
 
-		internal static XYZ GetPoint(UIDocument uiDoc, 
-			TopographySurface topoSurface, string message)
+		internal static XYZ GetPoint(UIDocument uiDoc, TopographySurface topoSurface, 
+			string message, bool interiorRequired = true)
 		{
 			bool again;
 			bool isWithIn = false;
 			DialogResult result;
 			XYZ point;
 
-			do
+			try
 			{
-				again = false;
-
-				point = uiDoc.Selection.PickPoint(message);
-
-				if (!topoSurface.IsInteriorPoint(point))
+				do
 				{
-					result = MessageBox.Show("You must select a point within " +
-						"the perimeter of the Topography Surface", "Not an Acceptable Point", 
-						MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+					again = false;
 
-					if (result == DialogResult.Cancel)
+					point = uiDoc.Selection.PickPoint(message);
+
+					if (interiorRequired && !topoSurface.IsInteriorPoint(point))
 					{
-						return null;
-					}
+						point = null;
 
-					again = true;
+						result = MessageBox.Show("You must select a point within " +
+							"the perimeter of the Topography Surface", "Not an Acceptable Point", 
+							MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+						if (result != DialogResult.Cancel)
+						{
+							again = true;
+						}
+					}
 				}
+				while (again);
 			}
-			while (again);
+			catch
+			{
+				point = null;
+			}
 
 			return point;
 		}
@@ -176,14 +182,20 @@ namespace TopoEdit
 			Util.GetGeoElemInfo(topoSurface.get_Geometry(new Options()));
 		}
 
+		private static int shown = 1;
+
 		internal static bool IsInteriorPoint(this TopographySurface ts, XYZ testPoint)
 		{
 			bool result = false;
 
 			IList<XYZ> boundary = ts.GetBoundaryPointsOrdered();
 
-			BoundingCube cube = new BoundingCube(boundary);
+//			ModifyPoints.info.Clear();
+			ModifyPoints.info.NL();
+			ModifyPoints.info.Append("boundary points (" + shown++ + ")\n");
+			ModifyPoints.info.Append(Util.ListPoints(boundary));
 
+			BoundingCube cube = new BoundingCube(boundary);
 			if (!cube.IsWithinBox(testPoint)) { return result;}
 
 			int j = boundary.Count - 1;
@@ -204,7 +216,72 @@ namespace TopoEdit
 			}
 			return result;
 		}
-		
+
+		// find the closest point to the given point
+		internal static XYZ FindCloseBoundaryPoints(this TopographySurface ts, 
+			XYZ testPoint, ref XYZ point2)
+		{
+			int pointIndex = 0;
+
+			double minDistance = Double.MaxValue;
+			double minDistanceBefore;
+			double minDistanceAfter;
+
+			double calcDistance;
+
+			IList<XYZ> boundary = ts.GetBoundaryPointsOrdered();
+
+			// 
+			XYZ point1 = boundary[0];
+
+			// go around the perimeter and determine the shortest distance
+			for (int i = 0; i < boundary.Count; i++)
+			{
+				calcDistance = Util.DistanceBetweenPoints(testPoint, boundary[i]);
+
+				if (calcDistance 
+					< minDistance)
+				{
+					minDistance = calcDistance;
+					point1 = boundary[i];
+					pointIndex = i;
+				}
+			}
+
+			// got the closest point - now determine the next closest point
+			// tow possible choces - point before or point after
+			XYZ pointBefore;
+			XYZ pointAfter;
+
+			if (pointIndex == 0)
+			{
+				pointBefore = boundary[boundary.Count - 1];
+				pointAfter = boundary[1];
+			}
+			else if (pointIndex == boundary.Count - 1)
+			{
+				pointBefore = boundary[pointIndex - 1];
+				pointAfter = boundary[0];
+			}
+			else
+			{
+				pointBefore = boundary[pointIndex - 1];
+				pointAfter = boundary[pointIndex + 1];
+			}
+
+			point2 = pointAfter;
+
+			minDistanceBefore = Util.DistanceBetweenPoints(testPoint, pointBefore);
+			minDistanceAfter = Util.DistanceBetweenPoints(testPoint, pointAfter);
+
+			if (minDistanceBefore < minDistanceAfter)
+			{
+				point2 = pointBefore;
+			}
+
+			return point1;
+		}
+
 		internal static IList<XYZ> GetBoundaryPointsOrdered(this TopographySurface ts)
 		{
 			IList<XYZ> boundaryPoints;
@@ -228,22 +305,106 @@ namespace TopoEdit
 		{
 			GeometryElement geoElem = ts.get_Geometry(new Options());
 
+			IList<MeshTriangle> triangles = new List<MeshTriangle>();
+
 			foreach (GeometryObject geoObj in geoElem)
 			{
 				Mesh m = geoObj as Mesh;
 				if (m != null)
 				{
 					// found mesh
+					ProcessTriangles(m);
 					return m.Vertices;
 				}
 			}
 			return null;
 		}
 
+		private static void ProcessTriangles(Mesh m)
+		{
+			IList<Tuple<XYZ, XYZ>> edges = new List<Tuple<XYZ, XYZ>>();
+			Tuple<XYZ, XYZ> edge;
+
+			MeshTriangle t;
+
+			int found;
+
+			for (int i = 0; i < m.NumTriangles; i++)
+			{
+				t = m.get_Triangle(i);
+
+				int k = 2;
+
+				for (int j = 0; j < 3; j++)
+				{
+					edge = MakeEdge(t.get_Vertex(k), t.get_Vertex(j));
+					found = 0;
+
+					for (int l = 0; l < edges.Count; l++)
+					{
+						if (CompareEdges(edge, edges[l]))
+						{
+							found = l;
+							break;
+						}
+					}
+
+					if (found > 0)
+					{
+						edges.RemoveAt(found);
+					}
+					else
+					{
+						edges.Add(edge);
+					}
+
+					k = j;
+				}
+			}
+
+			// got the list of edges - need to get them
+			// in the correct order
+			test.ListEdges(edges);
+
+		}
+
+		private static Tuple<XYZ, XYZ> MakeEdge(XYZ vertex1, XYZ vertex2)
+		{
+			if (vertex1.X > vertex2.X)
+			{
+				return new Tuple<XYZ, XYZ>(vertex1, vertex2);
+			}
+			return new Tuple<XYZ, XYZ>(vertex2, vertex1);
+		}
+
+		private static bool CompareEdges(Tuple<XYZ, XYZ> edge1, Tuple<XYZ, XYZ> edge2)
+		{
+			return (edge1.Item1.IsAlmostEqualTo(edge2.Item1, 0.0000001) &&
+				edge1.Item2.IsAlmostEqualTo(edge2.Item2, 0.0000001));
+		}
+
 	}
 
+	class test
+	{
+		public static void ListEdges(IList<Tuple<XYZ, XYZ>> edges)
+		{
+			FormInformation Form = ModifyPoints.info;
+			Form.SetText = "Listing of the edges\n";
+			Form.Append("number of edges: " + edges.Count);
+			Form.NL();
+
+			for (int i = 0; i < edges.Count; i++)
+			{
+				Form.Append($"{i,-3:D}| " +
+					"point1: " + Util.ListPoint(edges[i].Item1) +
+					"point2: " + Util.ListPoint(edges[i].Item2));
+				Form.NL();
+			}
 
 
+		}
+	}
 
 	/// <summary>
     /// A selection filter to pass topography surfaces which don't represent subregions.

@@ -26,7 +26,6 @@ namespace TopoEdit
 			TopographySurface topoSurface)
 		{
 			bool again = true;
-			bool success;
 
 			FormOneElevation form = new FormOneElevation();
 
