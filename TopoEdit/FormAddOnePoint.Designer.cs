@@ -1,6 +1,6 @@
 ﻿namespace TopoEdit
 {
-	partial class FormOneElevation
+	partial class FormAddOnePoint
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -58,6 +58,8 @@
 			this.tbOneElevationDelta.TabIndex = 1;
 			this.tbOneElevationDelta.Text = "  0";
 			this.tbOneElevationDelta.WordWrap = false;
+			this.tbOneElevationDelta.Enter += new System.EventHandler(this.tbOneElevationDelta_Enter);
+			this.tbOneElevationDelta.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbOneElevationDelta_keyPress);
 			this.tbOneElevationDelta.Leave += new System.EventHandler(this.tbOneElevationDelta_Leave);
 			// 
 			// btnOneElevationApply
@@ -131,7 +133,8 @@
 			this.Name = "FormOneElevation";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Add a Point Elevation";
+			this.Text = "Add a Point";
+			this.Activated += new System.EventHandler(this.FormOneElevation_Activated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormOneElevationPoints_FormClosing);
 			this.Load += new System.EventHandler(this.FormOneElevationPoints_Load);
 			this.ResumeLayout(false);

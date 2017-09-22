@@ -39,6 +39,7 @@
 			this.btnPlacePointsNewLine = new System.Windows.Forms.Button();
 			this.btnNewPoint = new System.Windows.Forms.Button();
 			this.btnAddBoundaryPoint = new System.Windows.Forms.Button();
+			this.btnMeasure = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// RaiseLower
@@ -58,7 +59,7 @@
 			this.btnCancelAll.BackColor = System.Drawing.SystemColors.Control;
 			this.btnCancelAll.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.btnCancelAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCancelAll.Location = new System.Drawing.Point(350, 356);
+			this.btnCancelAll.Location = new System.Drawing.Point(356, 363);
 			this.btnCancelAll.Margin = new System.Windows.Forms.Padding(8, 5, 8, 5);
 			this.btnCancelAll.Name = "btnCancelAll";
 			this.btnCancelAll.Size = new System.Drawing.Size(90, 30);
@@ -74,7 +75,7 @@
 			this.btnSave.Enabled = false;
 			this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSave.Location = new System.Drawing.Point(244, 356);
+			this.btnSave.Location = new System.Drawing.Point(250, 363);
 			this.btnSave.Margin = new System.Windows.Forms.Padding(8, 5, 8, 5);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(90, 30);
@@ -101,7 +102,7 @@
 			this.lblTopoName.Location = new System.Drawing.Point(143, 17);
 			this.lblTopoName.Margin = new System.Windows.Forms.Padding(8);
 			this.lblTopoName.Name = "lblTopoName";
-			this.lblTopoName.Size = new System.Drawing.Size(297, 20);
+			this.lblTopoName.Size = new System.Drawing.Size(303, 20);
 			this.lblTopoName.TabIndex = 8;
 			this.lblTopoName.Text = "Name";
 			this.lblTopoName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -113,7 +114,7 @@
 			this.btnUndoMain.Enabled = false;
 			this.btnUndoMain.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.btnUndoMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnUndoMain.Location = new System.Drawing.Point(138, 356);
+			this.btnUndoMain.Location = new System.Drawing.Point(144, 363);
 			this.btnUndoMain.Margin = new System.Windows.Forms.Padding(8, 5, 8, 5);
 			this.btnUndoMain.Name = "btnUndoMain";
 			this.btnUndoMain.Size = new System.Drawing.Size(90, 30);
@@ -177,12 +178,24 @@
 			this.btnAddBoundaryPoint.UseVisualStyleBackColor = true;
 			this.btnAddBoundaryPoint.Click += new System.EventHandler(this.btnAddBoundaryPoint_Click);
 			// 
+			// btnMeasure
+			// 
+			this.btnMeasure.Location = new System.Drawing.Point(17, 358);
+			this.btnMeasure.Margin = new System.Windows.Forms.Padding(8);
+			this.btnMeasure.Name = "btnMeasure";
+			this.btnMeasure.Size = new System.Drawing.Size(110, 35);
+			this.btnMeasure.TabIndex = 21;
+			this.btnMeasure.Text = "Measure";
+			this.btnMeasure.UseVisualStyleBackColor = true;
+			this.btnMeasure.Click += new System.EventHandler(this.btnMeasure_Click);
+			// 
 			// FormTopoEditMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(457, 400);
+			this.ClientSize = new System.Drawing.Size(463, 407);
 			this.ControlBox = false;
+			this.Controls.Add(this.btnMeasure);
 			this.Controls.Add(this.btnAddBoundaryPoint);
 			this.Controls.Add(this.btnNewPoint);
 			this.Controls.Add(this.btnPlacePointsNewLine);
@@ -219,5 +232,6 @@
 		private System.Windows.Forms.Button btnPlacePointsNewLine;
 		private System.Windows.Forms.Button btnNewPoint;
 		private System.Windows.Forms.Button btnAddBoundaryPoint;
+		private System.Windows.Forms.Button btnMeasure;
 	}
 }

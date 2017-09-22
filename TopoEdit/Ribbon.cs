@@ -211,7 +211,7 @@ namespace TopoEdit
 //		private bool AddPullDownButton(RibbonPanel ribbonPanel)
 //		{
 //			PulldownButtonData pdData = new PulldownButtonData("pullDownButton1", "Edit Points");
-//			pdData.Image = Util.getBitmapImage(SMALLICON);
+//			pdData.Image = Util.GetBitmapImage(SMALLICON);
 //
 //			pb = ribbonPanel.AddItem(pdData) as PulldownButton;
 //
@@ -237,8 +237,8 @@ namespace TopoEdit
 			{
 				pbd = new PushButtonData(ButtonName, ButtonText, AddInPath, string.Concat(CLASSPATH, className))
 				{
-					Image = Util.getBitmapImage(smallIcon),
-					LargeImage = Util.getBitmapImage(largeIcon),
+					Image = Util.GetBitmapImage(smallIcon),
+					LargeImage = Util.GetBitmapImage(largeIcon),
 					ToolTip = ToolTip
 				};
 			}

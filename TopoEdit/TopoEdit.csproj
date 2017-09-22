@@ -68,21 +68,28 @@
     <Compile Include="FormInformation.Designer.cs">
       <DependentUpon>FormInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMeasurePoints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMeasurePoints.Designer.cs">
+      <DependentUpon>FormMeasurePoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormQueryPoints.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormQueryPoints.Designer.cs">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormOneElevation.cs">
+    <Compile Include="FormAddOnePoint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormOneElevation.Designer.cs">
-      <DependentUpon>FormOneElevation.cs</DependentUpon>
+    <Compile Include="FormAddOnePoint.Designer.cs">
+      <DependentUpon>FormAddOnePoint.cs</DependentUpon>
     </Compile>
     <Compile Include="ModifyPoints.cs" />
     <Compile Include="PointBoundaryPlace.cs" />
     <Compile Include="PointPlaceNew.cs" />
+    <Compile Include="PointsMeasure.cs" />
     <Compile Include="PointsPlaceInANewLine.cs" />
     <Compile Include="PointsDelete.cs" />
     <Compile Include="PointsQuery.cs" />
@@ -121,11 +128,14 @@
     <EmbeddedResource Include="FormInformation.resx">
       <DependentUpon>FormInformation.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormMeasurePoints.resx">
+      <DependentUpon>FormMeasurePoints.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormQueryPoints.resx">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormOneElevation.resx">
-      <DependentUpon>FormOneElevation.cs</DependentUpon>
+    <EmbeddedResource Include="FormAddOnePoint.resx">
+      <DependentUpon>FormAddOnePoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRaiseLowerPoints.resx">
       <DependentUpon>FormRaiseLowerPoints.cs</DependentUpon>

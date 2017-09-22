@@ -34,6 +34,7 @@ namespace TopoEdit
 
 			// misc functions
 			QUERYPOINTS,
+			MEASURE,
 			
 			// editing functions
 			RAISELOWERPOINTS,
@@ -76,6 +77,7 @@ namespace TopoEdit
 		public static readonly EnumFunctions UNDO					= new EnumFunctions(FUNCTION, Type.UNDO);
 		// info functions
 		public static readonly EnumFunctions QUERYPOINTS			= new EnumFunctions(INFO, Type.QUERYPOINTS);
+		public static readonly EnumFunctions MEASURE				= new EnumFunctions(INFO, Type.MEASURE);
 		// editing functions
 		public static readonly EnumFunctions RAISELOWERPOINTS		= new EnumFunctions(EDIT, Type.RAISELOWERPOINTS);
 		public static readonly EnumFunctions DELETEPOINTS			= new EnumFunctions(EDIT, Type.DELETEPOINTS);
@@ -86,7 +88,7 @@ namespace TopoEdit
 		private static List<EnumFunctions> list = new List<EnumFunctions>() {
 			CANCEL, SAVE,
 			UNDO,
-			QUERYPOINTS,
+			QUERYPOINTS, MEASURE,
 			RAISELOWERPOINTS, DELETEPOINTS, PLACEPOINTSNEWLINE, PLACENEWPOINT,
 			PLACEBOUNDARYPOINT};
 

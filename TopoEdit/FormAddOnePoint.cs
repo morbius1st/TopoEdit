@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -9,21 +10,50 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TopoEdit.Properties;
 
+using static TopoEdit.Util;
+
 
 namespace TopoEdit
 {
-	public partial class FormOneElevation : Form
+	public partial class FormAddOnePoint : Form
 	{
 		internal double OneElevation;
 
-		public FormOneElevation()
+		// form events
+		public FormAddOnePoint()
 		{
 			InitializeComponent();
 
 			FormatOneElevationDelta();
-		}
 
-		// raise lower text box methods
+		}
+		
+		private void FormOneElevationPoints_Load(object sender, EventArgs e)
+		{
+			if (!Settings.Default.FormOneElevationLocation.Equals(new Point(0, 0)))
+			{
+				this.Location = Settings.Default.FormOneElevationLocation;
+			}
+			else
+			{
+				CenterToParent();
+			}
+		}
+		
+		private void FormOneElevation_Activated(object sender, EventArgs e)
+		{
+			OneElevation = Settings.Default.OneElevation;
+			FormatOneElevationDelta();
+		}
+		
+		private void FormOneElevationPoints_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Settings.Default.FormOneElevationLocation = this.Location;
+			Settings.Default.OneElevation = OneElevation;
+
+			Settings.Default.Save();
+		}
+		// text box methods
 		private void tbOneElevationDelta_Leave(object sender, EventArgs e)
 		{
 			tbOneElevationDeltaLeave();
@@ -36,6 +66,11 @@ namespace TopoEdit
 				tbOneElevationDeltaLeave();
 				btnOneElevationApply.Select();
 			}
+		}
+		
+		private void tbOneElevationDelta_Enter(object sender, EventArgs e)
+		{
+			tbOneElevationDelta.SelectAll();
 		}
 
 		private void tbOneElevationDeltaLeave()
@@ -54,6 +89,7 @@ namespace TopoEdit
 		// button methods
 		private void btnOneElevationCancel_Click(object sender, EventArgs e)
 		{
+			
 			this.Close();
 		}
 
@@ -62,31 +98,5 @@ namespace TopoEdit
 			this.Close();
 		}
 
-		private void FormOneElevationPoints_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			Settings.Default.FormOneElevationLocation = this.Location;
-			Settings.Default.OneElevation = OneElevation;
-
-			Settings.Default.Save();
-		}
-
-		private void FormOneElevationPoints_Load(object sender, EventArgs e)
-		{
-			OneElevation = Settings.Default.OneElevation;
-
-			if (!Settings.Default.FormOneElevationLocation.Equals(new Point(0, 0)))
-			{
-				this.Location = Settings.Default.FormOneElevationLocation;
-			}
-			else
-			{
-				CenterToParent();
-			}
-		}
-
-		private void btnUndoAll_Click(object sender, EventArgs e)
-		{
-			this.Close();
-		}
 	}
 }

@@ -110,6 +110,11 @@ namespace TopoEdit
 			function = PLACEBOUNDARYPOINT;
 			this.Close();
 		}
-		
+
+		private void btnMeasure_Click(object sender, EventArgs e)
+		{
+			function = MEASURE;
+			this.Close();
+		}
 	}
 }

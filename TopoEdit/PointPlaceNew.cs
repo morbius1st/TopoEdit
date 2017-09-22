@@ -10,6 +10,7 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 
 using static System.Windows.Forms.DialogResult;
+using static TopoEdit.Util;
 
 #endregion
 
@@ -27,7 +28,7 @@ namespace TopoEdit
 		{
 			bool again = true;
 
-			FormOneElevation form = new FormOneElevation();
+			FormAddOnePoint form = new FormAddOnePoint();
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 
@@ -69,7 +70,6 @@ namespace TopoEdit
 						break;
 					}
 			}
-
 			return true;
 		}
 
@@ -97,6 +97,8 @@ namespace TopoEdit
 
 						IList<XYZ> points = new List<XYZ>();
 						points.Add(point);
+
+						
 
 						using (Transaction t = new Transaction(doc, "Add A Point"))
 						{

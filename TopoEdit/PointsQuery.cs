@@ -11,6 +11,8 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 
+using static TopoEdit.Util;
+
 #endregion
 
 // itemname:	PointsQuery
@@ -56,8 +58,6 @@ namespace TopoEdit
 		private static void QueryPts(UIDocument uiDoc, Document doc,
 			TopographySurface topoSurface)
 		{
-			string nl = Environment.NewLine;
-
 			_form.lblPointsInfo.ResetText();
 
 			PickedBox2 picked = Util.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");

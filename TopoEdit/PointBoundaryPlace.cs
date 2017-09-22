@@ -65,6 +65,8 @@ namespace TopoEdit
 							topoSurface.AddPoints(points);
 							t.Commit();
 						}
+
+						topoSurface.InvalidateBoundaryPoints();
 					}
 					else
 					{

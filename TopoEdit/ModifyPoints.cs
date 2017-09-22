@@ -30,6 +30,11 @@ namespace TopoEdit
 
 		private Application app;
 
+		public static GraphicsStyle ls = null;
+
+		internal static bool disposeOfForm = false;
+
+
 		public Result Execute(
 			ExternalCommandData commandData,
 			ref string message, ElementSet elements)
@@ -50,29 +55,40 @@ namespace TopoEdit
 
 			bool repeat;
 
-			info = new FormInformation();
-			info.SetText = "starting\n";
-			info.Show();
 
-			// get the toposurface to edit
-			TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
-			if (topoSurface == null) { return Result.Failed; }
-
-			if (!CanEditTopo(doc, topoSurface))
+			disposeOfForm = false;
+			if (disposeOfForm)
 			{
-				TaskDialog td = new TaskDialog("TopoSurface Edit");
-				td.CommonButtons = TaskDialogCommonButtons.Close;
-				td.MainInstruction = "TopoEdit cannot proceed";
-				td.MainContent = "A valid topography surface is not visible " +
-					"in this view.  Please select a view with the topography " +
-					"surface visible and try again";
-				td.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
-
-				td.Show();
+				info = new FormInformation();
+				info.SetText = "starting\n";
+				info.Show();
 			}
+
+			ShowLineStyles(doc, disposeOfForm);
 
 			try
 			{
+				// get the toposurface to edit
+				TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
+				if (topoSurface == null) { return Result.Failed; }
+
+				if (!CanEditTopo(doc, topoSurface))
+				{
+					TaskDialog td = new TaskDialog("TopoSurface Edit");
+					td.CommonButtons = TaskDialogCommonButtons.Close;
+					td.MainInstruction = "TopoEdit cannot proceed";
+					td.MainContent = "A valid topography surface is not visible " +
+						"in this view.  Please select a view with the topography " +
+						"surface visible and try again";
+					td.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+
+					td.Show();
+					return Result.Failed;
+				}
+
+				// make sure that we do not reuse the old points
+				topoSurface.InvalidateBoundaryPoints();
+			
 				topoEdit = new TopographyEditScope(doc, "edit topo surface");
 				topoEdit.Start(topoSurface.Id);
 
@@ -80,7 +96,7 @@ namespace TopoEdit
 
 				do
 				{
-					editForm.ShowDialog(new Util.JtWinHandle(Util.GetWinHandle()));
+					editForm.ShowDialog(new JtWinHandle(Util.GetWinHandle()));
 					function = FormTopoEditMain.function;
 
 					switch (function.EnumCat)
@@ -134,7 +150,16 @@ namespace TopoEdit
 							break;
 
 						case INFO:
-							PointsQuery.Process(uiDoc, doc, topoSurface);
+							switch (function.EnumType)
+							{
+								case EnumFunctions.Type.QUERYPOINTS:
+									PointsQuery.Process(uiDoc, doc, topoSurface);
+									break;
+								case EnumFunctions.Type.MEASURE:
+									PointsMeasure.Process(uiDoc, doc, topoSurface);
+									break;
+							}
+							
 							break;
 
 						case CONTROL:
@@ -171,15 +196,19 @@ namespace TopoEdit
 			}
 			finally
 			{
+
 				while (tgStack.HasItems)
 				{
 					tgStack.RollBack();
 				}
 
-				topoEdit.Dispose();
+				topoEdit?.Dispose();
 			}
 
-			info.Dispose();
+			if (disposeOfForm)
+			{
+				info.Dispose();
+			}
 
 			return Result.Succeeded;
 		}
@@ -192,7 +221,31 @@ namespace TopoEdit
 
 		}
 
+		void ShowLineStyles(Document doc, bool disposeOfForm)
+		{
+			Category c = doc.Settings.Categories.get_Item(
+				BuiltInCategory.OST_Lines);
 
+			CategoryNameMap subCats = c.SubCategories;
+
+			foreach (Category lineStyle in subCats)
+			{
+				if (disposeOfForm)
+				{
+					info.Append($"line style: name: {lineStyle.Name}  id: {lineStyle.Id.ToString()}");
+				}
+
+				if (lineStyle.Name.Equals("Wide Lines"))
+				{
+					if (disposeOfForm)
+					{
+						info.Append("found \"wide lines\"");
+					}
+					
+					ls = lineStyle.GetGraphicsStyle(GraphicsStyleType.Projection);
+				}
+			}
+
+		}
 	}
-
 }

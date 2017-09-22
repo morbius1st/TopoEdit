@@ -17,8 +17,13 @@ namespace TopoEdit
 {
 	class Util
 	{
-		private const string NAMESPACE_PREFIX = "TopoEdit.Resources.Images";
-		private static Units docUnits;
+		public static string nl = Environment.NewLine; 
+	
+		internal const double TOLERANCE = 0.000001;
+		
+		const int FIELD_WIDTH = 12;
+		const string NAMESPACE_PREFIX = "TopoEdit.Resources.Images";
+		static Units docUnits;
 
 		internal static Units DocUnits
 		{
@@ -38,7 +43,7 @@ namespace TopoEdit
 
 		public static string FormatDelta(double delta)
 		{
-			return "  " + UnitFormatUtils.Format(docUnits,
+			return UnitFormatUtils.Format(docUnits,
 				UnitType.UT_Length, delta, true, false);
 		}
 
@@ -55,16 +60,13 @@ namespace TopoEdit
 			return 0;
 		}
 
-		internal static double DistanceBetweenPoints(XYZ point1, XYZ point2)
+		internal static double DistanceBetweenPointsXY(XYZ point1, XYZ point2)
 		{
-			double deltaX = point1.X - point2.X;
-			double deltaY = point1.Y - point2.Y;
-
-			return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+			return new PointMeasurements(point1, point2).distanceXY;
 		}
 
 		// load an image from embeded resource
-		public static BitmapImage getBitmapImage(string imageName)
+		public static BitmapImage GetBitmapImage(string imageName)
 		{
 			Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(NAMESPACE_PREFIX + "." + imageName);
 
@@ -76,27 +78,6 @@ namespace TopoEdit
 
 			return img;
 		}
-
-		internal static IntPtr GetWinHandle()
-		{
-			return Process.GetCurrentProcess().MainWindowHandle;
-		}
-
-
-		public class JtWinHandle : IWin32Window
-		{
-			public JtWinHandle(IntPtr h)
-			{
-				if (h == null)
-				{
-					throw new NullReferenceException();
-				}
-				Handle = h;
-			}
-
-			public IntPtr Handle { get; }
-		}
-
 
 		internal static PickedBox2 GetPickedBox(UIDocument uiDoc, PickBoxStyle style, string prompt)
 		{
@@ -283,6 +264,46 @@ namespace TopoEdit
 			}
 		}
 
+		internal static void ListEdges(IList<Tuple<XYZ, XYZ>> edges)
+		{
+			FormInformation Form = ModifyPoints.info;
+			Form.SetText = "Listing of the edges\n";
+			Form.Appendx("number of edges: " + edges.Count);
+			Form.Nl();
+
+			for (int i = 0; i < edges.Count; i++)
+			{
+				Form.Appendx($"{i,-3:D}| " +
+					"point1: " + Util.ListPoint(edges[i].Item1) +
+					"point2: " + Util.ListPoint(edges[i].Item2));
+				Form.Nl();
+			}
+		}
+
+		internal static string ListPointMeasurement(XYZ point1,
+			XYZ point2, bool includeZ)
+		{
+			StringBuilder sb =
+				new StringBuilder("Measurement Information for Points:").Append(nl).Append(nl);
+			PointMeasurements pm = new PointMeasurements(point1, point2);
+
+			sb.Append (" First Point: ").Append(ListPoint(point1, includeZ)).Append(nl);
+			sb.Append ("Second Point: ").Append(ListPoint(point2, includeZ)).Append(nl);
+			sb.Append($"     X Distance: {FormatDelta(pm.deltaX), FIELD_WIDTH}").Append(nl);
+			sb.Append($"     Y Distance: {FormatDelta(pm.deltaY),FIELD_WIDTH}").Append(nl);
+			if (includeZ)
+			{
+				sb.Append($"     Z Distance: {FormatDelta(pm.deltaZ),FIELD_WIDTH}").Append(nl);
+			}
+			sb.Append($"    XY Distance: {FormatDelta(pm.distanceXY),FIELD_WIDTH}").Append(nl);
+			if (includeZ)
+			{
+				sb.Append($"   XYZ Distance: {FormatDelta(pm.distanceXYZ),FIELD_WIDTH}").Append(nl);
+			}
+
+			return sb.ToString();
+		}
+
 		internal static string ListPoints(IList<XYZ> points)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -295,10 +316,17 @@ namespace TopoEdit
 			return sb.ToString();
 		}
 
-		internal static string ListPoint(XYZ point)
+		internal static string ListPoint(XYZ point, bool includeZ = true)
 		{
-			return $"x: {point.X,-8:F2} | " +
-				$"y: {point.Y,-8:F2} | z: {point.Z,-8:F2}";
+			string result = $"x: {FormatDelta(point.X), FIELD_WIDTH} "
+				+ $"| y: {FormatDelta(point.Y), FIELD_WIDTH}";
+
+			if (includeZ)
+			{
+				result += $" | z: {FormatDelta(point.Z), FIELD_WIDTH}";
+			}
+			return result;
+
 		}
 
 		internal static void ListPointsDebug(IList<XYZ> points)
@@ -306,11 +334,18 @@ namespace TopoEdit
 			Debug.WriteLine(ListPoints(points));
 		}
 
-		internal static void ShowInformation(string message)
+		internal static void LogMsgln(string message)
 		{
-			ModifyPoints.info.SetText = message;
-			ModifyPoints.info.Show();
+			if (ModifyPoints.disposeOfForm)
+			{
+				ModifyPoints.info.Append(message);
+			}
+			else
+			{
+				Debug.WriteLine(message);
+			}
 		}
+
 
 		// determine if the supplied list contains the supplied point
 		// within tolerance - and only test the X / Y values - set Z to 0
@@ -325,14 +360,65 @@ namespace TopoEdit
 
 //				if (listPoint.IsAlmostEqualTo(testPoint, 0.000001)) worked
 //				if (listPoint.IsAlmostEqualTo(testPoint, 0.00000001)) // failed
-				if (listPoint.IsAlmostEqualTo(testPoint, 0.0000001)) //worked
+				if (listPoint.IsAlmostEqualTo(testPoint, TOLERANCE)) //worked
 				{
 					return true;
 				}
 			}
 			return false;
 		}
+
+		internal static IntPtr GetWinHandle()
+		{
+			return Process.GetCurrentProcess().MainWindowHandle;
+		}
 	}
+
+	public class JtWinHandle : IWin32Window
+	{
+		public JtWinHandle(IntPtr h)
+		{
+			if (h == null)
+			{
+				throw new NullReferenceException();
+			}
+			Handle = h;
+		}
+
+		public IntPtr Handle { get; }
+	}
+
+
+
+	internal class PointMeasurements
+	{
+		internal XYZ P1 { get; }
+		internal  XYZ P2 { get; }
+
+		internal  double deltaX { get; }
+		internal  double deltaY { get; }
+		internal  double deltaZ { get; }
+		internal  double distanceXY { get; }
+		internal  double distanceXYZ { get; }
+
+		internal PointMeasurements(XYZ p1, XYZ p2)
+		{
+			P1 = p1;
+			P2 = p2;
+
+			deltaX = p2.X - p1.X;
+			deltaY = p2.Y - p1.Y;
+			deltaZ = p2.Z - p1.Z;
+
+			double temp = deltaX * deltaX + deltaY * deltaY;
+
+			distanceXY = Math.Sqrt(temp);
+
+			distanceXYZ = Math.Sqrt(temp + deltaZ * deltaZ);
+		}
+
+	}
+	
 
 	static class IListExtensions
 	{
@@ -346,7 +432,7 @@ namespace TopoEdit
 
 //				if (listPoint.IsAlmostEqualTo(testPoint, 0.000001)) worked
 //				if (listPoint.IsAlmostEqualTo(testPoint, 0.00000001)) // failed
-				if (listPoint.IsAlmostEqualTo(testPoint, 0.0000001)) //worked
+				if (listPoint.IsAlmostEqualTo(testPoint, Util.TOLERANCE)) //worked
 				{
 					return true;
 				}

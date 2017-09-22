@@ -29,7 +29,7 @@ namespace TopoEdit
 			TopographySurface topoSurface)
 		{
 
-			DetailLine line = DrawLine(uiDoc, doc, topoSurface);
+			ModelLine line = DrawLine(uiDoc, doc, topoSurface);
 
 			if (line == null) return false;
 
@@ -40,7 +40,7 @@ namespace TopoEdit
 			return true;
 		}
 
-		internal static DetailLine DrawLine(UIDocument uiDoc, 
+		internal static ModelLine DrawLine(UIDocument uiDoc, 
 			Document doc, TopographySurface topoSurface)
 		{
 
@@ -64,18 +64,25 @@ namespace TopoEdit
 				return null;
 			}
 
-			Line geomLine = Line.CreateBound(startPoint, endPoint);
+			Line geomLine = Line.CreateBound(new XYZ(startPoint.X, startPoint.Y, 0.0), 
+				new XYZ(endPoint.X, endPoint.Y, 0.0));
 
-//				Plane geomPlane = Plane.Create(new Frame());
-//				// Create a sketch plane in current document
-//				SketchPlane sketch = SketchPlane.Create(doc, geomPlane);
+//			geomLine.SetGraphicsStyleId(ModifyPoints.ls.Id);
+
+			Plane geomPlane = Plane.Create(new Frame());
+
 			using (Transaction t = new Transaction(doc, "test")) 
 			{
 				t.Start();
 				// Create a DetailLine element using the 
 				// created geometry line and sketch plane
-				DetailLine line = doc.Create.NewDetailCurve(
-					view, geomLine) as DetailLine;
+				SketchPlane sp = SketchPlane.Create(doc, geomPlane);
+
+				ModelLine line = doc.Create.NewModelCurve(geomLine, sp) as ModelLine;
+
+				
+
+				
 
 				t.Commit();
 

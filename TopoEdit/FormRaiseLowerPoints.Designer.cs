@@ -56,6 +56,7 @@
 			this.tbRaiseLowerDelta.TabIndex = 1;
 			this.tbRaiseLowerDelta.Text = "  0";
 			this.tbRaiseLowerDelta.WordWrap = false;
+			this.tbRaiseLowerDelta.Enter += new System.EventHandler(this.tbRaiseLowerDelta_Enter);
 			this.tbRaiseLowerDelta.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbRaiseLowerDelta_keyPress);
 			this.tbRaiseLowerDelta.Leave += new System.EventHandler(this.tbRaiseLowerDelta_Leave);
 			// 
@@ -127,6 +128,7 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Raise / Lower Points";
+			this.Activated += new System.EventHandler(this.FormRaiseLowerPoints_Activated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRaiseLowerPoints_FormClosing);
 			this.Load += new System.EventHandler(this.FormRaiseLowerPoints_Load);
 			this.ResumeLayout(false);
