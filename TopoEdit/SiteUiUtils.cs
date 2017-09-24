@@ -75,7 +75,7 @@ namespace TopoEdit
 			return topoSurface;
 		}
 
-		internal static XYZ GetPoint(UIDocument uiDoc, TopographySurface topoSurface, 
+		internal static XYZ GetPointWithinTopo(UIDocument uiDoc, TopographySurface topoSurface, 
 			string message, bool interiorRequired = true)
 		{
 			bool again;

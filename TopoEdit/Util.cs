@@ -41,10 +41,12 @@ namespace TopoEdit
 			set { docUnits = value; }
 		}
 
-		public static string FormatDelta(double delta)
+		public static string FormatLengthNumber(double length)
 		{
+			
+
 			return UnitFormatUtils.Format(docUnits,
-				UnitType.UT_Length, delta, true, false);
+				UnitType.UT_Length, length, true, false);
 		}
 
 		public static double ParseDelta(string delta)
@@ -289,16 +291,16 @@ namespace TopoEdit
 
 			sb.Append (" First Point: ").Append(ListPoint(point1, includeZ)).Append(nl);
 			sb.Append ("Second Point: ").Append(ListPoint(point2, includeZ)).Append(nl);
-			sb.Append($"     X Distance: {FormatDelta(pm.deltaX), FIELD_WIDTH}").Append(nl);
-			sb.Append($"     Y Distance: {FormatDelta(pm.deltaY),FIELD_WIDTH}").Append(nl);
+			sb.Append($"     X Distance: {FormatLengthNumber(pm.deltaX), FIELD_WIDTH}").Append(nl);
+			sb.Append($"     Y Distance: {FormatLengthNumber(pm.deltaY),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
 			{
-				sb.Append($"     Z Distance: {FormatDelta(pm.deltaZ),FIELD_WIDTH}").Append(nl);
+				sb.Append($"     Z Distance: {FormatLengthNumber(pm.deltaZ),FIELD_WIDTH}").Append(nl);
 			}
-			sb.Append($"    XY Distance: {FormatDelta(pm.distanceXY),FIELD_WIDTH}").Append(nl);
+			sb.Append($"    XY Distance: {FormatLengthNumber(pm.distanceXY),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
 			{
-				sb.Append($"   XYZ Distance: {FormatDelta(pm.distanceXYZ),FIELD_WIDTH}").Append(nl);
+				sb.Append($"   XYZ Distance: {FormatLengthNumber(pm.distanceXYZ),FIELD_WIDTH}").Append(nl);
 			}
 
 			return sb.ToString();
@@ -318,12 +320,12 @@ namespace TopoEdit
 
 		internal static string ListPoint(XYZ point, bool includeZ = true)
 		{
-			string result = $"x: {FormatDelta(point.X), FIELD_WIDTH} "
-				+ $"| y: {FormatDelta(point.Y), FIELD_WIDTH}";
+			string result = $"x: {FormatLengthNumber(point.X), FIELD_WIDTH} "
+				+ $"| y: {FormatLengthNumber(point.Y), FIELD_WIDTH}";
 
 			if (includeZ)
 			{
-				result += $" | z: {FormatDelta(point.Z), FIELD_WIDTH}";
+				result += $" | z: {FormatLengthNumber(point.Z), FIELD_WIDTH}";
 			}
 			return result;
 
@@ -368,6 +370,21 @@ namespace TopoEdit
 			return false;
 		}
 
+		internal static bool IsEqual(double a, double b)
+		{
+			return a.Equals(b);
+		}
+
+		internal static bool IsZero(double a, double tolerance)
+		{
+			return tolerance > Math.Abs(a);
+		}
+
+		internal static bool IsZero(double a)
+		{
+			return IsZero(a, Double.Epsilon);
+		}
+
 		internal static IntPtr GetWinHandle()
 		{
 			return Process.GetCurrentProcess().MainWindowHandle;
@@ -390,7 +407,7 @@ namespace TopoEdit
 
 
 
-	internal class PointMeasurements
+	internal struct PointMeasurements
 	{
 		internal XYZ P1 { get; }
 		internal  XYZ P2 { get; }
@@ -399,6 +416,8 @@ namespace TopoEdit
 		internal  double deltaY { get; }
 		internal  double deltaZ { get; }
 		internal  double distanceXY { get; }
+		internal  double distanceXZ { get; }
+		internal  double distanceYZ { get; }
 		internal  double distanceXYZ { get; }
 
 		internal PointMeasurements(XYZ p1, XYZ p2)
@@ -410,11 +429,15 @@ namespace TopoEdit
 			deltaY = p2.Y - p1.Y;
 			deltaZ = p2.Z - p1.Z;
 
-			double temp = deltaX * deltaX + deltaY * deltaY;
+			double sqX = deltaX * deltaX;
+			double sqY = deltaY * deltaY;
+			double sqZ = deltaZ * deltaZ;
 
-			distanceXY = Math.Sqrt(temp);
+			distanceXY = Math.Sqrt(sqX + sqY);
+			distanceXZ = Math.Sqrt(sqX + sqZ);
+			distanceYZ = Math.Sqrt(sqZ + sqY);
 
-			distanceXYZ = Math.Sqrt(temp + deltaZ * deltaZ);
+			distanceXYZ = Math.Sqrt(sqX + sqY + sqZ);
 		}
 
 	}

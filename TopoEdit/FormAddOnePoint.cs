@@ -83,7 +83,7 @@ namespace TopoEdit
 
 		private void FormatOneElevationDelta()
 		{
-			tbOneElevationDelta.Text = Util.FormatDelta(OneElevation);
+			tbOneElevationDelta.Text = Util.FormatLengthNumber(OneElevation);
 		}
 
 		// button methods

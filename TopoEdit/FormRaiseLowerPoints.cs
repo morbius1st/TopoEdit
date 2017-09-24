@@ -80,7 +80,7 @@ namespace TopoEdit
 
 		private void FormatRaiseLowerDelta()
 		{
-			tbRaiseLowerDelta.Text = Util.FormatDelta(RaiseLowerDistance);
+			tbRaiseLowerDelta.Text = Util.FormatLengthNumber(RaiseLowerDistance);
 			Settings.Default.Save();
 		}
 

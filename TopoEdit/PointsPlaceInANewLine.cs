@@ -51,11 +51,11 @@ namespace TopoEdit
 
 			try
 			{
-				startPoint = SiteUIUtils.GetPoint(uiDoc, topoSurface,
+				startPoint = SiteUIUtils.GetPointWithinTopo(uiDoc, topoSurface,
 					"Enter start point");
 				if (startPoint == null) return null;
 
-				endPoint = SiteUIUtils.GetPoint(uiDoc, topoSurface,
+				endPoint = SiteUIUtils.GetPointWithinTopo(uiDoc, topoSurface,
 					"Enter end point");
 				if (endPoint == null) return null;
 			}

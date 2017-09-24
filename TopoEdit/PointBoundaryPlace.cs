@@ -45,7 +45,7 @@ namespace TopoEdit
 			{
 				try
 				{
-					selectedPoint = SiteUIUtils.GetPoint(uiDoc, topoSurface,
+					selectedPoint = SiteUIUtils.GetPointWithinTopo(uiDoc, topoSurface,
 						"Enter new boundary point", false);
 
 					if (selectedPoint != null)

@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
-<!--  <AddIn Type="Command">-->
-<!--    <Text>Raise-Lower Points</Text>-->
-<!--    <Description>Raise or Lower Topo Points</Description>-->
-<!--    <Assembly>TopoEdit.dll</Assembly>-->
-<!--    <AddInId>3E8B248E-6A55-4491-BC05-DC4C5F90E662</AddInId>-->
-<!--    <FullClassName>TopoEdit.ModifyPoints</FullClassName>-->
-<!--    <VendorId>pro.cyberstudio</VendorId>-->
-<!--    <VendorDescription>CyberStudio</VendorDescription>-->
-<!--    <VisibilityMode>AlwaysVisible</VisibilityMode>-->
-<!--    <Discipline>Any</Discipline>-->
-<!--  </AddIn>-->
+  <AddIn Type="Command">
+    <Text>Measure Points</Text>
+    <Description>Measure Points</Description>
+    <Assembly>TopoEdit.dll</Assembly>
+    <AddInId>3E8B248E-6A55-4491-BC05-DC4C5F90E662</AddInId>
+    <FullClassName>TopoEdit.PointsMeasure</FullClassName>
+    <VendorId>pro.cyberstudio</VendorId>
+    <VendorDescription>CyberStudio</VendorDescription>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <Discipline>Any</Discipline>
+  </AddIn>
   <AddIn Type="Application">
     <Name>Application TopoEdit</Name>
     <Description>Tools to Edit Topo Surfaces</Description>

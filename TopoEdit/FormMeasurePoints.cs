@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TopoEdit.Properties;
 
+using static TopoEdit.Util;
+
 namespace TopoEdit
 {
 	public partial class FormMeasurePoints : Form
@@ -37,5 +39,25 @@ namespace TopoEdit
 			}
 		}
 
+		internal void UpdatePoints(PointMeasurements pm)
+		{
+			lblP1X.Text = FormatLengthNumber(pm.P1.X);
+			lblP1Y.Text = FormatLengthNumber(pm.P1.Y);
+			lblP1Z.Text = FormatLengthNumber(pm.P1.Z);
+
+			lblP2X.Text = FormatLengthNumber(pm.P2.X);
+			lblP2Y.Text = FormatLengthNumber(pm.P2.Y);
+			lblP2Z.Text = FormatLengthNumber(pm.P2.Z);
+
+			lblDistX.Text = FormatLengthNumber(pm.deltaX);
+			lblDistY.Text = FormatLengthNumber(pm.deltaY);
+			lblDistZ.Text = FormatLengthNumber(pm.deltaZ);
+
+			lblDistXY.Text = FormatLengthNumber(pm.distanceXY);
+			lblDistXZ.Text = FormatLengthNumber(pm.distanceXZ);
+			lblDistYZ.Text = FormatLengthNumber(pm.distanceYZ);
+
+			lblDistXYZ.Text = FormatLengthNumber(pm.distanceXYZ);
+		}
 	}
 }

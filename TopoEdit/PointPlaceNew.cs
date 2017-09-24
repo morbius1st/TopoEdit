@@ -86,7 +86,7 @@ namespace TopoEdit
 			{
 				try
 				{
-					point = SiteUIUtils.GetPoint(uiDoc,
+					point = SiteUIUtils.GetPointWithinTopo(uiDoc,
 						topoSurface, "select new point location or escape to finish");
 
 					if (point != null)

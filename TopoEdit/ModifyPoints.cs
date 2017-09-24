@@ -156,7 +156,7 @@ namespace TopoEdit
 									PointsQuery.Process(uiDoc, doc, topoSurface);
 									break;
 								case EnumFunctions.Type.MEASURE:
-									PointsMeasure.Process(uiDoc, doc, topoSurface);
+									PointsMeasure.Process(uiDoc, doc);
 									break;
 							}
 							
