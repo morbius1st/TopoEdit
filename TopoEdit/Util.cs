@@ -126,7 +126,7 @@ namespace TopoEdit
 			MessageBox.Show(st.ToString(), "Revit", MessageBoxButtons.OK);
 		}
 
-		private static String GetParameterInformation(Parameter para, Document document)
+		internal static String GetParameterInformation(Parameter para, Document document)
 		{
 			string defName = para.Definition.Name + "\t";
 			// Use different method to get parameter data according to the storage type
@@ -291,11 +291,11 @@ namespace TopoEdit
 
 			sb.Append (" First Point: ").Append(ListPoint(point1, includeZ)).Append(nl);
 			sb.Append ("Second Point: ").Append(ListPoint(point2, includeZ)).Append(nl);
-			sb.Append($"     X Distance: {FormatLengthNumber(pm.deltaX), FIELD_WIDTH}").Append(nl);
-			sb.Append($"     Y Distance: {FormatLengthNumber(pm.deltaY),FIELD_WIDTH}").Append(nl);
+			sb.Append($"     X Distance: {FormatLengthNumber(pm.delta.X), FIELD_WIDTH}").Append(nl);
+			sb.Append($"     Y Distance: {FormatLengthNumber(pm.delta.Y),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
 			{
-				sb.Append($"     Z Distance: {FormatLengthNumber(pm.deltaZ),FIELD_WIDTH}").Append(nl);
+				sb.Append($"     Z Distance: {FormatLengthNumber(pm.delta.Z),FIELD_WIDTH}").Append(nl);
 			}
 			sb.Append($"    XY Distance: {FormatLengthNumber(pm.distanceXY),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
@@ -370,6 +370,74 @@ namespace TopoEdit
 			return false;
 		}
 
+		internal enum VTypeSub
+		{
+			OTHER,
+			D2_HORIZONTAL,
+			D2_VERTICAL,
+			D2_DRAFTING,
+			D2_SHEET,
+			D3_VIEW
+		}
+
+		internal enum VTtypeCat
+		{
+			OTHER,
+			D2_WITHPLANE,
+			D2_WITHOUTPLANE,
+		}
+
+		internal struct VType
+		{
+			internal VTypeSub VTSub { get;} 
+			internal VTtypeCat VTCat { get; }
+			internal string VTName { get; }
+
+			internal VType(VTypeSub VTSub, VTtypeCat VTCat, string VTName )
+			{
+				this.VTSub = VTSub;
+				this.VTCat = VTCat;
+				this.VTName = VTName;
+			}
+		}
+
+		internal static VType GetViewType(Autodesk.Revit.DB.View v)
+		{
+			VType vtype = new VType(VTypeSub.OTHER, VTtypeCat.OTHER, "Other View Type");
+
+			switch (v.ViewType)
+			{
+				case ViewType.AreaPlan:
+				case ViewType.CeilingPlan:
+				case ViewType.EngineeringPlan:
+				case ViewType.FloorPlan:
+					vtype = new VType(VTypeSub.D2_HORIZONTAL, 
+						VTtypeCat.D2_WITHOUTPLANE, "Plan 2D View");
+					break;
+				case ViewType.Elevation:
+				case ViewType.Section:
+					vtype = new VType(VTypeSub.D2_VERTICAL, 
+						VTtypeCat.D2_WITHPLANE, "Vertical 2D View");
+					break;
+				case ViewType.ThreeD:
+					vtype = new VType(VTypeSub.D3_VIEW, 
+						VTtypeCat.OTHER, "3D View");
+					break;
+				case ViewType.Detail:
+				case ViewType.DraftingView:
+					vtype = new VType(VTypeSub.D2_DRAFTING, 
+						VTtypeCat.D2_WITHOUTPLANE, "Drawing View");
+					break;
+				case ViewType.DrawingSheet:
+					vtype = new VType(VTypeSub.D2_SHEET, 
+						VTtypeCat.D2_WITHOUTPLANE, "Drawing Sheet View");
+					break;
+			}
+
+			return vtype;
+		}
+
+
 		internal static bool IsEqual(double a, double b)
 		{
 			return a.Equals(b);
@@ -412,34 +480,48 @@ namespace TopoEdit
 		internal XYZ P1 { get; }
 		internal  XYZ P2 { get; }
 
-		internal  double deltaX { get; }
-		internal  double deltaY { get; }
-		internal  double deltaZ { get; }
-		internal  double distanceXY { get; }
-		internal  double distanceXZ { get; }
-		internal  double distanceYZ { get; }
-		internal  double distanceXYZ { get; }
+		internal XYZ delta { get; }
+		private XYZ sqDelta;
+
+//		internal double deltaX { get; }
+//		internal double deltaY { get; }
+//		internal double deltaZ { get; }
+		internal double distanceXY { get; }
+		internal double distanceXZ { get; }
+		internal double distanceYZ { get; }
+		internal double distanceXYZ { get; }
 
 		internal PointMeasurements(XYZ p1, XYZ p2)
 		{
 			P1 = p1;
 			P2 = p2;
 
-			deltaX = p2.X - p1.X;
-			deltaY = p2.Y - p1.Y;
-			deltaZ = p2.Z - p1.Z;
+			delta = p2 - p1;
+			sqDelta = delta.Multiply(delta);
 
-			double sqX = deltaX * deltaX;
-			double sqY = deltaY * deltaY;
-			double sqZ = deltaZ * deltaZ;
+//			deltaX = p2.X - p1.X;
+//			deltaY = p2.Y - p1.Y;
+//			deltaZ = p2.Z - p1.Z;
+//
+//			double sqX = deltaX * deltaX;
+//			double sqY = deltaY * deltaY;
+//			double sqZ = deltaZ * deltaZ;
 
-			distanceXY = Math.Sqrt(sqX + sqY);
-			distanceXZ = Math.Sqrt(sqX + sqZ);
-			distanceYZ = Math.Sqrt(sqZ + sqY);
+			distanceXY = Math.Sqrt(sqDelta.X + sqDelta.Y);
+			distanceXZ = Math.Sqrt(sqDelta.X + sqDelta.Z);
+			distanceYZ = Math.Sqrt(sqDelta.Y + sqDelta.Z);
 
-			distanceXYZ = Math.Sqrt(sqX + sqY + sqZ);
+			distanceXYZ = Math.Sqrt(sqDelta.X + sqDelta.Y + sqDelta.Z);
 		}
 
+	}
+
+	static class XYZExtensions
+	{
+		public static XYZ Multiply(this XYZ point, XYZ multiplier)
+		{
+			return new XYZ(point.X * multiplier.X, point.Y * multiplier.Y, point.Z * multiplier.Z);
+		}
 	}
 	
 

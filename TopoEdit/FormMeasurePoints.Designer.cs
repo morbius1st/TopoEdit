@@ -58,6 +58,7 @@
 			this.lblDistXZ = new System.Windows.Forms.Label();
 			this.lblAlongXZaxis = new System.Windows.Forms.Label();
 			this.lblMessage = new System.Windows.Forms.Label();
+			this.lblMessage2 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// btnDone
@@ -65,7 +66,7 @@
 			this.btnDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnDone.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.btnDone.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnDone.Location = new System.Drawing.Point(432, 219);
+			this.btnDone.Location = new System.Drawing.Point(432, 242);
 			this.btnDone.Name = "btnDone";
 			this.btnDone.Size = new System.Drawing.Size(90, 30);
 			this.btnDone.TabIndex = 1;
@@ -77,7 +78,7 @@
 			this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnSelect.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.btnSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSelect.Location = new System.Drawing.Point(331, 219);
+			this.btnSelect.Location = new System.Drawing.Point(331, 242);
 			this.btnSelect.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
 			this.btnSelect.Name = "btnSelect";
 			this.btnSelect.Size = new System.Drawing.Size(90, 30);
@@ -344,10 +345,19 @@
 			// 
 			// lblMessage
 			// 
-			this.lblMessage.Location = new System.Drawing.Point(12, 229);
+			this.lblMessage.Location = new System.Drawing.Point(12, 227);
 			this.lblMessage.Name = "lblMessage";
 			this.lblMessage.Size = new System.Drawing.Size(305, 13);
 			this.lblMessage.TabIndex = 38;
+			this.lblMessage.Text = "x";
+			// 
+			// lblMessage2
+			// 
+			this.lblMessage2.Location = new System.Drawing.Point(12, 252);
+			this.lblMessage2.Name = "lblMessage2";
+			this.lblMessage2.Size = new System.Drawing.Size(305, 13);
+			this.lblMessage2.TabIndex = 39;
+			this.lblMessage2.Text = "x";
 			// 
 			// FormMeasurePoints
 			// 
@@ -356,6 +366,7 @@
 			this.CancelButton = this.btnDone;
 			this.ClientSize = new System.Drawing.Size(534, 284);
 			this.ControlBox = false;
+			this.Controls.Add(this.lblMessage2);
 			this.Controls.Add(this.lblMessage);
 			this.Controls.Add(this.lblDistXY);
 			this.Controls.Add(this.lblAlongXYaxis);
@@ -429,5 +440,6 @@
 		internal System.Windows.Forms.Label lblDistXZ;
 		private System.Windows.Forms.Label lblAlongXZaxis;
 		internal System.Windows.Forms.Label lblMessage;
+		internal System.Windows.Forms.Label lblMessage2;
 	}
 }

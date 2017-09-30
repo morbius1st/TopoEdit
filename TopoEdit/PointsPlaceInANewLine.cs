@@ -1,12 +1,6 @@
 ﻿#region Using directives
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
@@ -64,12 +58,22 @@ namespace TopoEdit
 				return null;
 			}
 
-			Line geomLine = Line.CreateBound(new XYZ(startPoint.X, startPoint.Y, 0.0), 
+			Line geomLine = Line.CreateBound(
+				new XYZ(startPoint.X, startPoint.Y, 0.0), 
 				new XYZ(endPoint.X, endPoint.Y, 0.0));
+
+
+//			ElementId eid = ModifyPoints.GLineStyles[ModifyPoints.GLineStyles.Count - 1].elementid;
+//
+//			geomLine.SetGraphicsStyleId(eid);
+
+
 
 //			geomLine.SetGraphicsStyleId(ModifyPoints.ls.Id);
 
 			Plane geomPlane = Plane.Create(new Frame());
+
+			ModelLine line = null;
 
 			using (Transaction t = new Transaction(doc, "test")) 
 			{
@@ -78,16 +82,23 @@ namespace TopoEdit
 				// created geometry line and sketch plane
 				SketchPlane sp = SketchPlane.Create(doc, geomPlane);
 
-				ModelLine line = doc.Create.NewModelCurve(geomLine, sp) as ModelLine;
-
-				
-
-				
+				line = doc.Create.NewModelCurve(geomLine, sp) as ModelLine;
 
 				t.Commit();
-
-				return line;
 			}
+
+			using (Transaction t = new Transaction(doc, "test2"))
+			{
+				t.Start();
+
+				GraphicsStyle ls = (GraphicsStyle) ModifyPoints.GLineStyles[0].element;
+
+				line.LineStyle = ls;
+
+				t.Commit();
+			}
+
+			return line;
 
 		}
 	}
