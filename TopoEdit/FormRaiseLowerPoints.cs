@@ -70,10 +70,11 @@ namespace TopoEdit
 			tbRaiseLowerDelta.SelectAll();
 		}
 
+		// custom methods
 		private void tbRaiseLowerDeltaLeave()
 		{
 			RaiseLowerDistance = 
-				Util.ParseDelta(tbRaiseLowerDelta.Text);
+				Util.ParseElevation(tbRaiseLowerDelta.Text);
 
 			FormatRaiseLowerDelta();
 		}

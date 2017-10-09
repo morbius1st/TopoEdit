@@ -1,6 +1,6 @@
 ﻿namespace TopoEdit
 {
-	partial class FormTopoEditMain
+	partial class FormModifyPointsMain
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -189,7 +189,7 @@
 			this.btnMeasure.UseVisualStyleBackColor = true;
 			this.btnMeasure.Click += new System.EventHandler(this.btnMeasure_Click);
 			// 
-			// FormTopoEditMain
+			// FormModifyPointsMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -209,7 +209,7 @@
 			this.Controls.Add(this.RaiseLower);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.MinimumSize = new System.Drawing.Size(440, 400);
-			this.Name = "FormTopoEditMain";
+			this.Name = "FormModifyPointsMain";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Edit Toposurface";

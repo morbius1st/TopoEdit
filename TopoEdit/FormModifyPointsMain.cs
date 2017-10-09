@@ -1,33 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.Revit.DB.Architecture;
-using Autodesk.Revit.UI;
 using TopoEdit.Properties;
-using static TopoEdit.EnumFunctions;
+using static TopoEdit.ModifyPointsFunctions;
+using static TopoEdit.Util;
 
 namespace TopoEdit
 {
-	public partial class FormTopoEditMain : Form
+	public partial class FormModifyPointsMain : Form
 	{
-		internal static EnumFunctions function;
+		internal static ModifyPointsFunctions function;
 
 		private bool moving = false;
 		private Point lastPos;
+		private TopographySurface _topoSurface;
 
-		public FormTopoEditMain()
+		public FormModifyPointsMain()
 		{
 			InitializeComponent();
 		}
 
-		internal TopographySurface topoSurface { get; set; }
+		// custom methods
+		internal TopographySurface TopoSurface {
+			get { return _topoSurface; }
+			set
+			{
+				_topoSurface = value;
+				TopoSurfaceName = TopoSurface.GetName() + "(" + TopoSurface.Name + ")";
+			}
+		}
 
 		internal string TopoSurfaceName
 		{
@@ -36,6 +38,12 @@ namespace TopoEdit
 			set { lblTopoName.Text = value; }
 		}
 
+		internal void ConfigureButtons(Util.VType vType)
+		{
+			btnPlacePointsNewLine.Enabled = vType.VTSub != VTypeSub.D3_VIEW;
+		}
+
+		// form methods
 		private void FormTopoEditMain_Load(object sender, EventArgs e)
 		{
 			if (Settings.Default.FormMainLocation.Equals(new Point(0, 0)))
@@ -56,7 +64,7 @@ namespace TopoEdit
 		}
 
 
-		// buttons
+		// control methods
 		private void btnCancelAllAndExit_Click(object sender, EventArgs e)
 		{
 			function = CANCEL;

@@ -41,18 +41,18 @@
 			this.lblRaiseLowerLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblRaiseLowerLable.Location = new System.Drawing.Point(12, 35);
 			this.lblRaiseLowerLable.Name = "lblRaiseLowerLable";
-			this.lblRaiseLowerLable.Size = new System.Drawing.Size(165, 20);
+			this.lblRaiseLowerLable.Size = new System.Drawing.Size(162, 20);
 			this.lblRaiseLowerLable.TabIndex = 0;
 			this.lblRaiseLowerLable.Text = "Elevation Change Amount:";
-			this.lblRaiseLowerLable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.lblRaiseLowerLable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// tbRaiseLowerDelta
 			// 
 			this.tbRaiseLowerDelta.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.tbRaiseLowerDelta.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbRaiseLowerDelta.Location = new System.Drawing.Point(208, 39);
+			this.tbRaiseLowerDelta.Location = new System.Drawing.Point(192, 39);
 			this.tbRaiseLowerDelta.Name = "tbRaiseLowerDelta";
-			this.tbRaiseLowerDelta.Size = new System.Drawing.Size(109, 13);
+			this.tbRaiseLowerDelta.Size = new System.Drawing.Size(125, 13);
 			this.tbRaiseLowerDelta.TabIndex = 1;
 			this.tbRaiseLowerDelta.Text = "  0";
 			this.tbRaiseLowerDelta.WordWrap = false;
@@ -89,9 +89,9 @@
 			// lblBogusBackground
 			// 
 			this.lblBogusBackground.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.lblBogusBackground.Location = new System.Drawing.Point(208, 35);
+			this.lblBogusBackground.Location = new System.Drawing.Point(192, 35);
 			this.lblBogusBackground.Name = "lblBogusBackground";
-			this.lblBogusBackground.Size = new System.Drawing.Size(109, 22);
+			this.lblBogusBackground.Size = new System.Drawing.Size(125, 22);
 			this.lblBogusBackground.TabIndex = 4;
 			this.lblBogusBackground.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 

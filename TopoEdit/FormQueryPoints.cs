@@ -20,20 +20,20 @@ namespace TopoEdit
 
 		private void FormQueryPoints_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Settings.Default.FormQueryLocation = this.Location;
+			Settings.Default.FormMeasurePointsLocation = this.Location;
 
 			Settings.Default.Save();
 		}
 
 		private void FormQueryPoints_Load(object sender, EventArgs e)
 		{
-			if (Settings.Default.FormQueryLocation.Equals(new Point(0, 0)))
+			if (Settings.Default.FormMeasurePointsLocation.Equals(new Point(0, 0)))
 			{
 				CenterToParent();
 			}
 			else
 			{
-				this.Location = Settings.Default.FormQueryLocation;
+				this.Location = Settings.Default.FormMeasurePointsLocation;
 			}
 		}
 

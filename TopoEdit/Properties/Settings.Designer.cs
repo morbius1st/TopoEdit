@@ -50,12 +50,12 @@ namespace TopoEdit.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point FormQueryLocation {
+        public global::System.Drawing.Point FormMeasurePointsLocation {
             get {
-                return ((global::System.Drawing.Point)(this["FormQueryLocation"]));
+                return ((global::System.Drawing.Point)(this["FormMeasurePointsLocation"]));
             }
             set {
-                this["FormQueryLocation"] = value;
+                this["FormMeasurePointsLocation"] = value;
             }
         }
         
@@ -92,6 +92,90 @@ namespace TopoEdit.Properties {
             }
             set {
                 this["OneElevation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MeasurePointsShowWorkplane {
+            get {
+                return ((bool)(this["MeasurePointsShowWorkplane"]));
+            }
+            set {
+                this["MeasurePointsShowWorkplane"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FormAddPointsByLineLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FormAddPointsByLineLocation"]));
+            }
+            set {
+                this["FormAddPointsByLineLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ContourInterval {
+            get {
+                return ((double)(this["ContourInterval"]));
+            }
+            set {
+                this["ContourInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepGuideLine {
+            get {
+                return ((bool)(this["KeepGuideLine"]));
+            }
+            set {
+                this["KeepGuideLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EvenlySpaced {
+            get {
+                return ((bool)(this["EvenlySpaced"]));
+            }
+            set {
+                this["EvenlySpaced"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double StartZ {
+            get {
+                return ((double)(this["StartZ"]));
+            }
+            set {
+                this["StartZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double EndZ {
+            get {
+                return ((double)(this["EndZ"]));
+            }
+            set {
+                this["EndZ"] = value;
             }
         }
     }

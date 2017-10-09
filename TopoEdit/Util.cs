@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
@@ -17,13 +18,21 @@ namespace TopoEdit
 {
 	class Util
 	{
-		public static string nl = Environment.NewLine; 
+		public static readonly string nl = Environment.NewLine; 
 	
 		internal const double TOLERANCE = 0.000001;
-		
-		const int FIELD_WIDTH = 12;
-		const string NAMESPACE_PREFIX = "TopoEdit.Resources.Images";
+
+		private const int FIELD_WIDTH = 12;
+		private const string NAMESPACE_PREFIX = "TopoEdit.Resources.Images";
+
+		internal const ObjectSnapTypes snaps =
+			ObjectSnapTypes.Centers | ObjectSnapTypes.Endpoints | ObjectSnapTypes.Intersections |
+			ObjectSnapTypes.Midpoints | ObjectSnapTypes.Nearest | ObjectSnapTypes.Perpendicular |
+			ObjectSnapTypes.Quadrants | ObjectSnapTypes.Tangents;
+
 		static Units docUnits;
+
+		internal static List<GraphicsStyle> GLineStyles = new List<GraphicsStyle>();
 
 		internal static Units DocUnits
 		{
@@ -49,7 +58,7 @@ namespace TopoEdit
 				UnitType.UT_Length, length, true, false);
 		}
 
-		public static double ParseDelta(string delta)
+		public static double ParseElevation(string delta)
 		{
 			double result;
 
@@ -59,12 +68,42 @@ namespace TopoEdit
 				return result;
 			}
 
-			return 0;
+			return Double.NaN;
+		}
+
+		internal static ModelLine DrawModelLine(Document doc, 
+			XYZ startPoint, XYZ endPoint, GraphicsStyle style)
+		{
+			ModelLine ml;
+
+			using (Transaction t = new Transaction(doc, "draw line")) 
+			{
+				t.Start();
+
+				Line l = Line.CreateBound(startPoint, endPoint);
+
+				// Create a ModelLine using the 
+				// created geometry line and sketch plane
+				Plane p = Plane.Create(new Frame());
+				SketchPlane sp = SketchPlane.Create(doc, p);
+
+				ml = doc.Create.NewModelCurve(l, sp) as ModelLine;
+
+				// this technically can work but not within a topo edit session
+				// in an edit session, this will cause an exception
+				if (style != null)
+				{
+					ml.LineStyle = style;
+				}
+				t.Commit();
+			}
+
+			return ml;
 		}
 
 		internal static double DistanceBetweenPointsXY(XYZ point1, XYZ point2)
 		{
-			return new PointMeasurements(point1, point2).distanceXY;
+			return new PointMeasurements(point1, point2, XYZ.Zero).distanceXY;
 		}
 
 		// load an image from embeded resource
@@ -88,14 +127,32 @@ namespace TopoEdit
 			return new PickedBox2(uiDoc.Selection.PickBox(style, prompt), true);
 		}
 
+		internal static void PickAPoint(UIDocument uiDoc)
+		{
+			try
+			{
+				while (true)
+				{
+					Reference r = uiDoc.Selection.PickObject(ObjectType.PointOnElement);
+
+					LogMsgln("ref: " + ListPoint(r.GlobalPoint));
+				}
+			}
+			catch
+			{
+				
+			}
+		}
+
+
 		// gets a string based the parameter information provided
-		internal static string GetParameter(Element elem, string name,
+		internal static string GetParameterAsString(Element elem, string name,
 			BuiltInParameterGroup group, ParameterType type)
 		{
 			foreach (Parameter param in elem.Parameters)
 			{
 				if (param.Definition.Name.Equals(name) &&
-					param.Definition.ParameterGroup.Equals(@group) &&
+					param.Definition.ParameterGroup.Equals(group) &&
 					param.Definition.ParameterType.Equals(type))
 				{
 					return param.AsString();
@@ -103,6 +160,38 @@ namespace TopoEdit
 			}
 
 			return null;
+		}
+
+		// gets a string based the parameter information provided
+		internal static ElementId GetParameterAsElementId(Element elem, string name,
+			BuiltInParameterGroup group, ParameterType type)
+		{
+			foreach (Parameter param in elem.Parameters)
+			{
+				if (param.Definition.Name.Equals(name) &&
+					param.Definition.ParameterGroup.Equals(group) &&
+					param.Definition.ParameterType.Equals(type))
+				{
+					return param.AsElementId();
+				}
+			}
+
+			return null;
+		}
+
+		internal static void SetParameterElementId(Element elem, string name,
+			BuiltInParameterGroup group, ParameterType type, ElementId eid)
+		{
+			foreach (Parameter param in elem.Parameters)
+			{
+				if (param.Definition.Name.Equals(name) &&
+					param.Definition.ParameterGroup.Equals(group) &&
+					param.Definition.ParameterType.Equals(type))
+				{
+					param.Set(eid);
+					break;
+				}
+			}
 		}
 
 		// show the parameter information for the element
@@ -262,8 +351,121 @@ namespace TopoEdit
 					continue;
 				}
 				Debug.WriteLine("GeoObj is a other");
-
 			}
+		}
+
+		internal static bool GetLineStyles(Document doc)
+		{
+			View av = doc.ActiveView;
+
+			VType vt = GetViewType(av);
+
+			if (vt.VTCat == VTtypeCat.OTHER)
+			{
+				return false;
+			}
+
+			if (vt.VTSub == VTypeSub.D3_VIEW)
+			{
+				getLineStylesViaModelLine(doc, av);
+			}
+			else
+			{
+				getLineStylesViaDetailLine(doc, av);
+			}
+
+			if (GLineStyles == null) { return false; }
+
+			return true;
+		}
+
+		private static void getLineStylesViaModelLine(Document doc, View av)
+		{
+			try
+			{
+				using (Transaction t = new Transaction(doc, "get line styles"))
+				{
+					t.Start();
+
+					Plane p = Plane.Create(new Frame());
+					SketchPlane sp = SketchPlane.Create(doc, p);
+					Line l = Line.CreateBound(p.Origin, new XYZ(1, 1, p.Origin.Z));
+
+					ModelLine ml = 
+						doc.Create.NewModelCurve(l, sp) as ModelLine;
+
+					foreach (ElementId eid in ml.GetLineStyleIds())
+					{
+						GLineStyles.Add(doc.GetElement(eid) as GraphicsStyle);
+					}
+					t.Commit();
+				}
+			}
+			catch
+			{
+				GLineStyles = null;
+			}
+		}
+
+		private static void getLineStylesViaDetailLine(Document doc, View av)
+		{
+			try
+			{
+				using (Transaction t = new Transaction(doc, "get line styles"))
+				{
+					t.Start();
+
+					Line l = Line.CreateBound(av.Origin, new XYZ(1, 1, av.Origin.Z));
+
+					DetailLine dl = 
+						doc.Create.NewDetailCurve(doc.ActiveView, l) as DetailLine;
+
+					foreach (ElementId eid in dl.GetLineStyleIds())
+					{
+						GLineStyles.Add(doc.GetElement(eid) as GraphicsStyle);
+					}
+					t.Commit();
+				}
+			}
+			catch
+			{
+				GLineStyles = null;
+			}
+		}
+
+
+		internal static void GetElements(Document doc)
+		{
+			StringBuilder sb = new StringBuilder("all elements");
+
+			FilteredElementCollector elems = new FilteredElementCollector(doc).WhereElementIsElementType();
+			FilteredElementCollector notelems = new FilteredElementCollector(doc).WhereElementIsNotElementType();
+			FilteredElementCollector allelems = elems.UnionWith(notelems);
+
+			ICollection<Element> found = allelems.ToElements();
+
+			// found now has all elements in the database;
+
+			foreach (Element el in found)
+			{
+				string name = el.Name.ToLower();
+				string type = el.GetType().Name.ToLower();
+
+				if (name.Contains("view") || name.Contains("title") || name.Contains("label")
+					|| type.Contains("view") || type.Contains("title") || type.Contains("label"))
+				{
+					sb.Append("element: ")
+						.Append(el.Name)
+						.Append(" type: ")
+						.Append(el.GetType())
+						.Append("  el number: ")
+						.Append(el.Id)
+						.Append(nl);
+				}
+			}
+
+			LogMsgln(sb.ToString());
+
 		}
 
 		internal static void ListEdges(IList<Tuple<XYZ, XYZ>> edges)
@@ -287,7 +489,7 @@ namespace TopoEdit
 		{
 			StringBuilder sb =
 				new StringBuilder("Measurement Information for Points:").Append(nl).Append(nl);
-			PointMeasurements pm = new PointMeasurements(point1, point2);
+			PointMeasurements pm = new PointMeasurements(point1, point2, XYZ.Zero);
 
 			sb.Append (" First Point: ").Append(ListPoint(point1, includeZ)).Append(nl);
 			sb.Append ("Second Point: ").Append(ListPoint(point2, includeZ)).Append(nl);
@@ -347,11 +549,21 @@ namespace TopoEdit
 				Debug.WriteLine(message);
 			}
 		}
+		
+		internal static void ListLineStyles(Document doc)
+		{
+//			Util.GetLineStyles(doc);
 
+			// show the list of valid graphics styles for a line
+			foreach (GraphicsStyle gs in GLineStyles)
+			{
+				LogMsgln("  name: " + gs.Name + "  id: " + gs.Id.IntegerValue);
+			}
+		}
 
 		// determine if the supplied list contains the supplied point
 		// within tolerance - and only test the X / Y values - set Z to 0
-		internal static bool ContainsPoint(IList<XYZ> points, XYZ point)
+		internal static bool IncludesPoint(IList<XYZ> points, XYZ point)
 		{
 			XYZ listPoint;
 			XYZ testPoint = new XYZ(point.X, point.Y, 0);
@@ -370,6 +582,19 @@ namespace TopoEdit
 			return false;
 		}
 
+		internal static IntPtr GetWinHandle()
+		{
+			return Process.GetCurrentProcess().MainWindowHandle;
+		}
+
+		internal enum VTtypeCat
+		{
+			OTHER,
+			D2_WITHPLANE,
+			D2_WITHOUTPLANE,
+			D3_WITHPLANE
+		}
+
 		internal enum VTypeSub
 		{
 			OTHER,
@@ -378,13 +603,6 @@ namespace TopoEdit
 			D2_DRAFTING,
 			D2_SHEET,
 			D3_VIEW
-		}
-
-		internal enum VTtypeCat
-		{
-			OTHER,
-			D2_WITHPLANE,
-			D2_WITHOUTPLANE,
 		}
 
 		internal struct VType
@@ -412,7 +630,7 @@ namespace TopoEdit
 				case ViewType.EngineeringPlan:
 				case ViewType.FloorPlan:
 					vtype = new VType(VTypeSub.D2_HORIZONTAL, 
-						VTtypeCat.D2_WITHOUTPLANE, "Plan 2D View");
+						VTtypeCat.D2_WITHPLANE, "Plan 2D View");
 					break;
 				case ViewType.Elevation:
 				case ViewType.Section:
@@ -421,42 +639,22 @@ namespace TopoEdit
 					break;
 				case ViewType.ThreeD:
 					vtype = new VType(VTypeSub.D3_VIEW, 
-						VTtypeCat.OTHER, "3D View");
+						VTtypeCat.D3_WITHPLANE, "3D View");
 					break;
 				case ViewType.Detail:
 				case ViewType.DraftingView:
 					vtype = new VType(VTypeSub.D2_DRAFTING, 
-						VTtypeCat.D2_WITHOUTPLANE, "Drawing View");
+						VTtypeCat.D2_WITHOUTPLANE, "Drafting View");
 					break;
 				case ViewType.DrawingSheet:
 					vtype = new VType(VTypeSub.D2_SHEET, 
-						VTtypeCat.D2_WITHOUTPLANE, "Drawing Sheet View");
+						VTtypeCat.D2_WITHOUTPLANE, "Sheet View");
 					break;
 			}
 
 			return vtype;
 		}
 
-
-		internal static bool IsEqual(double a, double b)
-		{
-			return a.Equals(b);
-		}
-
-		internal static bool IsZero(double a, double tolerance)
-		{
-			return tolerance > Math.Abs(a);
-		}
-
-		internal static bool IsZero(double a)
-		{
-			return IsZero(a, Double.Epsilon);
-		}
-
-		internal static IntPtr GetWinHandle()
-		{
-			return Process.GetCurrentProcess().MainWindowHandle;
-		}
 	}
 
 	public class JtWinHandle : IWin32Window
@@ -472,8 +670,6 @@ namespace TopoEdit
 
 		public IntPtr Handle { get; }
 	}
-
-
 
 	internal struct PointMeasurements
 	{
@@ -491,10 +687,10 @@ namespace TopoEdit
 		internal double distanceYZ { get; }
 		internal double distanceXYZ { get; }
 
-		internal PointMeasurements(XYZ p1, XYZ p2)
+		internal PointMeasurements(XYZ p1, XYZ p2, XYZ origin)
 		{
-			P1 = p1;
-			P2 = p2;
+			P1 = p1 - origin;
+			P2 = p2 - origin;
 
 			delta = p2 - p1;
 			sqDelta = delta.Multiply(delta);
@@ -520,10 +716,10 @@ namespace TopoEdit
 	{
 		public static XYZ Multiply(this XYZ point, XYZ multiplier)
 		{
+			
 			return new XYZ(point.X * multiplier.X, point.Y * multiplier.Y, point.Z * multiplier.Z);
 		}
 	}
-	
 
 	static class IListExtensions
 	{
@@ -543,6 +739,24 @@ namespace TopoEdit
 				}
 			}
 			return false;
+		}
+	}
+
+	static class DoubleExtensions
+	{
+		public static bool IsZero(this Double d, double tolerance)
+		{
+			return tolerance > Math.Abs(d);
+		}
+
+		public static bool IsZero(this Double d)
+		{
+			return Double.Epsilon > Math.Abs(d);
+		}
+
+		public static bool Equals(this Double d1, double d2)
+		{
+			return d1.Equals(d2);
 		}
 	}
 

@@ -58,7 +58,17 @@ namespace TopoEdit
 		private static void QueryPts(UIDocument uiDoc, Document doc,
 			TopographySurface topoSurface)
 		{
-			_form.lblPointsInfo.ResetText();
+			bool collectPointsAboveCutPlane = false;
+
+			_form.tbPointsInfo.ResetText();
+
+			VType vType = Util.GetViewType(doc.ActiveView);
+
+			if (vType.VTSub != VTypeSub.D3_VIEW)
+			{
+				collectPointsAboveCutPlane = true;
+			}
+
 
 			PickedBox2 picked = Util.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 
@@ -75,14 +85,14 @@ namespace TopoEdit
 
 				double avgZ = 0;
 
-
 				StringBuilder sb = new StringBuilder();
 
 				sb.Append("    total points: ").Append(points.Count).Append(nl).Append(nl);
 				foreach (XYZ xyz in points)
 				{
-					sb.AppendFormat("{0} | x:{1,12:F4} | y:{2,12:F4} | z:{3,12:F4}",
-						idx++, xyz.X, xyz.Y, xyz.Z).Append(nl);
+					sb.AppendFormat($"{idx++, -4}|  ");
+					sb.Append(ListPoint(xyz));
+					sb.Append(nl);
 
 					if (xyz.Z > maxZ) maxZ = xyz.Z;
 					if (xyz.Z < minZ) minZ = xyz.Z;
@@ -95,11 +105,11 @@ namespace TopoEdit
 				sb.AppendFormat("maximum Z | {0,12:F4}", maxZ).Append(nl);
 				sb.AppendFormat("average Z | {0,12:F4}", avgZ).Append(nl);
 
-				_form.lblPointsInfo.Text = sb.ToString();
+				_form.tbPointsInfo.Text = sb.ToString();
 			}
 			else
 			{
-				_form.lblPointsInfo.Text = "no points selected";
+				_form.tbPointsInfo.Text = "no points selected";
 			}
 
 			

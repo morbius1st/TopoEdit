@@ -22,7 +22,7 @@ namespace TopoEdit
 		/// <returns>The selected TopographySurface.</returns>
 		public static TopographySurface PickTopographySurface(UIDocument uiDoc)
 		{
-			TopoSurfaceExtension._boundaryPointsValid = false;
+			TopoSurfaceExtension.BoundaryPointsValid = false;
 
 			Reference toposurfRef = uiDoc.Selection.PickObject(ObjectType.Element,
 				new TopographySurfaceSelectionFilter(),
@@ -33,13 +33,13 @@ namespace TopoEdit
 		}
 
 		internal static TopographySurface GetTopoSurface(UIDocument uiDoc,
-			Document doc, FormTopoEditMain form)
+			Document doc, FormModifyPointsMain form)
 		{
 			TopographySurface topoSurface;
 
 			try
 			{
-				if (form.topoSurface == null)
+				if (form.TopoSurface == null)
 				{
 					// Find toposurfaces
 					FilteredElementCollector tsCollector = new FilteredElementCollector(doc);
@@ -58,13 +58,11 @@ namespace TopoEdit
 						topoSurface = tsEnumerable.First<TopographySurface>();
 					}
 
-					form.topoSurface = topoSurface;
-
-					form.TopoSurfaceName = topoSurface.GetName() + " ( " + topoSurface.Name + " )";
+					form.TopoSurface = topoSurface;
 				}
 				else
 				{
-					topoSurface = form.topoSurface;
+					topoSurface = form.TopoSurface;
 				}
 
 			}
@@ -89,7 +87,7 @@ namespace TopoEdit
 				{
 					again = false;
 
-					point = uiDoc.Selection.PickPoint(message);
+					point = uiDoc.Selection.PickPoint(snaps, message);
 
 					if (interiorRequired && !topoSurface.IsInteriorPoint(point))
 					{
@@ -379,14 +377,14 @@ namespace TopoEdit
 			return point1;
 		}
 
-		internal static IList<XYZ> _boundaryPoints;
-		internal static bool _boundaryPointsValid = false;
+		internal static IList<XYZ> BoundaryPoints;
+		internal static bool BoundaryPointsValid = false;
 
 		internal static IList<XYZ> GetBoundaryPointsOrdered(this TopographySurface ts)
 		{
-			if (_boundaryPointsValid) { return _boundaryPoints; }
+			if (BoundaryPointsValid) { return BoundaryPoints; }
 
-			_boundaryPoints = null;
+			BoundaryPoints = null;
 
 			GeometryElement geoElem = ts.get_Geometry(new Options());
 
@@ -398,16 +396,16 @@ namespace TopoEdit
 				if (m != null)
 				{
 					// found mesh
-					_boundaryPoints = SequenceVertices(ProcessTriangles(m));
-					_boundaryPointsValid = true;
+					BoundaryPoints = SequenceVertices(ProcessTriangles(m));
+					BoundaryPointsValid = true;
 				}
 			}
-			return _boundaryPoints;
+			return BoundaryPoints;
 		}
 
 		internal static void InvalidateBoundaryPoints(this TopographySurface ts)
 		{
-			_boundaryPointsValid = false;
+			BoundaryPointsValid = false;
 		}
 	}
 

@@ -13,7 +13,7 @@ using static TopoEdit.SiteUIUtils;
 using Document = Autodesk.Revit.DB.Document;
 using Application = Autodesk.Revit.Creation.Application;
 
-using static TopoEdit.EnumFunctions.Category;
+using static TopoEdit.ModifyPointsFunctions.Category;
 using static TopoEdit.Util;
 
 
@@ -27,70 +27,90 @@ namespace TopoEdit
 	{
 		public static FormInformation info;
 
-		private FormTopoEditMain editForm = new FormTopoEditMain();
-
-		private Application app;
-
-		
-
-
-		internal static List<LineStyle> GLineStyles = new List<LineStyle>(5);
+		private FormModifyPointsMain _form;
 
 		internal static bool disposeOfForm = false;
 
+		private UIApplication _uiApp;
+		private UIDocument _uiDoc;
+		private Document _doc;
 
-		internal struct LineStyle
-		{
-			internal string name;
-			internal ElementId elementid;
-			internal Element element;
-
-			internal LineStyle(string name, ElementId elementid, Element element)
-			{
-				this.name = name;
-				this.elementid = elementid;
-				this.element = element;
-			}
-		}
 
 		public Result Execute(
 			ExternalCommandData commandData,
 			ref string message, ElementSet elements)
 		{
-			UIApplication uiApp = commandData.Application;
-			UIDocument uiDoc = uiApp.ActiveUIDocument;
-			Document doc = uiDoc.Document;
+			_uiApp = commandData.Application;
+			_uiDoc = _uiApp.ActiveUIDocument;
+			_doc = _uiDoc.Document;
 
-			app = doc.Application.Create;
+			VType vType = GetViewType(_doc.ActiveView);
+
+			if (vType.VTSub == VTypeSub.OTHER 
+				|| vType.VTSub == VTypeSub.D2_DRAFTING
+				|| vType.VTSub == VTypeSub.D2_SHEET)
+
+			{
+				TaskDialog.Show("Incorrect View", "Please use TopoEdit in a view with " + nl
+					+ "where topography can be edited.");
+
+				return Result.Failed;
+			}
+
+			_form = new FormModifyPointsMain();
+//			_form.ConfigureButtons(vType);
 
 			TopographyEditScope topoEdit = null;
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 
-			EnumFunctions function;
+			ModifyPointsFunctions function;
 
-			Util.DocUnits = doc.GetUnits();
+			Util.DocUnits = _doc.GetUnits();
 
 			bool repeat;
 
-
-			disposeOfForm = true;
+			disposeOfForm = false;
 			if (disposeOfForm)
 			{
 				info = new FormInformation();
-				info.SetText = "starting\n\n";
+				info.SetText = "starting" + nl + nl;
 				info.Show();
-			}
 
-			ShowLineStyles(doc, disposeOfForm);
+				if (false)
+				{
+					Util.ListLineStyles(_doc);
+
+					Element e = Util.DrawModelLine(_doc, XYZ.Zero,
+						new XYZ(1000, 5000, 0), Util.GLineStyles[10]);
+
+					GetElementParameterInformation(_doc, e);
+					ElementId eid = 
+						GetParameterAsElementId(e, "Line Style", BuiltInParameterGroup.PG_GRAPHICS, ParameterType.Invalid);
+
+					Element ex = _doc.GetElement(eid);
+
+					LogMsgln(nl + "model line element id: " + eid.IntegerValue + " as info: " + ex.Name);
+				}
+
+				if (false)
+				{
+					Util.GetElements(_doc);
+				}
+
+				if (true)
+				{
+					Util.PickAPoint(_uiDoc);
+				}
+			}
 
 			try
 			{
 				// get the toposurface to edit
-				TopographySurface topoSurface = GetTopoSurface(uiDoc, doc, editForm);
+				TopographySurface topoSurface = GetTopoSurface(_uiDoc, _doc, _form);
 				if (topoSurface == null) { return Result.Failed; }
 
-				if (!CanEditTopo(doc, topoSurface))
+				if (!_doc.ActiveView.IsElementVisibleInView(topoSurface))
 				{
 					TaskDialog td = new TaskDialog("TopoSurface Edit");
 					td.CommonButtons = TaskDialogCommonButtons.Close;
@@ -104,47 +124,57 @@ namespace TopoEdit
 					return Result.Failed;
 				}
 
+//				if (!Util.GetLineStyles(_doc))
+//				{
+//					TaskDialog.Show("Get Line Styles", "I cannot proceed!" + nl
+//						+ "Cannot get current line styles.");
+//
+//					return Result.Failed;
+//				}
+
 				// make sure that we do not reuse the old points
 				topoSurface.InvalidateBoundaryPoints();
 			
-				topoEdit = new TopographyEditScope(doc, "edit topo surface");
+				topoEdit = new TopographyEditScope(_doc, "edit topo surface");
 				topoEdit.Start(topoSurface.Id);
+
 
 				repeat = true;
 
 				do
 				{
-					editForm.ShowDialog(new JtWinHandle(Util.GetWinHandle()));
-					function = FormTopoEditMain.function;
+					_form.ShowDialog(new JtWinHandle(Util.GetWinHandle()));
+					function = FormModifyPointsMain.function;
 
 					switch (function.EnumCat)
 					{
 						case EDIT:
-							tgStack.Start(new TransactionGroup(doc, "modify topo surface"));
 
-							editForm.btnUndoMain.Enabled = true;
-							editForm.btnSave.Enabled = true;
+							tgStack.Start(new TransactionGroup(_doc, "modify topo surface"));
+
+							_form.btnUndoMain.Enabled = true;
+							_form.btnSave.Enabled = true;
 								//	process an editing function				
 								switch (function.EnumType)
 								{
-								case EnumFunctions.Type.RAISELOWERPOINTS:
-									PointsRaiseLower.Process(uiDoc, doc, topoEdit, topoSurface);
+								case ModifyPointsFunctions.Type.RAISELOWERPOINTS:
+									PointsRaiseLower.Process(_uiDoc, _doc, topoEdit, topoSurface);
 									break;
 
-								case EnumFunctions.Type.DELETEPOINTS:
-									PointsDelete.Process(uiDoc, doc, topoSurface);
+								case ModifyPointsFunctions.Type.DELETEPOINTS:
+									PointsDelete.Process(_uiDoc, _doc, topoSurface);
 									break;
 
-								case EnumFunctions.Type.PLACEPOINTSNEWLINE:
-									PointsPlaceInANewLine.Process(uiDoc, doc, topoSurface);
+								case ModifyPointsFunctions.Type.PLACEPOINTSNEWLINE:
+									PointsPlaceInANewLine.Process(_uiDoc, _doc, topoSurface);
 									break;
 
-								case EnumFunctions.Type.PLACENEWPOINT:
-									PointPlaceNew.Process(uiDoc, doc, topoSurface);
+								case ModifyPointsFunctions.Type.PLACENEWPOINT:
+									PointPlaceNew.Process(_uiDoc, _doc, topoSurface);
 									break;
 
-								case EnumFunctions.Type.PLACEBOUNDARYPOINT:
-									PointBoundaryPlace.Process(uiDoc, doc, topoSurface);
+								case ModifyPointsFunctions.Type.PLACEBOUNDARYPOINT:
+									PointBoundaryPlace.Process(_uiDoc, _doc, topoSurface);
 									break;
 								}
 	
@@ -152,7 +182,7 @@ namespace TopoEdit
 						case FUNCTION:
 							switch (function.EnumType)
 							{
-							case EnumFunctions.Type.UNDO:
+							case ModifyPointsFunctions.Type.UNDO:
 								if (tgStack.HasItems)
 								{
 									tgStack.RollBack();
@@ -160,8 +190,8 @@ namespace TopoEdit
 
 								if (tgStack.IsEmpty)
 								{
-									editForm.btnUndoMain.Enabled = false;
-									editForm.btnSave.Enabled = false;
+									_form.btnUndoMain.Enabled = false;
+									_form.btnSave.Enabled = false;
 								}
 								break;
 							}
@@ -170,11 +200,11 @@ namespace TopoEdit
 						case INFO:
 							switch (function.EnumType)
 							{
-								case EnumFunctions.Type.QUERYPOINTS:
-									PointsQuery.Process(uiDoc, doc, topoSurface);
+								case ModifyPointsFunctions.Type.QUERYPOINTS:
+									PointsQuery.Process(_uiDoc, _doc, topoSurface);
 									break;
-								case EnumFunctions.Type.MEASURE:
-									PointsMeasure.Process(uiDoc, doc);
+								case ModifyPointsFunctions.Type.MEASURE:
+									PointsMeasure.Process(_uiDoc, _doc);
 									break;
 							}
 							
@@ -183,7 +213,7 @@ namespace TopoEdit
 						case CONTROL:
 							switch (function.EnumType)
 							{
-								case EnumFunctions.Type.CANCEL:
+								case ModifyPointsFunctions.Type.CANCEL:
 									while (tgStack.HasItems)
 									{
 										tgStack.RollBack();
@@ -195,7 +225,7 @@ namespace TopoEdit
 									repeat = false;
 									break;
 
-								case EnumFunctions.Type.SAVE:
+								case ModifyPointsFunctions.Type.SAVE:
 									while (tgStack.HasItems)
 									{
 										tgStack.Commit();
@@ -229,244 +259,6 @@ namespace TopoEdit
 			}
 
 			return Result.Succeeded;
-		}
-
-		bool CanEditTopo(Document doc, TopographySurface topoSurface)
-		{
-			return doc.ActiveView.IsElementVisibleInView(topoSurface)
-				&& (doc.ActiveView.ViewType == ViewType.FloorPlan
-					|| doc.ActiveView.ViewType == ViewType.ThreeD);
-
-		}
-
-		void ShowLineStyles(Document doc, bool disposeOfForm)
-		{
-			
-
-
-			using (Transaction t = new Transaction(doc, "test"))
-			{
-				t.Start();
-
-				Line l = Line.CreateBound(XYZ.Zero,
-					new XYZ(1, 1, 0));
-				Plane p = Plane.Create(new Frame());
-
-				SketchPlane s = SketchPlane.Create(doc, p);
-
-				ModelLine ml = doc.Create.NewModelCurve(l, s) as ModelLine;
-
-				foreach (ElementId eid in ml.GetLineStyleIds())
-				{
-					GLineStyles.Add(
-						new LineStyle(doc.GetElement(eid).Name, eid, 
-						doc.GetElement(eid)));
-				}
-				
-
-				t.RollBack();
-			}
-
-			// gets the list of valid graphics styles for a line
-				foreach (LineStyle ls in GLineStyles)
-				{
-					LogMsgln("  name: " + ls.name + "  id: " + ls.element.Id.IntegerValue);
-				}
-
-
-			
-////			FilteredElementCollector elems = new FilteredElementCollector(doc).WhereElementIsElementType();
-//			FilteredElementCollector notelems = new FilteredElementCollector(doc).WhereElementIsNotElementType();
-////			FilteredElementCollector allelems = elems.UnionWith(notelems);
-////			ICollection<Element> found = allelems.ToElements();
-//			ICollection<Element> found = notelems.ToElements();
-//
-//			FilteredElementCollector foundLines =
-//				new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Lines);
-//		
-//			IList<Element> lines = foundLines.ToElements();
-//
-//			LogMsgln("type of model  line: " + typeof(ModelLine));
-//			LogMsgln("type of detail line: " + typeof(DetailLine));
-//
-//
-//			foreach (Element el in lines)
-//			{
-//				LogMsgln("****line: " + el.Name);
-//				LogMsgln("    type: " + el.GetType());
-//				LogMsgln("     cat: " + el.Category);
-//				
-//					
-//			}
-
-			
-
-//			foreach (Element el in lines)
-//			{
-//				ml = el as ModelLine;
-//				LogMsgln("line: " + el.Name
-//					+ "  cat name: " + el.Category.Name);
-//			}
-
-			// gets the list of valid graphics styles for a line
-//			foreach (ElementId eid in ml.GetLineStyleIds())
-//			{
-//				Element elx = doc.GetElement(eid);
-//
-//				LogMsgln("  line style: " + elx.Name + "  id: " + eid.IntegerValue);
-//			}
-
-
-//
-//			int i = 0;
-//
-//			string preface;
-//			string postfix;
-//
-//			ElementId ix = null;
-//			Element ixe = null;
-//
-//			foreach (Element e in found)
-//			{
-//				preface = "";
-//				postfix = "--";
-//
-//				if (e.GetType().Name.Equals("GraphicsStyle"))
-//				{
-//					preface = "*** ";
-//					try
-//					{
-//						ix = ((GraphicsStyle) e).GraphicsStyleCategory?.Parent?.Id;
-//						if (ix == null) { continue; }
-//
-//						Category cx = Category.GetCategory(doc, ix);
-//
-//						if (cx == null) { continue; }
-//
-//						if (!cx.Name.Equals("Lines")) { continue;}
-//
-//						ixe = doc.GetElement(new ElementId(ix.IntegerValue));
-//
-//						postfix = cx.Name;
-//						postfix += "  parent id: (" + ix + ")";
-//						postfix += "  parent elem id: (" + ixe + ")";
-//						
-//						
-//					}
-//					catch (Exception ex)
-//					{
-////						continue;
-//						postfix = " caused exception " + ex.Message;
-//					}
-//
-//					LogMsgln(preface + "element info: " + e.GetType().Name
-//					+ " :: " + GetElemName(e) 
-//					+ "(" + postfix + ")");
-//
-////					if (ixe != null)
-////					{
-////
-////						ICollection<ElementId> vt = ixe.GetValidTypes();
-////
-////						if (vt != null)
-////						{
-////							foreach (ElementId vtx in vt)
-////							{
-////								Element vte = doc.GetElement(vtx);
-////
-////								info.Append($"type: name: {vte.Name} ");
-////							}
-////						}
-////					}
-//
-//				}
-//
-////				if (i++ > 1500)
-////				{
-////					break;
-////				}
-//			}
-
-
-////			// does not include graphic styles
-////			Categories cx = doc.Settings.Categories;
-////
-////			foreach (Category cat in cx)
-////			{
-////				LogMsgln("category: " + cat.Name);
-////			}
-//			Category c = doc.Settings.Categories.get_Item(
-//				BuiltInCategory.OST_Lines);
-//
-//			CategoryNameMap subCats = c.SubCategories;
-//
-//			string subcats;
-//			Category lineCat = null;
-//
-//			foreach (Category lineStyle in subCats)
-//			{
-//				if (disposeOfForm)
-//				{
-//// does not get anything
-////					subcats = " sub cats: ";
-////					CategoryNameMap nm = lineStyle.SubCategories;
-////					foreach (Category cz in nm)
-////					{
-////						subcats += " :: " + cz.Name;
-////					}
-//
-//					info.Append($"line style: name: {lineStyle.Name}  "
-//						+ $"id: {lineStyle.Id.ToString()}");
-//				}
-//
-//				if (lineStyle.Name.Equals("!4 Red Dashed"))
-//				{
-//					if (disposeOfForm)
-//					{
-//						info.Append("found \"!4 Red Dashed\"");
-//					}
-//					lineCat = lineStyle;
-//					ls = lineStyle.GetGraphicsStyle(GraphicsStyleType.Projection);
-//				}
-//			}
-//
-//
-//			if (disposeOfForm)
-//			{
-//				ElementId id = new ElementId(lineCat.Id.IntegerValue);
-//
-//				Element E = doc.GetElement(id);
-//
-//				if (lineCat != null && E != null)
-//				{
-//					ICollection<ElementId> Ex = E.GetValidTypes();
-//
-//					foreach (ElementId vt in Ex)
-//					{
-//						info.Append($"type: name: {doc.GetElement(vt).Name} ");
-//					}
-//					
-//				}
-//			}
-
-		}
-
-		internal string GetElemName(Element e)
-		{
-			if (e == null) { return "< null >"; }
-
-			string nameStr;
-
-			try
-			{
-				nameStr = (e.Name == string.Empty) ? "??" : e.Name;
-			}
-			catch (Exception ex)
-			{
-				return $"< {null}  {ex.Message}>";
-			}
-
-			return $"< {nameStr}   {e.Id.IntegerValue.ToString()} >";
 		}
 	}
 }

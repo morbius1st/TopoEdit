@@ -26,9 +26,7 @@ namespace TopoEdit
 			TopographyEditScope topoEdit, TopographySurface topoSurface)
 		{
 			bool again = true;
-			bool success = true;
-
-			Debug.WriteLine("@raise lower");
+			bool success;
 
 			FormRaiseLowerPoints form = new FormRaiseLowerPoints();
 

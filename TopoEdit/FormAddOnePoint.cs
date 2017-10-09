@@ -76,7 +76,7 @@ namespace TopoEdit
 		private void tbOneElevationDeltaLeave()
 		{
 			OneElevation = 
-				Util.ParseDelta(tbOneElevationDelta.Text);
+				Util.ParseElevation(tbOneElevationDelta.Text);
 
 			FormatOneElevationDelta();
 		}
