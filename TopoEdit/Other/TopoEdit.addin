@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Application TopoEdit</Name>
+    <Description>Tools to Edit Topo Surfaces</Description>
+    <Assembly>TopoEdit.dll</Assembly>
+    <FullClassName>TopoEdit.Ribbon</FullClassName>
+    <AddInId>5FC4181B-A88D-4C60-8BCD-03CE3DB0DC15</AddInId>
+    <VendorId>pro.cyberstudio</VendorId>
+    <VendorDescription>CyberStudio</VendorDescription>
+  </AddIn>
+</RevitAddIns>

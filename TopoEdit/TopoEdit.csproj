@@ -42,6 +42,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AOTools">
+      <HintPath>C:\Users\jeffs\AppData\Roaming\Autodesk\Revit\Addins\2017\AOTools.dll</HintPath>
+    </Reference>
+    <Reference Include="EnergyAnalysisDBAPI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2017\EnergyAnalysisDBAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
@@ -61,63 +68,56 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModifyPointsFunctions.cs" />
-    <Compile Include="FormAddPointsByLine.cs">
+    <Compile Include="Main\ModifyPointsFunctions.cs" />
+    <Compile Include="PointsByLineOrArc\FormAddPointsByLineOrArc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAddPointsByLine.Designer.cs">
-      <DependentUpon>FormAddPointsByLine.cs</DependentUpon>
+    <Compile Include="PointsByLineOrArc\FormAddPointsByLineOrArc.Designer.cs">
+      <DependentUpon>FormAddPointsByLineOrArc.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormInformation.cs">
+    <Compile Include="Information\FormInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormInformation.Designer.cs">
+    <Compile Include="Information\FormInformation.Designer.cs">
       <DependentUpon>FormInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMeasurePoints.cs">
+    <Compile Include="QueryPoints\FormQueryPoints.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMeasurePoints.Designer.cs">
-      <DependentUpon>FormMeasurePoints.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormQueryPoints.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormQueryPoints.Designer.cs">
+    <Compile Include="QueryPoints\FormQueryPoints.Designer.cs">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAddOnePoint.cs">
+    <Compile Include="AddOnePoint\FormAddOnePoint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAddOnePoint.Designer.cs">
+    <Compile Include="AddOnePoint\FormAddOnePoint.Designer.cs">
       <DependentUpon>FormAddOnePoint.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModifyPoints.cs" />
-    <Compile Include="PointBoundaryPlace.cs" />
-    <Compile Include="PointPlaceNew.cs" />
-    <Compile Include="PointsMeasure.cs" />
-    <Compile Include="PointsPlaceInANewLine.cs" />
-    <Compile Include="PointsDelete.cs" />
-    <Compile Include="PointsQuery.cs" />
+    <Compile Include="Main\ModifyPoints.cs" />
+    <Compile Include="Main\PointBoundaryPlace.cs" />
+    <Compile Include="Main\PointPlaceNew.cs" />
+    <Compile Include="PointsByLineOrArc\PointsByLineOrArc.cs" />
+    <Compile Include="Main\PointsDelete.cs" />
+    <Compile Include="QueryPoints\PointsQuery.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PointsRaiseLower.cs" />
-    <Compile Include="FormRaiseLowerPoints.cs">
+    <Compile Include="Main\PointsRaiseLower.cs" />
+    <Compile Include="RaiseOrLower\FormRaiseLowerPoints.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRaiseLowerPoints.Designer.cs">
+    <Compile Include="RaiseOrLower\FormRaiseLowerPoints.Designer.cs">
       <DependentUpon>FormRaiseLowerPoints.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormModifyPointsMain.cs">
+    <Compile Include="Main\FormModifyPointsMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormModifyPointsMain.Designer.cs">
+    <Compile Include="Main\FormModifyPointsMain.Designer.cs">
       <DependentUpon>FormModifyPointsMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="PickedBox2.cs" />
+    <Compile Include="Util\PickedBox2.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -125,31 +125,35 @@
     </Compile>
     <Compile Include="Ribbon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SiteUiUtils.cs" />
-    <Compile Include="TopographyEditFailuresPreprocessor.cs" />
-    <Compile Include="TransactionGroupStack.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Util\BoundingCube.cs" />
+    <Compile Include="Util\Extensions.cs" />
+    <Compile Include="Util\PointMeasurements.cs" />
+    <Compile Include="Util\TextUtils.cs" />
+    <Compile Include="Util\ListingMethods.cs" />
+    <Compile Include="Util\MessageUtil.cs" />
+    <Compile Include="Util\TopoSurfaceUtils.cs" />
+    <Compile Include="Util\TopographyEditFailuresPreprocessor.cs" />
+    <Compile Include="Util\TransactionGroupStack.cs" />
+    <Compile Include="Util\Utils.cs" />
+    <Compile Include="Util\RevitView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FormAddPointsByLine.resx">
-      <DependentUpon>FormAddPointsByLine.cs</DependentUpon>
+    <EmbeddedResource Include="PointsByLineOrArc\FormAddPointsByLineOrArc.resx">
+      <DependentUpon>FormAddPointsByLineOrArc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormInformation.resx">
+    <EmbeddedResource Include="Information\FormInformation.resx">
       <DependentUpon>FormInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMeasurePoints.resx">
-      <DependentUpon>FormMeasurePoints.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormQueryPoints.resx">
+    <EmbeddedResource Include="QueryPoints\FormQueryPoints.resx">
       <DependentUpon>FormQueryPoints.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAddOnePoint.resx">
+    <EmbeddedResource Include="AddOnePoint\FormAddOnePoint.resx">
       <DependentUpon>FormAddOnePoint.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRaiseLowerPoints.resx">
+    <EmbeddedResource Include="RaiseOrLower\FormRaiseLowerPoints.resx">
       <DependentUpon>FormRaiseLowerPoints.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormModifyPointsMain.resx">
+    <EmbeddedResource Include="Main\FormModifyPointsMain.resx">
       <DependentUpon>FormModifyPointsMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -158,15 +162,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Images\information16.png" />
     <EmbeddedResource Include="Resources\Images\information32.png" />
-    <Content Include="TopoEdit.addin" />
+    <Content Include="Other\TopoEdit.addin" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2017" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2017"

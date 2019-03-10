@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.UI;
+using TopoEdit.Util;
 
 #endregion
 
@@ -19,7 +20,7 @@ namespace TopoEdit
 		private const string TAB_NAME = "AO Tools";
 
 		private static string AddInPath = typeof(Ribbon).Assembly.Location;
-		private const string CLASSPATH = "TopoEdit.";
+		private const string CLASSPATH = @"TopoEdit.Main.";
 
 		private const string SMALLICON = "information16.png";
 		private const string LARGEICON = "information32.png";
@@ -211,7 +212,7 @@ namespace TopoEdit
 //		private bool AddPullDownButton(RibbonPanel ribbonPanel)
 //		{
 //			PulldownButtonData pdData = new PulldownButtonData("pullDownButton1", "Edit Points");
-//			pdData.Image = Util.GetBitmapImage(SMALLICON);
+//			pdData.Image = Utils.GetBitmapImage(SMALLICON);
 //
 //			pb = ribbonPanel.AddItem(pdData) as PulldownButton;
 //
@@ -237,8 +238,8 @@ namespace TopoEdit
 			{
 				pbd = new PushButtonData(ButtonName, ButtonText, AddInPath, string.Concat(CLASSPATH, className))
 				{
-					Image = Util.GetBitmapImage(smallIcon),
-					LargeImage = Util.GetBitmapImage(largeIcon),
+					Image = Utils.GetBitmapImage(smallIcon),
+					LargeImage = Utils.GetBitmapImage(largeIcon),
 					ToolTip = ToolTip
 				};
 			}

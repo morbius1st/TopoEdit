@@ -35,10 +35,10 @@
     <Setting Name="EvenlySpaced" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="StartZ" Type="System.Double" Scope="User">
+    <Setting Name="StartZbyLine" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="EndZ" Type="System.Double" Scope="User">
+    <Setting Name="EndZbyLine" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
