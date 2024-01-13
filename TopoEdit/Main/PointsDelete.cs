@@ -26,7 +26,7 @@ namespace TopoEdit.Main
 
 			try
 			{
-				picked = Utils.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+				picked = Select.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 			}
 			catch (Exception e)
 			{

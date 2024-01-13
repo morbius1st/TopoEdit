@@ -1,22 +1,95 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopoEdit", "TopoEdit\TopoEdit.csproj", "{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedApp", "SharedApp\SharedApp.csproj", "{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedCode", "SharedCode\SharedCode.shproj", "{B89AEE0A-7D3B-4DEC-95DC-E8EE14D8C50A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jack", "Jack\Jack.csproj", "{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackTests01", "JackTests01\JackTests01.csproj", "{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackRvtTst01", "JackRvtTst01\JackRvtTst01.csproj", "{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedCodeRevit", "SharedCodeRevit\SharedCodeRevit.shproj", "{AF429CCB-6DC3-46F6-9C16-2EF799271DC1}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedCodeNoRevit", "SharedCodeNoRevit\SharedCodeNoRevit.shproj", "{99F6E4F8-C9EE-4806-9AC5-FEA5846E5520}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{91A60D9C-4FE6-4EFE-9A9A-928F59204D17}"
+	ProjectSection(SolutionItems) = preProject
+		modeless dialog notes.txt = modeless dialog notes.txt
+		Notes.txt = Notes.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		DebugJack|Any CPU = DebugJack|Any CPU
+		Jack01_Dbg|Any CPU = Jack01_Dbg|Any CPU
+		JackRvtTst01_Dbg|Any CPU = JackRvtTst01_Dbg|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.DebugJack|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.Jack01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.JackRvtTst01_Dbg|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC429DE-0FCC-45A7-A152-112E9AB46CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.DebugJack|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.Jack01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.JackRvtTst01_Dbg|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDAB500-0C87-4F6F-85AD-F7FF5114793B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.DebugJack|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.DebugJack|Any CPU.Build.0 = Debug|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.Jack01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.JackRvtTst01_Dbg|Any CPU.ActiveCfg = Release|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2D9C8A6-2168-4407-AD93-E9F65C67FF53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.DebugJack|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Jack01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Jack01_Dbg|Any CPU.Build.0 = Debug|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.JackRvtTst01_Dbg|Any CPU.ActiveCfg = Release|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE999B7A-FE08-456F-90B3-1D2AF6081C5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.DebugJack|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.Jack01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.JackRvtTst01_Dbg|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.JackRvtTst01_Dbg|Any CPU.Build.0 = Debug|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC76BB1B-55B1-4B35-AE0B-98C064A1742C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {864C469D-F4AB-43CB-8185-D29840EF014C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedCodeNoRevit\SharedCodeNoRevit.projitems*{99f6e4f8-c9ee-4806-9ac5-fea5846e5520}*SharedItemsImports = 13
+		SharedCodeNoRevit\SharedCodeNoRevit.projitems*{ae999b7a-fe08-456f-90b3-1d2af6081c5f}*SharedItemsImports = 4
+		SharedCode\SharedCode.projitems*{ae999b7a-fe08-456f-90b3-1d2af6081c5f}*SharedItemsImports = 4
+		SharedCodeRevit\SharedCodeRevit.projitems*{af429ccb-6dc3-46f6-9c16-2ef799271dc1}*SharedItemsImports = 13
+		SharedCodeRevit\SharedCodeRevit.projitems*{b2d9c8a6-2168-4407-ad93-e9f65c67ff53}*SharedItemsImports = 4
+		SharedCode\SharedCode.projitems*{b2d9c8a6-2168-4407-ad93-e9f65c67ff53}*SharedItemsImports = 4
+		SharedCode\SharedCode.projitems*{b89aee0a-7d3b-4dec-95dc-e8ee14d8c50a}*SharedItemsImports = 13
+		SharedCodeRevit\SharedCodeRevit.projitems*{cc76bb1b-55b1-4b35-ae0b-98c064a1742c}*SharedItemsImports = 4
+		SharedCode\SharedCode.projitems*{cc76bb1b-55b1-4b35-ae0b-98c064a1742c}*SharedItemsImports = 4
+		SharedCodeNoRevit\SharedCodeNoRevit.projitems*{dddab500-0c87-4f6f-85ad-f7ff5114793b}*SharedItemsImports = 4
+		SharedCode\SharedCode.projitems*{dddab500-0c87-4f6f-85ad-f7ff5114793b}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

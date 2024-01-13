@@ -1,4 +1,5 @@
 ﻿#region Using
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,8 +9,6 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using TopoEdit.Util;
-using static TopoEdit.Util.Utils;
-using static TopoEdit.Util.ListingMethods;
 using ViewType = TopoEdit.Util.ViewType;
 
 #endregion
@@ -19,7 +18,7 @@ using ViewType = TopoEdit.Util.ViewType;
 // created:		9/11/2017 9:32:49 PM
 
 
-namespace TopoEdit
+namespace TopoEdit.QueryPoints
 {
 	class PointsQuery
 	{
@@ -69,7 +68,7 @@ namespace TopoEdit
 			}
 
 
-			PickedBox2 picked = Utils.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+			PickedBox2 picked = Select.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 
 			Outline ol = new Outline(picked.Min, picked.Max);
 
@@ -86,12 +85,12 @@ namespace TopoEdit
 
 				StringBuilder sb = new StringBuilder();
 
-				sb.Append("    total points: ").Append(points.Count).Append(nl).Append(nl);
+				sb.Append("    total points: ").Append(points.Count).Append(Utils.nl).Append(Utils.nl);
 				foreach (XYZ xyz in points)
 				{
 					sb.AppendFormat($"{idx++, -4}|  ");
-					sb.Append(ListPoint(xyz));
-					sb.Append(nl);
+					sb.Append(ListingMethods.ListPoint(xyz));
+					sb.Append(Utils.nl);
 
 					if (xyz.Z > maxZ) maxZ = xyz.Z;
 					if (xyz.Z < minZ) minZ = xyz.Z;
@@ -99,10 +98,10 @@ namespace TopoEdit
 					avgZ += xyz.Z / points.Count;
 				}
 
-				sb.Append(nl);
-				sb.AppendFormat("minimum Z | {0,12:F4}", minZ).Append(nl);
-				sb.AppendFormat("maximum Z | {0,12:F4}", maxZ).Append(nl);
-				sb.AppendFormat("average Z | {0,12:F4}", avgZ).Append(nl);
+				sb.Append(Utils.nl);
+				sb.AppendFormat("minimum Z | {0,12:F4}", minZ).Append(Utils.nl);
+				sb.AppendFormat("maximum Z | {0,12:F4}", maxZ).Append(Utils.nl);
+				sb.AppendFormat("average Z | {0,12:F4}", avgZ).Append(Utils.nl);
 
 				_form.tbPointsInfo.Text = sb.ToString();
 			}

@@ -182,7 +182,7 @@ namespace TopoEdit
 //				FormatValueOptions opt = new FormatValueOptions();
 //				opt.AppendUnitSymbol = true;
 //				opt.SetFormatOptions(fOpt);
-//				ElevChange.Value = UnitFormatUtils.Format(units, UnitType.UT_Length, length, false, true, opt);
+//				ElevChange.Value = UnitFormatUtils.Formatting(units, UnitType.UT_Length, length, false, true, opt);
 //			}
 //			else
 //			{

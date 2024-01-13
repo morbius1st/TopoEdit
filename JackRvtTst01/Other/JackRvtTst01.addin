@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>JackRvtTst01</Text>
+    <Description>Description of JackRvtTst01</Description>
+    <Assembly>JackRvtTst01.dll</Assembly>
+    <FullClassName>JackRvtTst01.Command</FullClassName>
+    <ClientId>8f4548ee-5555-49a9-a3d9-5b86ae354748</ClientId>
+    <VendorId>pro.cyberstudio</VendorId>
+    <VendorDescription>CyberStudio</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application JackRvtTst01</Name>
+    <Assembly>JackRvtTst01.dll</Assembly>
+    <FullClassName>JackRvtTst01.AppRibbon</FullClassName>
+    <ClientId>e0417ae5-6c87-45c2-9889-d3941b991f5a</ClientId>
+    <VendorId>pro.cyberstudio</VendorId>
+    <VendorDescription>CyberStudio</VendorDescription>
+  </AddIn>
+</RevitAddIns>

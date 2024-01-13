@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using TopoEdit.Properties;
 using TopoEdit.Util;
 
+using static TopoEdit.Util.Formatting;
+
 namespace TopoEdit.AddOnePoint
 {
 	public partial class FormAddOnePoint : Form
@@ -74,7 +76,7 @@ namespace TopoEdit.AddOnePoint
 
 		private void FormatOneElevationDelta()
 		{
-			tbOneElevationDelta.Text = Utils.FormatLengthNumber(OneElevation);
+			tbOneElevationDelta.Text = Format.LengthNumber(OneElevation);
 		}
 
 		// button methods

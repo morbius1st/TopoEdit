@@ -30,6 +30,7 @@ namespace TopoEdit.Main
 			// misc functions
 			QUERYPOINTS,
 			MEASURE,
+			INTERSECT,
 			
 			// editing functions
 			RAISELOWERPOINTS,
@@ -73,6 +74,7 @@ namespace TopoEdit.Main
 		// info functions
 		public static readonly ModifyPointsFunctions QUERYPOINTS			= new ModifyPointsFunctions(Category.INFO, Type.QUERYPOINTS);
 		public static readonly ModifyPointsFunctions MEASURE				= new ModifyPointsFunctions(Category.INFO, Type.MEASURE);
+		public static readonly ModifyPointsFunctions INTERSECT				= new ModifyPointsFunctions(Category.INFO, Type.INTERSECT);
 		// editing functions
 		public static readonly ModifyPointsFunctions RAISELOWERPOINTS		= new ModifyPointsFunctions(Category.EDIT, Type.RAISELOWERPOINTS);
 		public static readonly ModifyPointsFunctions DELETEPOINTS			= new ModifyPointsFunctions(Category.EDIT, Type.DELETEPOINTS);

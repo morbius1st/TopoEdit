@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
-using TopoEdit.AddOnePoint;
+// using EnvDTE;
 using TopoEdit.Util;
 
 #endregion
@@ -15,7 +15,7 @@ using TopoEdit.Util;
 // created:		9/17/2017 6:23:06 AM
 
 
-namespace TopoEdit.Main
+namespace TopoEdit.AddOnePoint
 {
 	internal class PointPlaceNew
 	{

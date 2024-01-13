@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TopoEdit.Properties;
 
-namespace TopoEdit
+namespace TopoEdit.QueryPoints
 {
 	public partial class FormQueryPoints : Form
 	{

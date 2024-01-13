@@ -1,0 +1,625 @@
+﻿<Window x:Class="Jack.Windows.WinModifyTopo"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:local="clr-namespace:Jack.Windows"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:resLocal="clr-namespace:Jack.Properties"
+		xmlns:resShared="clr-namespace:SharedApp.Windows.ShResources"
+		xmlns:supportShared="clr-namespace:SharedApp.Windows.ShSupport"
+		Title="Jack - The Topo Editor"
+		Height="650"
+		MinWidth="920"
+		MaxHeight="650"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		mc:Ignorable="d"
+		Background="{DynamicResource Normal.Window.Background}"
+		Foreground="White"
+		ResizeMode="CanResize"
+		SizeToContent="Width"
+		SnapsToDevicePixels="True"
+		Loaded="Window_Loaded"
+		Closing="Window_Closing"
+		>
+
+	<!--#region > resources  -->
+
+	<Window.Resources>
+
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<!-- <ResourceDictionary Source="SharedSupport/MasterColorList.xaml" /> -->
+				<!-- <ResourceDictionary Source="SharedSupport/VisualStates.xaml" /> -->
+				<ResourceDictionary Source="SharedSupport/ShCommon.xaml" />
+				<ResourceDictionary Source="SharedSupport/ScrollViewerNarrow.xaml" />
+				<ResourceDictionary Source="SharedSupport/ScrollBar.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<supportShared:InvertBool x:Key="InvertBool" />
+
+
+			<GridLength x:Key="DlgControlRowHeight">32</GridLength>
+
+			<!--  <Style x:Key="BtnBaseStyle"  -->
+			<!--  TargetType="Button"  -->
+			<!--  BasedOn="{StaticResource Button.Normal.Style}"  -->
+			<!--  >  -->
+			<!-- 	<Setter Property="Template" Value="{StaticResource Button.Normal.ControlTemplate}" /> -->
+			<!-- 	<Setter Property="Height" Value="{StaticResource BtnHeight}" /> -->
+			<!-- 	<Setter Property="Width" Value="{StaticResource BtnWidth}" /> -->
+			<!-- </Style> -->
+
+			<Style x:Key="BtnBottomRow"
+					TargetType="Button"
+					BasedOn="{StaticResource BtnBaseStyle}"
+			>
+				<Setter Property="Margin" Value="3,0,3,0" />
+			</Style>
+
+			<Style x:Key="BtnOps"
+					TargetType="Button"
+					BasedOn="{StaticResource BtnBaseStyle}"
+			>
+				<Setter Property="Margin" Value="0,2,0,0" />
+			</Style>
+
+			<Style x:Key="BdrStkPnl"
+					TargetType="Border"
+			>
+				<Setter Property="BorderBrush" Value="White" />
+				<Setter Property="BorderThickness" Value="0,0.5,0,0.5" />
+				<Setter Property="Margin" Value="3,0,3,0" />
+			</Style>
+
+			<Style x:Key="BdrTxBlkHdr"
+					TargetType="Border"
+			>
+				<Setter Property="Padding" Value="0,1,0,2" />
+				<Setter Property="BorderBrush" Value="White" />
+				<Setter Property="BorderThickness" Value="0,0,0,0.5" />
+			</Style>
+			<Style x:Key="FocusVisual">
+				<Setter Property="Control.Template">
+					<Setter.Value>
+						<ControlTemplate>
+							<Rectangle Margin="2"
+									StrokeDashArray="1 2"
+									SnapsToDevicePixels="true"
+									StrokeThickness="1"
+									Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+							/>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+		</ResourceDictionary>
+
+	</Window.Resources>
+
+	<!--#endregion -->
+
+	<!--#region > window  -->
+
+	<Grid x:Name="GrdPrimary"
+			Margin="20,20,20,10"
+			>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width=" 340 " MinWidth="340" />
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!--#region > primary controls  -->
+
+		<DockPanel Grid.Column="0"
+				Grid.Row="0"
+		>
+
+			<Grid x:Name="GrdHeader"
+					VerticalAlignment="Top"
+					DockPanel.Dock="Top"
+			>
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="110" />
+					<ColumnDefinition Width="30" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<Button Grid.Column="0"
+						Grid.Row="0"
+						Grid.RowSpan="2"
+						Margin="0"
+						Width="{StaticResource BtnWidth}"
+						HorizontalAlignment="Left"
+						VerticalAlignment="top"
+						HorizontalContentAlignment="Center"
+						IsEnabled="{Binding TopoMain.IsEditing,
+																Converter={StaticResource InvertBool}}"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnStart_OnClick"
+				>
+					<!--  Height="{StaticResource BtnHeight}"  -->
+					<Button.Content>
+						<DockPanel HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+						>
+							<TextBlock Margin="0,-2,0,-1"
+									Padding="0,2,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Top"
+									Text="Select Topo"
+							/>
+							<TextBlock Margin="0,-2,0,1"
+									Padding="0,0,0,2"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Bottom"
+									Text="Surface"
+							/>
+						</DockPanel>
+					</Button.Content>
+
+				</Button>
+
+				<CheckBox Content="Topo Editing Mode Active"
+						Grid.Column="2"
+						Grid.Row="1"
+						Grid.ColumnSpan="3"
+						VerticalAlignment="Center"
+						Foreground="White"
+						IsChecked="{Binding TopoMain.IsEditing,
+																Mode=OneWay}"
+						DockPanel.Dock="Right"
+				/>
+
+
+
+				<StackPanel Grid.Column="2"
+						Grid.Row="0"
+						Grid.ColumnSpan="3"
+						Orientation="Horizontal"
+				>
+					<TextBlock Margin="0,-2,10,0"
+							Padding="4,0,0,0"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							DockPanel.Dock="Left"
+							Text="Surface Name"
+					/>
+
+
+					<TextBlock Padding="4,0,0,2"
+							Text="{Binding TopoMain.TopoSurfaceName,
+														 Mode=OneWay,
+														 FallbackValue='topo surface name'}"
+							Style="{StaticResource Tblk.Present.Info}"
+					/>
+
+				</StackPanel>
+
+
+
+			</Grid>
+
+			<Grid x:Name="GrdDialogControl"
+					Margin="0"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Stretch"
+					DockPanel.Dock="Bottom"
+			>
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="26"/>
+					<RowDefinition Height="{StaticResource DlgControlRowHeight}" />
+				</Grid.RowDefinitions>
+
+				<StackPanel x:Name="SpRevisions"
+						Grid.Column="0"
+						Grid.Row="0"
+
+						Orientation="Horizontal"
+				>
+
+					<TextBlock
+							Text="Revisions"
+					/>
+
+					<TextBlock
+							Margin="15,0,0,0"
+							Text="{Binding TopoMain.RevCount, Mode=OneWay, FallbackValue='0'}"
+					/>
+
+				</StackPanel>
+
+				<Button x:Name="BtnCancel"
+						Grid.Column="1"
+						Grid.Row="1"
+						HorizontalAlignment="Left"
+						IsEnabled="{Binding TopoMain.HasChanges,
+																Mode=OneWay,
+																FallbackValue='False'}"
+						Style="{StaticResource Btn.Std.Style}"
+						Click="BtnCancel_OnClick"
+				>
+					<Button.Content>
+						<DockPanel HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+						>
+							<TextBlock Margin="0,-2,0,-1"
+									Padding="0,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Top"
+									Text="Cancel"
+							/>
+							<TextBlock Margin="0,-2,0,1"
+									Padding="0,0,0,2"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Bottom"
+									Text="Modifications"
+							/>
+						</DockPanel>
+					</Button.Content>
+				</Button>
+
+				<Button x:Name="BtnSave"
+						Grid.Column="2"
+						Grid.Row="1"
+						HorizontalAlignment="Left"
+						IsEnabled="{Binding TopoMain.HasChanges,
+																Mode=OneWay,
+																FallbackValue='False'}"
+						Style="{StaticResource Btn.Std.Style}"
+						Click="BtnSave_OnClick"
+				>
+					<Button.Content>
+						<DockPanel HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+						>
+							<TextBlock Margin="0,-2,0,-1"
+									Padding="0,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Top"
+									Text="Save"
+							/>
+							<TextBlock Margin="0,-2,0,1"
+									Padding="0,0,0,2"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									DockPanel.Dock="Bottom"
+									Text="Modifications"
+							/>
+						</DockPanel>
+					</Button.Content>
+				</Button>
+
+				<Button x:Name="BtnExit"
+						Content="Exit"
+						Grid.Column="3"
+						Grid.Row="1"
+						HorizontalAlignment="Left"
+						IsEnabled="{Binding CanExit,
+																Mode=OneWay,
+																FallbackValue='true'}"
+						Style="{StaticResource Btn.Std.Style}"
+						Click="BtnExit_OnClick"
+				/>
+
+
+			</Grid>
+
+			<Grid x:Name="GrdFunctions"
+					Margin="0"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Stretch"
+					DockPanel.Dock="Bottom"
+			>
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="20" />
+					<RowDefinition Height="*" />
+
+				</Grid.RowDefinitions>
+
+				<DockPanel Grid.Column="0"
+						Grid.Row="1"
+						HorizontalAlignment="Left"
+				>
+
+					<Button x:Name="BtnPointsDelete"
+							Content="Delete Points"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	FallbackValue='false'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnPointsDelete_OnClick"
+					/>
+
+					<Button x:Name="BtnPointsRaiseLower"
+							Margin="0,10,0,0"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	FallbackValue='false'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnPointsRaiseLower_OnClick"
+					>
+						<Button.Content>
+							<DockPanel HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+							>
+								<TextBlock Margin="0,-2,0,-1"
+										Padding="0,0,0,0"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Top"
+										DockPanel.Dock="Top"
+										Text="Raise or"
+								/>
+								<TextBlock Margin="0,-2,0,1"
+										Padding="0,0,0,2"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Top"
+										DockPanel.Dock="Bottom"
+										Text="Lower Points"
+								/>
+							</DockPanel>
+						</Button.Content>
+					</Button>
+
+					<Button x:Name="BtnPointsAddInterior"
+							Margin="0,10,0,0"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	FallbackValue='false'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnPointsAddInterior_OnClick"
+					>
+						<Button.Content>
+							<DockPanel HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+							>
+								<TextBlock Margin="0,-2,0,-1"
+										Padding="0,0,0,0"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Top"
+										DockPanel.Dock="Top"
+										Text="Add an"
+								/>
+								<TextBlock Margin="0,-2,0,1"
+										Padding="0,0,0,2"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Top"
+										DockPanel.Dock="Bottom"
+										Text="Interior point"
+								/>
+							</DockPanel>
+						</Button.Content>
+
+					</Button>
+
+
+
+
+				</DockPanel>
+
+
+				<DockPanel Grid.Column="2"
+						Grid.Row="1"
+						Margin="0,0,0,0"
+						HorizontalAlignment="Left"
+				>
+					<Button x:Name="BtnPointsQuery"
+							Content="Query Points"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	FallbackValue='false'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnPointsQuery_OnClick"
+					/>
+
+					<Button x:Name="BtnPointQuery"
+							Margin="0,10,0,0"
+							Content="Surface Elevation"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	FallbackValue='false'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnPointQuery_OnClick"
+					/>
+
+
+				</DockPanel>
+
+				<DockPanel Grid.Column="3"
+						Grid.Row="1"
+						Margin="0,0,0,0"
+						HorizontalAlignment="Left"
+				>
+
+					<Button x:Name="Btn1"
+							Content="Add Ref Line"
+							IsEnabled="{Binding TopoMain.IsEditing,
+																	Mode=OneWay,
+																	Converter={StaticResource InvertBool},
+																	FallbackValue='true'}"
+							DockPanel.Dock="Top"
+							Style="{StaticResource Btn.Std.Style}"
+							Click="BtnSelectPath_OnClick"
+					/>
+
+				</DockPanel>
+
+
+			</Grid>
+
+		</DockPanel>
+
+		<!--#endregion -->
+
+		<!--#region > debug panel  -->
+
+		<Grid x:Name="GrdDebug"
+				Grid.Column="1"
+				Grid.Row="0"
+				Visibility="Visible"
+				Margin="10,0,0,0"
+		>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="32" />
+			</Grid.RowDefinitions>
+
+			<Button
+					x:Name="BtnMsgClear"
+					Grid.Column="0"
+					Grid.Row="0"
+					Width="16"
+					Height="14"
+					FontSize="8"
+					Content="CLR"
+					Padding="0"
+					Margin="0,0,10,1"
+					VerticalAlignment="Bottom"
+					HorizontalAlignment="Right"
+					Click="BtnMsgClear_OnClick"
+			/>
+
+			<TextBox Grid.Column="0"
+					Grid.Row="1"
+					Margin="0,0,0,10"
+					FontFamily="Consolas"
+					Background="Transparent"
+					Foreground="White"
+					BorderThickness="0.5"
+					Text="{Binding MessageBox,
+												 Mode=OneWay}"
+					BorderBrush="Red"
+
+					VerticalScrollBarVisibility="Visible"
+					HorizontalScrollBarVisibility="Visible"
+			>
+
+				<TextBox.Resources>
+
+					<Style TargetType="{x:Type ScrollViewer}">
+						<Setter Property="Template" Value="{StaticResource ScrollViewerNarrow}" />
+						<Setter Property="supportShared:ScrollBarAttached.RepeatButtonLength" Value="10" />
+						<Setter Property="supportShared:ScrollBarAttached.ScrollBarWidth" Value="6" />
+						<Setter Property="supportShared:ScrollBarAttached.TrackWidth" Value="6" />
+						<Setter Property="supportShared:ScrollBarAttached.RepeatButtonIconGirth" Value="8" />
+						<Setter Property="supportShared:ScrollBarAttached.RepeatButtonIconLength" Value="8" />
+						<Setter Property="supportShared:ScrollBarAttached.VertBorderThickness" Value="1,0,0,0" />
+						<Setter Property="supportShared:ScrollBarAttached.VertBorderColor">
+							<Setter.Value>
+								<SolidColorBrush Color="{StaticResource Blue.350}" />
+							</Setter.Value>
+						</Setter>
+						<Setter Property="supportShared:ScrollBarAttached.HorizBorderThickness" Value="0,1,0,0" />
+						<Setter Property="supportShared:ScrollBarAttached.HorizBorderColor">
+							<Setter.Value>
+								<SolidColorBrush Color="{StaticResource Blue.350}" />
+							</Setter.Value>
+						</Setter>
+
+						<Setter Property="supportShared:ScrollViewerAttached.CornerRectColor">
+							<Setter.Value>
+								<SolidColorBrush Color="{StaticResource Gray.150}" />
+							</Setter.Value>
+						</Setter>
+
+						<Setter Property="supportShared:ScrollViewerAttached.CornerRectLeftBdrHeight" Value="1" />
+						<Setter Property="supportShared:ScrollViewerAttached.CornerRectLeftBdrColor">
+							<Setter.Value>
+								<SolidColorBrush Color="{StaticResource Blue.350}" />
+							</Setter.Value>
+						</Setter>
+
+						<Setter Property="supportShared:ScrollViewerAttached.CornerRectTopBdrHeight" Value="1" />
+						<Setter Property="supportShared:ScrollViewerAttached.CornerRectTopBdrColor">
+							<Setter.Value>
+								<SolidColorBrush Color="{StaticResource Blue.350}" />
+							</Setter.Value>
+						</Setter>
+
+					</Style>
+
+				</TextBox.Resources>
+
+			</TextBox>
+			<DockPanel
+						Grid.Column="0"
+						Grid.Row="2"					
+					>
+				<Button x:Name="BtnTest01"
+						Content="test01"
+
+						Margin="0,0,0,0"
+						Width="{StaticResource BtnWidth}"
+						HorizontalAlignment="right"
+						VerticalAlignment="Stretch"
+						HorizontalContentAlignment="Center"
+						IsEnabled="{Binding TopoMain.IsEditing}"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnTest01_OnClick" />
+
+				<Button x:Name="BtnDebug"
+						Content="debug"
+						Grid.Column="0"
+						Grid.Row="2"
+						Margin="0,0,0,0"
+						Width="{StaticResource BtnWidth}"
+						HorizontalAlignment="right"
+						VerticalAlignment="Stretch"
+						HorizontalContentAlignment="Center"
+						IsEnabled="{Binding TopoMain.IsEditing}"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnDebug_OnClick" />
+			</DockPanel>
+
+		</Grid>
+
+		<!--#endregion -->
+
+	</Grid>
+
+	<!--#endregion -->
+</Window>

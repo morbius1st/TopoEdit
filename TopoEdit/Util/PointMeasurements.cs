@@ -1,9 +1,4 @@
-﻿// Solution:     TopoEdit
-// Project:       TopoEdit
-// File:             PointMeasurements.cs
-// Created:      -- ()
-
-using System;
+﻿using System;
 using Autodesk.Revit.DB;
 
 // ReSharper disable once IdentifierTypo

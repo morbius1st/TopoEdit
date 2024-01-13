@@ -7,26 +7,28 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using MessageBox = System.Windows.Forms.MessageBox;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using TopoEdit.Measure;
-using MessageBox = System.Windows.Forms.MessageBox;
 using Point = Autodesk.Revit.DB.Point;
 using View = Autodesk.Revit.DB.View;
+using static UtilityLibrary.MessageUtilities2;
 
 namespace TopoEdit.Util
 {
 	partial class Utils
 	{
 	#region Fields
+
 		// public 
-		public static readonly string nl = Environment.NewLine; 
+		public static readonly string nl = Environment.NewLine;
 
 		// private
 		internal const int FIELD_WIDTH = 12;
 		private const string NAMESPACE_PREFIX = "TopoEdit.Resources.Images";
-	
+
 		// internal
 		internal const double TOLERANCE = 0.000001;
 
@@ -54,6 +56,7 @@ namespace TopoEdit.Util
 					_docUnits.SetFormatOptions(UnitType.UT_Length,
 						new FormatOptions(DisplayUnitType.DUT_DECIMAL_FEET, 0.001));
 				}
+
 				return _docUnits;
 			}
 
@@ -63,6 +66,7 @@ namespace TopoEdit.Util
 	#endregion
 
 	#region Image
+
 		// load an image from embeded resource
 		public static BitmapImage GetBitmapImage(string imageName)
 		{
@@ -76,11 +80,11 @@ namespace TopoEdit.Util
 
 			return img;
 		}
-		
 
 	#endregion
 
 	#region Number Utils
+
 		public static void RestrictValuetoMinMax(double value, ref double min, ref double max)
 		{
 			if (value < min)
@@ -93,74 +97,66 @@ namespace TopoEdit.Util
 			}
 		}
 
-		public static string FormatLengthNumber(double length)
-		{
-			if (Double.IsNaN(length)) return String.Empty;
-
-			return UnitFormatUtils.Format(_docUnits,
-				UnitType.UT_Length, length, true, false);
-		}
-
 		public static double ParseUnitLength(string delta)
 		{
 			double result;
 
 			if (UnitFormatUtils.TryParse(_docUnits,
-				UnitType.UT_Length, delta, out result))
+					UnitType.UT_Length, delta, out result))
 			{
 				return result;
 			}
 
 			return Double.NaN;
 		}
-		
 
 	#endregion
 
 	#region Revit Display
 
-		// ReSharper disable once IdentifierTypo
-		public static void ShowHideWorkplane(Document doc, FormMeasurePoints form, Plane p, View av)
-		{
-			if (p == null) { return; }
+//		// ReSharper disable once IdentifierTypo
+//		public static void ShowHideWorkplane(Document doc, FormMeasurePoints form, Plane p, View av)
+//		{
+//			if (p == null) { return; }
+//
+//			try
+//			{
+//				using (Transaction t = new Transaction(doc, "measure points"))
+//				{
+//					t.Start();
+//
+//					if (form.ShowWorkplane)
+//					{
+//						av.ShowActiveWorkPlane();
+//					}
+//					else
+//					{
+//						av.HideActiveWorkPlane();
+//					}
+//
+//					t.Commit();
+//				}
+//			}
+//			catch
+//			{
+//			}
+//		}
 
-			try
-			{
-				using (Transaction t = new Transaction(doc, "measure points"))
-				{
-					t.Start();
-
-					if (form.ShowWorkplane)
-					{
-						av.ShowActiveWorkPlane();
-					}
-					else
-					{
-						av.HideActiveWorkPlane();
-					}
-
-					t.Commit();
-				}
-			}
-			catch
-			{
-			}
-		}
-
-		internal static bool IsPlaneOrientationAcceptable(UIDocument uiDoc)
-		{
-			View v = uiDoc.ActiveGraphicalView;
-			SketchPlane sp = uiDoc.ActiveGraphicalView.SketchPlane;
-			Plane p = sp?.GetPlane();
-
-			if (p == null) { return false; }
-
-			double dp = Math.Abs(v.ViewDirection.DotProduct(p.Normal));
-
-			if (dp < 0.2) { return false; }
-
-			return true;
-		}
+// moved to library revit
+//		internal static bool IsPlaneOrientationAcceptable(UIDocument uiDoc)
+//		{
+//			View v = uiDoc.ActiveGraphicalView;
+//			SketchPlane sp = uiDoc.ActiveGraphicalView.SketchPlane;
+//			Plane p = sp?.GetPlane();
+//
+//			if (p == null) { return false; }
+//
+//			double dp = Math.Abs(v.ViewDirection.DotProduct(p.Normal));
+//
+//			if (dp < 0.2) { return false; }
+//
+//			return true;
+//		}
 
 	#endregion
 
@@ -178,12 +174,14 @@ namespace TopoEdit.Util
 					Debug.WriteLine("GeoObj is a curve");
 					continue;
 				}
+
 				Solid s = GeoObj as Solid;
 				if (s != null)
 				{
 					Debug.WriteLine("GeoObj is a solid");
 					continue;
 				}
+
 				Mesh m = GeoObj as Mesh;
 				if (m != null)
 				{
@@ -194,24 +192,28 @@ namespace TopoEdit.Util
 					ListingMethods.ListPointsDebug( m.Vertices);
 					continue;
 				}
+
 				Edge e = GeoObj as Edge;
 				if (e != null)
 				{
 					Debug.WriteLine("GeoObj is a edge");
 					continue;
 				}
+
 				GeometryElement g = GeoObj as GeometryElement;
 				if (g != null)
 				{
 					Debug.WriteLine("GeoObj is a GeometryElement");
 					continue;
 				}
+
 				Point p = GeoObj as Point ;
 				if (p != null)
 				{
 					Debug.WriteLine("GeoObj is a point");
 					continue;
 				}
+
 				PolyLine pl = GeoObj as PolyLine ;
 				if (pl != null)
 				{
@@ -222,12 +224,14 @@ namespace TopoEdit.Util
 
 					continue;
 				}
+
 				Profile pr = GeoObj as Profile ;
 				if (pr != null)
 				{
 					Debug.WriteLine("GeoObj is a Profile");
 					continue;
 				}
+
 				Debug.WriteLine("GeoObj is a other");
 			}
 		}
@@ -253,25 +257,24 @@ namespace TopoEdit.Util
 					|| type.Contains("view") || type.Contains("title") || type.Contains("label"))
 				{
 					sb.Append("element: ")
-						.Append(el.Name)
-						.Append(" type: ")
-						.Append(el.GetType())
-						.Append("  el number: ")
-						.Append(el.Id)
-						.Append(nl);
+					.Append(el.Name)
+					.Append(" type: ")
+					.Append(el.GetType())
+					.Append("  el number: ")
+					.Append(el.Id)
+					.Append(nl);
 				}
 			}
 
 			ListingMethods.LogMsgln(sb.ToString());
-
 		}
 
-		internal static ModelLine DrawModelLine(Document doc, 
+		internal static ModelLine DrawModelLine(Document doc,
 			XYZ startPoint, XYZ endPoint, GraphicsStyle style)
 		{
 			ModelLine ml;
 
-			using (Transaction t = new Transaction(doc, "draw line")) 
+			using (Transaction t = new Transaction(doc, "draw line"))
 			{
 				t.Start();
 
@@ -293,6 +296,7 @@ namespace TopoEdit.Util
 				{
 					ml.LineStyle = style;
 				}
+
 				t.Commit();
 			}
 
@@ -329,9 +333,10 @@ namespace TopoEdit.Util
 
 				t.Commit();
 			}
+
 			return dl;
 		}
-		
+
 		internal static bool GetLineStyles(Document doc)
 		{
 			View av = doc.ActiveView;
@@ -369,13 +374,14 @@ namespace TopoEdit.Util
 					SketchPlane sp = SketchPlane.Create(doc, p);
 					Line l = Line.CreateBound(p.Origin, new XYZ(1, 1, p.Origin.Z));
 
-					ModelLine ml = 
+					ModelLine ml =
 						doc.Create.NewModelCurve(l, sp) as ModelLine;
 
 					foreach (ElementId eid in ml.GetLineStyleIds())
 					{
 						GLineStyles.Add(doc.GetElement(eid) as GraphicsStyle);
 					}
+
 					t.Commit();
 				}
 			}
@@ -395,13 +401,14 @@ namespace TopoEdit.Util
 
 					Line l = Line.CreateBound(av.Origin, new XYZ(1, 1, av.Origin.Z));
 
-					DetailLine dl = 
+					DetailLine dl =
 						doc.Create.NewDetailCurve(doc.ActiveView, l) as DetailLine;
 
 					foreach (ElementId eid in dl.GetLineStyleIds())
 					{
 						GLineStyles.Add(doc.GetElement(eid) as GraphicsStyle);
 					}
+
 					t.Commit();
 				}
 			}
@@ -432,41 +439,26 @@ namespace TopoEdit.Util
 				RefPlanes.Add(rp);
 			}
 
-			if (idx == 0) { return null;}
+			if (idx == 0) { return null; }
 
 			return RefPlanes;
+		}
+
+		internal static View3D GetTemp3DView(Document doc)
+		{
+			FilteredElementCollector collector = new FilteredElementCollector(doc);
+			Func<View3D, bool> isNotTemplate = v3 => !(v3.IsTemplate);
+
+			return collector.OfClass(typeof(View3D)).Cast<View3D>().First<View3D>(isNotTemplate);
 		}
 
 	#endregion
 
 	#region Points
+
 		internal static double DistanceBetweenPointsXY(XYZ point1, XYZ point2)
 		{
 			return new PointMeasurements(point1, point2, XYZ.Zero).DistanceXy;
-		}
-
-		internal static PickedBox2 GetPickedBox(UIDocument uiDoc, PickBoxStyle style, string prompt)
-		{
-			// max == upper right
-			// min == lower left
-			return new PickedBox2(uiDoc.Selection.PickBox(style, prompt), true);
-		}
-
-		internal static void PickAPoint(UIDocument uiDoc)
-		{
-			try
-			{
-				while (true)
-				{
-					Reference r = uiDoc.Selection.PickObject(ObjectType.PointOnElement);
-
-					ListingMethods.LogMsgln("ref: " + ListingMethods.ListPoint(r.GlobalPoint));
-				}
-			}
-			catch
-			{
-				
-			}
 		}
 
 		// determine if the supplied list contains the supplied point
@@ -489,6 +481,28 @@ namespace TopoEdit.Util
 			}
 
 			return false;
+		}
+
+		// find a point on the face of a toposurface
+		internal static XYZ GetSurfacePoint(Document doc,
+			TopographySurface topoSurface, XYZ location
+			)
+		{
+			// create the ref intersector object
+			ReferenceIntersector ri =
+				new ReferenceIntersector(topoSurface.Id, FindReferenceTarget.All,
+					Utils.GetTemp3DView(doc));
+
+			// create a bogus point far above the topo surface
+			XYZ point = location.Add(new XYZ(0, 0, 50000.0));
+
+			// create a vector that points straight down
+			XYZ vector = XYZ.BasisZ.Negate();
+
+			// using the above, get a reference to the facet of the toposurface
+			Reference rf = ri.FindNearest(point, vector).GetReference();
+
+			return rf.GlobalPoint;
 		}
 
 	#endregion
@@ -546,10 +560,10 @@ namespace TopoEdit.Util
 		}
 
 		// show the parameter information for the element
-		internal static void 
+		internal static void
 			GetElementParameterInformation(Document document, Element element)
 		{
-			// Format the prompt information string
+			// Formatting the prompt information string
 			String message = "Show parameters for selected Element:";
 
 			StringBuilder st = new StringBuilder();
@@ -581,13 +595,13 @@ namespace TopoEdit.Util
 				ElementId id = para.AsElementId();
 				if (id.IntegerValue >= 0)
 				{
-
 					defName += " : " + document.GetElement(id).Name;
 				}
 				else
 				{
 					defName += " : " + id.IntegerValue.ToString();
 				}
+
 				break;
 			case StorageType.Integer:
 				if (ParameterType.YesNo == para.Definition.ParameterType)
@@ -605,6 +619,7 @@ namespace TopoEdit.Util
 				{
 					defName += " : " + para.AsInteger().ToString();
 				}
+
 				break;
 			case StorageType.String:
 				defName += " : " + para.AsString() + " (" + para.AsValueString() + ")";
@@ -622,7 +637,7 @@ namespace TopoEdit.Util
 		internal static void
 			GetElementParameterMapInformation(Document document, Element element)
 		{
-			// Format the prompt information string
+			// Formatting the prompt information string
 			String message = "Show parameter map for selected Element:";
 
 			StringBuilder st = new StringBuilder();
@@ -640,111 +655,149 @@ namespace TopoEdit.Util
 		}
 
 	#endregion
+	}
 
-	#region failed filled region 
+	public class LineSelectFilter : ISelectionFilter
+	{
+		Document doc = null;
 
-		/*
-		 * this region of code deals with my attempt to draw a marker to indicate
-		 * which point of the selected line is the start point
-		 * this does not work as I am not allowed to modify the DB, at this point,
-		 * and add a filled region
-		 *
-		 *
-		 
-
-		private const string FilledRegionTypeName = "Solid TopoEdit Red";
-
-		private static bool DrawStartMarker(XYZ point)
+		public LineSelectFilter(Document doc)
 		{
-			FilledRegionType frt = FindFilledRegionType("Solid Black");
-
-			IList<CurveLoop> loops = new List<CurveLoop>(4);
-
-			double leftDown = -100.0;
-			double rightUp = -1 * leftDown;
-
-			XYZ[] points = new XYZ[5];
-
-			points[0] = point.Add(new XYZ(leftDown, leftDown, 0));
-			points[1] = point.Add(new XYZ(rightUp, leftDown, 0));
-			points[2] = point.Add(new XYZ(rightUp, rightUp, 0));
-			points[3] = point.Add(new XYZ(leftDown, rightUp, 0));
-			points[4] = point.Add(new XYZ(leftDown, leftDown, 0));
-
-			CurveLoop loop = new CurveLoop();
-
-			for (var i = 0; i < points.Length - 1; i++)
-			{
-				Line l = Line.CreateBound(points[i], points[i + 1]);
-				loop.Append(l);
-			}
-
-			loops.Add(loop);
-
-			using (Transaction t = new Transaction(_doc, "create filled region"))
-			{
-				t.Start();
-
-				FilledRegion fr =
-					FilledRegion.Create(_doc, frt.Id,
-						_doc.ActiveView.Id, loops);
-				t.Commit();
-			}
-
-			return true;
+			this.doc = doc;
 		}
 
-
-
-		// scan for an existing an existing filled region type of the
-		// given name   (Solid Black)
-		private static FilledRegionType FindFilledRegionType(string name)
+		public bool AllowElement(Element elem)
 		{
-			FilteredElementCollector collector =
-				new FilteredElementCollector(_doc)
-				.OfClass(typeof(FilledRegionType));
+			if (elem.Category.Name == "Lines") return true;
+			return false;
+		}
+
+		public bool AllowReference(Reference reference, XYZ position)
+		{
+			return false;
+		}
+	}
+
+	internal struct XyxLabels
+	{
+		internal Label X;
+		internal Label Y;
+		internal Label Z;
+
+		public XyxLabels(Label x, Label y, Label z)
+		{
+			X = x;
+			Y = y;
+			Z = z;
+		}
+	}
+}
 
 
-			FilledRegionType f =
-				(from pattern in collector.Cast<FilledRegionType>()
-				where pattern.Name.Equals(name)
-				select pattern).First();
+#region failed filled region
+
+/*
+* this region of code deals with my attempt to draw a marker to indicate
+* which point of the selected line is the start point
+* this does not work as I am not allowed to modify the DB, at this point,
+* and add a filled region
+*
+*
 
 
-			IList<Element> elems = collector.ToElements();
+private const string FilledRegionTypeName = "Solid TopoEdit Red";
+
+private static bool DrawStartMarker(XYZ point)
+{
+	FilledRegionType frt = FindFilledRegionType("Solid Black");
+
+	IList<CurveLoop> loops = new List<CurveLoop>(4);
+
+	double leftDown = -100.0;
+	double rightUp = -1 * leftDown;
+
+	XYZ[] points = new XYZ[5];
+
+	points[0] = point.Add(new XYZ(leftDown, leftDown, 0));
+	points[1] = point.Add(new XYZ(rightUp, leftDown, 0));
+	points[2] = point.Add(new XYZ(rightUp, rightUp, 0));
+	points[3] = point.Add(new XYZ(leftDown, rightUp, 0));
+	points[4] = point.Add(new XYZ(leftDown, leftDown, 0));
+
+	CurveLoop loop = new CurveLoop();
+
+	for (var i = 0; i < points.Length - 1; i++)
+	{
+		Line l = Line.CreateBound(points[i], points[i + 1]);
+		loop.Append(l);
+	}
+
+	loops.Add(loop);
+
+	using (Transaction t = new Transaction(_doc, "create filled region"))
+	{
+		t.Start();
+
+		FilledRegion fr =
+			FilledRegion.Create(_doc, frt.Id,
+				_doc.ActiveView.Id, loops);
+		t.Commit();
+	}
+
+	return true;
+}
+
+
+
+// scan for an existing an existing filled region type of the
+// given name   (Solid Black)
+private static FilledRegionType FindFilledRegionType(string name)
+{
+	FilteredElementCollector collector =
+		new FilteredElementCollector(_doc)
+		.OfClass(typeof(FilledRegionType));
+
+
+	FilledRegionType f =
+		(from pattern in collector.Cast<FilledRegionType>()
+		where pattern.Name.Equals(name)
+		select pattern).First();
+
+
+	IList<Element> elems = collector.ToElements();
 
 //			ListFRT(elems);
 
-			foreach (FilledRegionType frt in elems)
-			{
-				if (frt.Name.Equals(name))
-				{
-					return frt;
-				}
-			}
-			return null;
-		}
-
-
-		private static FilledRegionType GetTopoEditFilledRegionType()
+	foreach (FilledRegionType frt in elems)
+	{
+		if (frt.Name.Equals(name))
 		{
-			FilledRegionType fr2 = null;
+			return frt;
+		}
+	}
+	return null;
+}
 
-			FillPatternElement solid = GetSolid();
+
+private static FilledRegionType GetTopoEditFilledRegionType()
+{
+	FilledRegionType fr2 = null;
+
+	FillPatternElement solid = GetSolid();
 
 
-			fr2 = FindFilledRegionType(FilledRegionTypeName);
+	fr2 = FindFilledRegionType(FilledRegionTypeName);
 
-			if (fr2 != null)
-			{
-				return SetFilledRegionTypeParameters(fr2, solid.Id);
-			}
+	if (fr2 != null)
+	{
+		return SetFilledRegionTypeParameters(fr2, solid.Id);
+	}
 
-			FilteredElementCollector collector =
-				new FilteredElementCollector(_doc)
-				.OfClass(typeof(FilledRegionType));
+	FilteredElementCollector collector =
+		new FilteredElementCollector(_doc)
+		.OfClass(typeof(FilledRegionType));
 
-			fr2 = MakeFilledRegionType(collector, solid.Id);
+	fr2 = MakeFilledRegionType(collector, solid.Id);
 
 //			using (Transaction t = new Transaction(_doc, "create filled region type"))
 //			{
@@ -772,81 +825,78 @@ namespace TopoEdit.Util
 //			IList<Element> anno3 = collector3.WherePasses(filter3).ToElements();
 //			IList<Element> anno2 = collector2.WherePasses(filter2).WhereElementIsElementType().ToElements();
 //
-			
+	
 
 //			FilledRegion fr = FilledRegion.Create(_doc, );
 
-			return fr2;
+	return fr2;
 
-		}
+}
 
-		private static void ListFRT(IList<Element> elems)
-		{
-			foreach (FilledRegionType e in elems)
-			{
-				Debug.WriteLine("frt| name| " + e.Name 
-					+ "  valid?| " + e.IsValidObject
-					+ e.Pinned);
-			}
-		}
-
-		private static FilledRegionType MakeFilledRegionType(FilteredElementCollector collector, ElementId id)
-		{
-
-			FilledRegionType fr2 = null;
-
-			using (Transaction t = new Transaction(_doc, "create filled region type"))
-			{
-				t.Start();
-				// gets the current filled region types
-
-				FilledRegionType fr1 = collector.FirstElement() as FilledRegionType;
-
-				// this worked and created a hidden filled region type
-				fr2 = fr1.Duplicate(FilledRegionTypeName) as FilledRegionType;
-				fr2.Color = new Color(255, 0, 0);
-//				fr2 = SetFilledRegionTypeParameters(fr2, id);
-
-				t.Commit();
-			}
-
-			return fr2;
-		}
-
-		private static FilledRegionType SetFilledRegionTypeParameters(FilledRegionType frt, ElementId id)
-		{
-			frt.Background = FilledRegionBackground.Transparent;
-			frt.Color = new Color(255, 0, 0);
-			frt.FillPatternId = id;
-
-			return frt;
-		}
-
-		// I beleive that solid is a permanent fill pattern
-		private static FillPatternElement GetSolid()
-		{
-			FillPatternElement solid = null;
-
-			// gets all of the fill patterns
-			FilteredElementCollector collector4 = new FilteredElementCollector(_doc).OfClass(typeof(FillPatternElement));
-			IList<Element> es = collector4.ToElements();
-
-			foreach (FillPatternElement e in es)
-			{
-				if (e.GetFillPattern().IsSolidFill)
-				{
-					return e;
-				}
-			}
-
-			return null;
-		}
-		
-			 
-			 
-			 */
-
-	#endregion
-
+private static void ListFRT(IList<Element> elems)
+{
+	foreach (FilledRegionType e in elems)
+	{
+		Debug.WriteLine("frt| name| " + e.Name 
+			+ "  valid?| " + e.IsValidObject
+			+ e.Pinned);
 	}
 }
+
+private static FilledRegionType MakeFilledRegionType(FilteredElementCollector collector, ElementId id)
+{
+
+	FilledRegionType fr2 = null;
+
+	using (Transaction t = new Transaction(_doc, "create filled region type"))
+	{
+		t.Start();
+		// gets the current filled region types
+
+		FilledRegionType fr1 = collector.FirstElement() as FilledRegionType;
+
+		// this worked and created a hidden filled region type
+		fr2 = fr1.Duplicate(FilledRegionTypeName) as FilledRegionType;
+		fr2.Color = new Color(255, 0, 0);
+//				fr2 = SetFilledRegionTypeParameters(fr2, id);
+
+		t.Commit();
+	}
+
+	return fr2;
+}
+
+private static FilledRegionType SetFilledRegionTypeParameters(FilledRegionType frt, ElementId id)
+{
+	frt.Background = FilledRegionBackground.Transparent;
+	frt.Color = new Color(255, 0, 0);
+	frt.FillPatternId = id;
+
+	return frt;
+}
+
+// I beleive that solid is a permanent fill pattern
+private static FillPatternElement GetSolid()
+{
+	FillPatternElement solid = null;
+
+	// gets all of the fill patterns
+	FilteredElementCollector collector4 = new FilteredElementCollector(_doc).OfClass(typeof(FillPatternElement));
+	IList<Element> es = collector4.ToElements();
+
+	foreach (FillPatternElement e in es)
+	{
+		if (e.GetFillPattern().IsSolidFill)
+		{
+			return e;
+		}
+	}
+
+	return null;
+}
+
+	
+	
+	*/
+
+#endregion

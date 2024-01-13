@@ -94,7 +94,7 @@ namespace TopoEdit.Util
 			string lpszClass, 
 			string lpszWindow );
 
-		private static void SetStatusText(string text)
+		public static void SetStatusText(string text)
 		{
 			IntPtr statusBar = FindWindowEx(GetWinHandle(), IntPtr.Zero,
 				"msctls_statusbar32", "");
@@ -108,6 +108,12 @@ namespace TopoEdit.Util
 		internal static IntPtr GetWinHandle()
 		{
 			return Process.GetCurrentProcess().MainWindowHandle;
+		}
+
+		internal static bool Is3DView(View v)
+		{
+			return GetViewType(v).ViewTSubCat == 
+				ViewTypeSub.D3_VIEW;
 		}
 
 		internal static bool IsViewAcceptable(View v)

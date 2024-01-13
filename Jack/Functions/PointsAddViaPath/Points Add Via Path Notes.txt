@@ -1,0 +1,71 @@
+﻿
+
+add points that follows a path
+
+options
+
+* select an existing line or arc
+* provide start and end point - linear add
+* provide start, mid, and end points - arc add
+* provide start and end point + radius & center point side - arc add
+* select multiple lines and / or arcs - path add
+* select multiple lines and / or arcs & additional points
+* provide multiple points - path add via points
+ 
+determine the surface elevation of each point
+
+have chart of control points - use the surface elevation of each point
+as the starting point
+
+user can modify the elevation of each control point
+user can modify the slope between the control points
+
+elevation adjustments:
+* surface elevation +/- distance (relative)
+* absolute elevation
+* calculated
+
+slope options:
+* x:y
+* %
+* angle
+
+create chart of control points with this info
+> segment type - line or arc
+> segment start point
+* x / y coordinate (can adjust)
+* z coordinate (original / surface elevation)
+* z adjustment type (relative / absolute / calculated)
+* z final (can adjust)
+> segment end point
+* x / y coordinate (can adjust)
+* z coordinate (original / surface elevation)
+* z adjustment type (relative / absolute / calculated)
+* z final (can adjust)
+> arcs
+* radius (can adjust)
+* center point x / y (cannot adjust)
+> slope
+* x:y  - or -
+* %  - or -
+* angle
+
+
+add: 
+
+# line | slope value
+                        x/y dist  orig  z change    new          prior
+  beg | x | y| space | from prior | z | from prior | z | space | x/y/z
+
+                        x/y dist  orig  z change    new
+  end | x | y| space | from prior | z | from prior | z | space |
+
+# arc | slope value
+                        x/y dist  orig  z change    new
+  beg | x | y| space | from prior | z | from prior | z | space |
+
+  cen | x | y| rad
+                        x/y dist  orig  z change    new
+  end | x | y| space | from prior | z | from prior | z | space |
+
+

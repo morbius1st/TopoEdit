@@ -1,0 +1,4 @@
+
+* place the main window object into AppRibbon.  this object hangs around.  I think that command is transenient and is gone once it hits the return;
+* however, in command, load "R" and start the window 
+* in appribbon: 

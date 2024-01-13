@@ -42,8 +42,8 @@ namespace TopoEdit.Main
 		internal void ConfigureButtons(ViewType viewType)
 		{
 			// must be used in a plan view
-			btnPlacePointsNewLine.Enabled = viewType.ViewTCat == RevitView.ViewTtypeCat.D2_WITHPLANE &&
-				viewType.ViewTSubCat == RevitView.ViewTypeSub.D2_HORIZONTAL;
+//			btnPlacePointsNewLine.Enabled = viewType.ViewTCat == RevitView.ViewTtypeCat.D2_WITHPLANE &&
+//				viewType.ViewTSubCat == RevitView.ViewTypeSub.D2_HORIZONTAL;
 		}
 
 		// form methods
@@ -125,6 +125,12 @@ namespace TopoEdit.Main
 		private void btnMeasure_Click(object sender, EventArgs e)
 		{
 			function = ModifyPointsFunctions.MEASURE;
+			this.Close();
+		}
+
+		private void btnIntersect_Click(object sender, EventArgs e)
+		{
+			function = ModifyPointsFunctions.INTERSECT;
 			this.Close();
 		}
 	}

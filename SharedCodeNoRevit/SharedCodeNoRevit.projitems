@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>99f6e4f8-c9ee-4806-9ac5-fea5846e5520</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SharedCodeNoRevit</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+  <Compile Include="\\CRONOS\Users\jeffs\Documents\Programming\VisualStudioProjects\RevitProjects\LibraryRevit\LibraryRevit\RevitFauxDocument.cs">
+      <Link>.Linked\RevitFauxDocument.cs</Link>
+    </Compile>
+    <Compile Include="\\CRONOS\Users\jeffs\Documents\Programming\VisualStudioProjects\RevitProjects\LibraryRevit\LibraryRevit\RevitFaux.cs">
+      <Link>.Linked\RevitFaux.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,138 @@
+﻿<Window
+		x:Name="mainWin"
+		x:Class="JackRvtTst01.Windows.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:local="clr-namespace:JackRvtTst01.Windows"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		Title="MainWindow"
+		Width="800"
+		Height="450"
+		mc:Ignorable="d"
+		Background="{DynamicResource Normal.Window.Background}"
+		DataContext="{Binding ElementName=mainWin}"
+		Closing="MainWindow_OnClosing"
+		>
+	<Window.Resources>
+
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ResourceFiles/XamlResources/ShCommon.xaml" />
+
+			</ResourceDictionary.MergedDictionaries>
+			</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid>
+		<Grid
+				Grid.Column="0"
+				Grid.Row="0"
+				x:Name="GrdMain"
+				IsEnabled="{Binding IsEnabledGrdMain}">
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="40" />
+			</Grid.RowDefinitions>
+
+			<DockPanel
+					Grid.Column="0"
+					Grid.Row="1"
+					Grid.ColumnSpan="2"
+					Margin="5">
+
+				<Button
+						Margin="10,0,0,0"
+						DockPanel.Dock="Right"
+						VerticalAlignment="Bottom"
+						HorizontalAlignment="Right"
+						Content="Exit"
+						Height="26"
+						Width="80"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnExit_OnClick" />
+
+
+				<Button
+						Margin="10,0,0,0"
+						DockPanel.Dock="Right"
+						VerticalAlignment="Bottom"
+						HorizontalAlignment="Right"
+						Content="Request Points"
+						Height="26"
+						Width="80"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnRequestPoints_OnClick" />
+
+				<Button
+						Margin="10,0,0,0"
+						DockPanel.Dock="Right"
+						VerticalAlignment="Bottom"
+						HorizontalAlignment="Right"
+						Content="Request Elements"
+						Height="26"
+						Width="80"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnRequestElements_OnClick" />
+
+
+			</DockPanel>
+
+			<TextBox
+					Grid.Column="0"
+					Grid.Row="0"
+					Foreground="White"
+					Background="Transparent"
+					Text="{Binding MessageBox}" />
+
+
+
+		</Grid>
+
+		<Grid
+				Grid.Column="0"
+				Grid.Row="0"
+				
+				>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="90" />
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="40" />
+				
+			</Grid.RowDefinitions>
+
+			<DockPanel
+					Grid.Column="1"
+					Grid.Row="0"
+					VerticalAlignment="Bottom"
+			>
+
+				<Button
+						DockPanel.Dock="Bottom"
+						VerticalAlignment="Bottom"
+						HorizontalAlignment="Right"
+						Content="Stop Points"
+						Height="26"
+						Width="80"
+						Style="{StaticResource Button.Normal.Style}"
+						Click="BtnStopPoints_OnClick"
+						/>
+
+			</DockPanel>
+
+		</Grid>
+
+	</Grid>
+
+</Window>

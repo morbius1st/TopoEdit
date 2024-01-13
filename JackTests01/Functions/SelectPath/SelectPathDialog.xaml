@@ -1,0 +1,185 @@
+﻿<Window x:Class="JackTests01.Functions.SelectPath.SelectPathDialog"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:JackTests01.Functions.SelectPath"
+		xmlns:shSupport="clr-namespace:SharedApp.Windows.ShSupport"
+		Title="PathSelection"
+		Width="650"
+		Height="450"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		mc:Ignorable="d"
+		Background="{DynamicResource Normal.Window.Background}"
+		>
+	<Window.Resources>
+
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../../Windows/ShSupport/ShCommon.xaml" />
+				<ResourceDictionary Source="../../Windows/ShSupport/ScrollViewerNarrow.xaml" />
+				<ResourceDictionary Source="../../Windows/ShSupport/ScrollBar.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="25" />
+			<RowDefinition Height="40" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Column="0"
+				Grid.Row="2"
+				HorizontalAlignment="Right"
+				Orientation="Horizontal"
+				>
+
+			<!-- <Button x:Name="BtnSelectPt" -->
+			<!-- 		Content="Pick Point" -->
+			<!-- 		Margin="0,0,10,0" -->
+			<!-- 		IsEnabled="{Binding Enable}" -->
+			<!-- 		Style="{StaticResource Btn.Std.Style}" -->
+			<!-- 		Click="BtnSelectPt_OnClick" -->
+			<!-- 		/> -->
+
+			<!-- <Button x:Name="BtnSelectPtElement" -->
+			<!-- 		Content="Pick Point Element" -->
+			<!-- 		Margin="0,0,10,0" -->
+			<!-- 		IsEnabled="{Binding Enable}" -->
+			<!-- 		Style="{StaticResource Btn.Std.Style}" -->
+			<!-- 		Click="BtnSelectPtElement_OnClick" -->
+			<!-- 		/> -->
+
+			<Button x:Name="BtnSelectElements"
+					Content="Select Elements"
+					Margin="0,0,10,0"
+					IsEnabled="{Binding Enable}"
+					Style="{StaticResource Btn.Std.Style}"
+					Click="BtnSelectElements_OnClick"
+					/>
+
+			<!-- removed
+			<Button x:Name="BtnSelectLineArc"
+					Margin="0,0,10,0"
+					IsEnabled="{Binding Enable}"
+					Style="{StaticResource Btn.Std.Style}"
+					Click="BtnSelectLineArc_OnClick"
+					>
+				<Button.Content>
+					<DockPanel HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							>
+						<TextBlock Margin="0,-2,0,-1"
+								Padding="0,0,0,0"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Top"
+								DockPanel.Dock="Top"
+								Text="Select Detail"
+								/>
+						<TextBlock Margin="0,-2,0,1"
+								Padding="0,0,0,2"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Top"
+								DockPanel.Dock="Bottom"
+								Text="Line or Arc"
+								/>
+					</DockPanel>
+				</Button.Content>
+			</Button>
+			-->
+
+			<Button x:Name="BtnExit"
+					Content="Exit"
+					Margin="0,0,10,0"
+					IsEnabled="{Binding Enable}"
+					Style="{StaticResource Btn.Std.Style}"
+					Click="BtnExit_OnClick"
+					/>
+
+
+		</StackPanel>
+
+		<TextBlock Grid.Column="0"
+				Grid.Row="1"
+				HorizontalAlignment="Right"
+				Foreground="White"
+				Text="To complete your selection choose FINISH on the option bar below the ribbon"
+				/>
+
+		<TextBox Grid.Column="0"
+				Grid.Row="0"
+				Margin="10,0,10,0"
+				FontFamily="Consolas"
+				Background="Transparent"
+				Foreground="White"
+				BorderThickness="0.5"
+				BorderBrush="Red"
+				Text="{Binding MessageBox,
+											 Mode=OneWay}"
+				VerticalScrollBarVisibility="Visible"
+				HorizontalScrollBarVisibility="Visible"
+				>
+
+			<TextBox.Resources>
+
+				<Style TargetType="{x:Type ScrollViewer}">
+					<Setter Property="Template" Value="{StaticResource ScrollViewerNarrow}" />
+					<Setter Property="shSupport:ScrollBarAttached.RepeatButtonLength" Value="10" />
+					<Setter Property="shSupport:ScrollBarAttached.ScrollBarWidth" Value="6" />
+					<Setter Property="shSupport:ScrollBarAttached.TrackWidth" Value="6" />
+					<Setter Property="shSupport:ScrollBarAttached.RepeatButtonIconGirth" Value="8" />
+					<Setter Property="shSupport:ScrollBarAttached.RepeatButtonIconLength" Value="8" />
+					<Setter Property="shSupport:ScrollBarAttached.VertBorderThickness" Value="1,0,0,0" />
+					<Setter Property="shSupport:ScrollBarAttached.VertBorderColor">
+						<Setter.Value>
+							<!-- <SolidColorBrush Color="{StaticResource Gray.300}" /> -->
+							<SolidColorBrush Color="{StaticResource Blue.350}" />
+						</Setter.Value>
+					</Setter>
+					<Setter Property="shSupport:ScrollBarAttached.HorizBorderThickness" Value="0,1,0,0" />
+					<Setter Property="shSupport:ScrollBarAttached.HorizBorderColor">
+						<Setter.Value>
+							<SolidColorBrush Color="{StaticResource Blue.350}" />
+						</Setter.Value>
+					</Setter>
+
+					<Setter Property="shSupport:ScrollViewerAttached.CornerRectColor">
+						<Setter.Value>
+							<SolidColorBrush Color="{StaticResource Gray.150}" />
+						</Setter.Value>
+					</Setter>
+
+					<Setter Property="shSupport:ScrollViewerAttached.CornerRectLeftBdrHeight" Value="1" />
+					<Setter Property="shSupport:ScrollViewerAttached.CornerRectLeftBdrColor">
+						<Setter.Value>
+							<SolidColorBrush Color="{StaticResource Blue.350}" />
+						</Setter.Value>
+					</Setter>
+
+					<Setter Property="shSupport:ScrollViewerAttached.CornerRectTopBdrHeight" Value="1" />
+					<Setter Property="shSupport:ScrollViewerAttached.CornerRectTopBdrColor">
+						<Setter.Value>
+							<SolidColorBrush Color="{StaticResource Blue.350}" />
+						</Setter.Value>
+					</Setter>
+
+				</Style>
+
+			</TextBox.Resources>
+
+		</TextBox>
+
+
+
+
+
+	</Grid>
+</Window>

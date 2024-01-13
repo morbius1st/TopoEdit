@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TopoEdit</RootNamespace>
     <AssemblyName>TopoEdit</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -42,25 +42,29 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AOTools">
-      <HintPath>C:\Users\jeffs\AppData\Roaming\Autodesk\Revit\Addins\2017\AOTools.dll</HintPath>
+    <Reference Include="AODxMeasure">
+      <HintPath>Resources\AODxMeasure.dll</HintPath>
     </Reference>
-    <Reference Include="EnergyAnalysisDBAPI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2017\EnergyAnalysisDBAPI.dll</HintPath>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
-      <HintPath>$(ProgramW6432)\Autodesk\Revit 2017\RevitAPI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>$(ProgramW6432)\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -68,6 +72,30 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\UtilityLibrary\UtilityLibrary\CsExtensions.cs">
+      <Link>Referenced\CsExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\UtilityLibrary\UtilityLibrary\MessageUtilities.cs">
+      <Link>Referenced\MessageUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\LibraryRevit\LibraryRevit\RevitExtensions.cs">
+      <Link>Util\RevitExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\LibraryRevit\LibraryRevit\RevitLibrary.cs">
+      <Link>Referenced\RevitLibrary.cs</Link>
+    </Compile>
+    <Compile Include="PointsByLineOrArc\PointsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PointsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="SurfacePoints\GetSurfacePoints.cs" />
+    <Compile Include="SurfacePoints\SurfacePoints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SurfacePoints\SurfacePoints.Designer.cs">
+      <DependentUpon>SurfacePoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main\ModifyPointsFunctions.cs" />
     <Compile Include="PointsByLineOrArc\FormAddPointsByLineOrArc.cs">
       <SubType>Form</SubType>
@@ -95,7 +123,7 @@
     </Compile>
     <Compile Include="Main\ModifyPoints.cs" />
     <Compile Include="Main\PointBoundaryPlace.cs" />
-    <Compile Include="Main\PointPlaceNew.cs" />
+    <Compile Include="AddOnePoint\PointPlaceNew.cs" />
     <Compile Include="PointsByLineOrArc\PointsByLineOrArc.cs" />
     <Compile Include="Main\PointsDelete.cs" />
     <Compile Include="QueryPoints\PointsQuery.cs" />
@@ -104,7 +132,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Main\PointsRaiseLower.cs" />
+    <Compile Include="RaiseOrLower\PointsRaiseLower.cs" />
     <Compile Include="RaiseOrLower\FormRaiseLowerPoints.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +145,7 @@
     <Compile Include="Main\FormModifyPointsMain.Designer.cs">
       <DependentUpon>FormModifyPointsMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Util\Formatting.cs" />
     <Compile Include="Util\PickedBox2.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -128,6 +157,7 @@
     <Compile Include="Util\BoundingCube.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\PointMeasurements.cs" />
+    <Compile Include="Util\Select.cs" />
     <Compile Include="Util\TextUtils.cs" />
     <Compile Include="Util\ListingMethods.cs" />
     <Compile Include="Util\MessageUtil.cs" />
@@ -138,6 +168,9 @@
     <Compile Include="Util\RevitView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SurfacePoints\SurfacePoints.resx">
+      <DependentUpon>SurfacePoints.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PointsByLineOrArc\FormAddPointsByLineOrArc.resx">
       <DependentUpon>FormAddPointsByLineOrArc.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,16 +198,33 @@
     <Content Include="Other\TopoEdit.addin" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="PointsByLineOrArc\PointsDataSet.xsc">
+      <DependentUpon>PointsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="PointsByLineOrArc\PointsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PointsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PointsByLineOrArc\PointsDataSet.xss">
+      <DependentUpon>PointsDataSet.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2017" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2017"
-if exist "$(AppData)\Autodesk\REVIT\Addins\2017" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2017"</PostBuildEvent>
+    <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2021" copy "$(ProjectDir)other\*.addin" "$(AppData)\Autodesk\REVIT\Addins\2021"
+if exist "$(AppData)\Autodesk\REVIT\Addins\2021" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2021"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>echo Configuration: $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

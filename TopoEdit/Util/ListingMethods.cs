@@ -9,6 +9,7 @@ using Autodesk.Revit.UI;
 using TopoEdit.Information;
 using TopoEdit.Main;
 using static TopoEdit.Util.Utils;
+using static TopoEdit.Util.Formatting;
 
 #endregion
 
@@ -98,16 +99,16 @@ namespace TopoEdit.Util
 
 			sb.Append (" First Point: ").Append(ListPoint(point1, includeZ)).Append(nl);
 			sb.Append ("Second Point: ").Append(ListPoint(point2, includeZ)).Append(nl);
-			sb.Append($"     X Distance: {FormatLengthNumber(pm.Delta.X), FIELD_WIDTH}").Append(nl);
-			sb.Append($"     Y Distance: {FormatLengthNumber(pm.Delta.Y),FIELD_WIDTH}").Append(nl);
+			sb.Append($"     X Distance: {Format.LengthNumber(pm.Delta.X), FIELD_WIDTH}").Append(nl);
+			sb.Append($"     Y Distance: {Format.LengthNumber(pm.Delta.Y),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
 			{
-				sb.Append($"     Z Distance: {FormatLengthNumber(pm.Delta.Z),FIELD_WIDTH}").Append(nl);
+				sb.Append($"     Z Distance: {Format.LengthNumber(pm.Delta.Z),FIELD_WIDTH}").Append(nl);
 			}
-			sb.Append($"    XY Distance: {FormatLengthNumber(pm.DistanceXy),FIELD_WIDTH}").Append(nl);
+			sb.Append($"    XY Distance: {Format.LengthNumber(pm.DistanceXy),FIELD_WIDTH}").Append(nl);
 			if (includeZ)
 			{
-				sb.Append($"   XYZ Distance: {FormatLengthNumber(pm.DistanceXyz),FIELD_WIDTH}").Append(nl);
+				sb.Append($"   XYZ Distance: {Format.LengthNumber(pm.DistanceXyz),FIELD_WIDTH}").Append(nl);
 			}
 
 			return sb.ToString();
@@ -127,12 +128,12 @@ namespace TopoEdit.Util
 
 		internal static string ListPoint(XYZ point, bool includeZ = true)
 		{
-			string result = $"x: {FormatLengthNumber(point.X), FIELD_WIDTH} "
-				+ $"| y: {FormatLengthNumber(point.Y), FIELD_WIDTH}";
+			string result = $"x: {Format.LengthNumber(point.X), FIELD_WIDTH} "
+				+ $"| y: {Format.LengthNumber(point.Y), FIELD_WIDTH}";
 
 			if (includeZ)
 			{
-				result += $" | z: {FormatLengthNumber(point.Z), FIELD_WIDTH}";
+				result += $" | z: {Format.LengthNumber(point.Z), FIELD_WIDTH}";
 			}
 			return result;
 

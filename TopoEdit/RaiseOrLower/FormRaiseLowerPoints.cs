@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+
+using static TopoEdit.Util.Formatting;
 using TopoEdit.Properties;
 using TopoEdit.Util;
 
@@ -74,7 +76,7 @@ namespace TopoEdit.RaiseOrLower
 
 		private void FormatRaiseLowerDelta()
 		{
-			tbRaiseLowerDelta.Text = Utils.FormatLengthNumber(RaiseLowerDistance);
+			tbRaiseLowerDelta.Text = Format.LengthNumber(RaiseLowerDistance);
 			Settings.Default.Save();
 		}
 

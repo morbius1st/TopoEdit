@@ -1,15 +1,22 @@
 #region Using
 
+using System;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using TopoEdit.Information;
-using TopoEdit.Measure;
 using TopoEdit.Util;
 using Document = Autodesk.Revit.DB.Document;
 
-using AOTools;
+using static TopoEdit.SurfacePoints.GetSurfacePoint;
+
+using DluxMeasure;
+using TopoEdit.AddOnePoint;
+using TopoEdit.QueryPoints;
+using TopoEdit.RaiseOrLower;
+
+using RevitLibrary;
 
 #endregion
 
@@ -20,7 +27,9 @@ namespace TopoEdit.Main
 	public class ModifyPoints : IExternalCommand
 	{
 
-		private FormModifyPointsMain _form;
+		public static IntPtr MainWinHandle;
+
+		private static FormModifyPointsMain _form;
 		internal static FormInformation _info;
 
 		internal static bool disposeOfForm = false;
@@ -30,7 +39,14 @@ namespace TopoEdit.Main
 		private UIDocument _uiDoc;
 		private Document _doc;
 
-		private DxMeasure _dxm = new DxMeasure();
+		private DlxMeasure _dxm;
+
+
+		// possible values to go into settings file:
+		// app setting:
+		// smallest contour value
+		internal const double COUNTOUR_INVERVAL_MIN = .01; // feet
+		
 
 
 		public Result Execute(
@@ -42,21 +58,33 @@ namespace TopoEdit.Main
 			Autodesk.Revit.ApplicationServices.Application app = _uiApp.Application;
 			_uiDoc = _uiApp.ActiveUIDocument;
 			_doc = _uiDoc.Document;
-			_form = new FormModifyPointsMain();
+//			_form = new FormModifyPointsMain();
 			_info = new FormInformation();
 
+			MainWinHandle=_uiApp.MainWindowHandle;
+
+			string info;
+
+			if (_form == null) { _form = new FormModifyPointsMain(); }
+			if (_dxm == null) { _dxm = DlxMeasure.Instance(_uiApp); }
 
 			View v = _uiDoc.ActiveGraphicalView;
-	
+
+			if (!RevitView.Is3DView(v))
+			{
+				TaskDialog.Show("Incorrect View", "Current view must be a 3D view");
+				return Result.Failed;
+			}
+
 			if (!RevitView.IsViewAcceptable(v))
 			{
-				TaskDialog.Show("Incorrect View", "Please use TopoEdit in a view with " + Utils.nl
+				TaskDialog.Show("Incorrect View", "Please use TopoEdit in a view " + Utils.nl
 					+ "where topography can be edited.");
 
 				return Result.Failed;
 			}
 
-			if (!Utils.IsPlaneOrientationAcceptable(_uiDoc))
+			if (!RvtLibrary.IsPlaneOrientationAcceptable(_uiDoc))
 			{
 				TaskDialog.Show("Unacceptable View", "Please use TopoEdit in a view where " + Utils.nl
 				+ "the work plane is at a greater angle to the screen.");
@@ -74,6 +102,8 @@ namespace TopoEdit.Main
 			ModifyPointsFunctions function;
 
 			Utils.DocUnits = _doc.GetUnits();
+
+			
 
 			bool repeat;
 
@@ -106,7 +136,7 @@ namespace TopoEdit.Main
 
 				if (false)
 				{
-					Utils.PickAPoint(_uiDoc);
+					Select.PickAPoint(_uiDoc);
 				}
 
 				if (true)
@@ -115,10 +145,14 @@ namespace TopoEdit.Main
 				}
 			}
 
+
 			try
 			{
+				RevitView.SetStatusText("Select a Topo Surface");
+
 				// get the toposurface to edit
 				TopographySurface topoSurface = TopoSurfaceUtils.GetTopoSurface(_uiDoc, _doc, _form);
+
 				if (topoSurface == null) { return Result.Failed; }
 
 				if (!_doc.ActiveView.IsElementVisibleInView(topoSurface))
@@ -215,9 +249,12 @@ namespace TopoEdit.Main
 									PointsQuery.Process(_uiDoc, _doc, topoSurface);
 									break;
 								case ModifyPointsFunctions.Type.MEASURE:
-									string info = "delux measure";
-									_dxm.Execute(_cmdData, ref info, null);
-//									PointsMeasure.Process(_uiDoc, _doc);
+									info = "delux measure";
+									_dxm.Measure();
+									break;
+								case ModifyPointsFunctions.Type.INTERSECT:
+									info = "Intersect";
+									GetSurfacePt.Process(_uiDoc, _doc, topoSurface);
 									break;
 							}
 							

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <!-- <AddIn Type="Command"> -->
+  <!--   <Text>Jack</Text> -->
+  <!--   <Description>Description of Jack</Description> -->
+  <!--   <Assembly>Jack.dll</Assembly> -->
+  <!--   <FullClassName>Jack.ModifyTopo</FullClassName> -->
+  <!--   <ClientId>b2d9c8a6-2168-4407-ad93-e9f65c67ff53</ClientId> -->
+  <!--   <VendorId>pro.cyberstudio</VendorId> -->
+  <!--   <VendorDescription>CyberStudio</VendorDescription> -->
+  <!-- </AddIn> -->
+  <AddIn Type="Application">
+    <Name>Application Jack</Name>
+    <Assembly>Jack.dll</Assembly>
+    <FullClassName>Jack.AppRibbon</FullClassName>
+    <ClientId>c280303c-2b53-4551-950b-d8a870eae1a4</ClientId>
+    <VendorId>pro.cyberstudio</VendorId>
+    <VendorDescription>CyberStudio</VendorDescription>
+  </AddIn>
+</RevitAddIns>

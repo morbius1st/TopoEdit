@@ -40,6 +40,7 @@
 			this.btnNewPoint = new System.Windows.Forms.Button();
 			this.btnAddBoundaryPoint = new System.Windows.Forms.Button();
 			this.btnMeasure = new System.Windows.Forms.Button();
+			this.bthIntersect = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// RaiseLower
@@ -189,12 +190,24 @@
 			this.btnMeasure.UseVisualStyleBackColor = true;
 			this.btnMeasure.Click += new System.EventHandler(this.btnMeasure_Click);
 			// 
+			// bthIntersect
+			// 
+			this.bthIntersect.Location = new System.Drawing.Point(192, 66);
+			this.bthIntersect.Margin = new System.Windows.Forms.Padding(11, 10, 11, 10);
+			this.bthIntersect.Name = "bthIntersect";
+			this.bthIntersect.Size = new System.Drawing.Size(147, 43);
+			this.bthIntersect.TabIndex = 22;
+			this.bthIntersect.Text = "Find Surface Point";
+			this.bthIntersect.UseVisualStyleBackColor = true;
+			this.bthIntersect.Click += new System.EventHandler(this.btnIntersect_Click);
+			// 
 			// FormModifyPointsMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(617, 501);
 			this.ControlBox = false;
+			this.Controls.Add(this.bthIntersect);
 			this.Controls.Add(this.btnMeasure);
 			this.Controls.Add(this.btnAddBoundaryPoint);
 			this.Controls.Add(this.btnNewPoint);
@@ -234,5 +247,6 @@
 		private System.Windows.Forms.Button btnNewPoint;
 		private System.Windows.Forms.Button btnAddBoundaryPoint;
 		private System.Windows.Forms.Button btnMeasure;
+		private System.Windows.Forms.Button bthIntersect;
 	}
 }

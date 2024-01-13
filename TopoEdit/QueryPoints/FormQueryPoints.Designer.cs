@@ -1,4 +1,4 @@
-﻿namespace TopoEdit
+﻿namespace TopoEdit.QueryPoints
 {
 	partial class FormQueryPoints
 	{

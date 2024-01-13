@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PointsDataSet" targetNamespace="http://tempuri.org/PointsDataSet.xsd" xmlns:mstns="http://tempuri.org/PointsDataSet.xsd" xmlns="http://tempuri.org/PointsDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PointsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PointsDataSet" msprop:Generator_UserDSName="PointsDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Points" msprop:Generator_TableClassName="PointsDataTable" msprop:Generator_TableVarName="tablePoints" msprop:Generator_RowChangedName="PointsRowChanged" msprop:Generator_TablePropName="Points" msprop:Generator_RowDeletingName="PointsRowDeleting" msprop:Generator_RowChangingName="PointsRowChanging" msprop:Generator_RowEvHandlerName="PointsRowChangeEventHandler" msprop:Generator_RowDeletedName="PointsRowDeleted" msprop:Generator_RowClassName="PointsRow" msprop:Generator_UserTableName="Points" msprop:Generator_RowEvArgName="PointsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Item" msprop:Generator_ColumnVarNameInTable="columnItem" msprop:Generator_ColumnPropNameInRow="Item" msprop:Generator_ColumnPropNameInTable="ItemColumn" msprop:Generator_UserColumnName="Item" type="xs:string" minOccurs="0" />
+              <xs:element name="X" msprop:Generator_ColumnVarNameInTable="columnX" msprop:Generator_ColumnPropNameInRow="X" msprop:Generator_ColumnPropNameInTable="XColumn" msprop:Generator_UserColumnName="X" type="xs:string" minOccurs="0" />
+              <xs:element name="Y" msprop:Generator_ColumnVarNameInTable="columnY" msprop:Generator_ColumnPropNameInRow="Y" msprop:Generator_ColumnPropNameInTable="YColumn" msprop:Generator_UserColumnName="Y" type="xs:string" minOccurs="0" />
+              <xs:element name="Elevation" msprop:Generator_ColumnVarNameInTable="columnElevation" msprop:Generator_ColumnPropNameInRow="Elevation" msprop:Generator_ColumnPropNameInTable="ElevationColumn" msprop:Generator_UserColumnName="Elevation" type="xs:string" minOccurs="0" />
+              <xs:element name="DistXY" msprop:Generator_ColumnVarNameInTable="columnDistXY" msprop:Generator_ColumnPropNameInRow="DistXY" msprop:Generator_ColumnPropNameInTable="DistXYColumn" msprop:Generator_UserColumnName="DistXY" type="xs:string" minOccurs="0" />
+              <xs:element name="DistXYZ" msprop:Generator_ColumnVarNameInTable="columnDistXYZ" msprop:Generator_ColumnPropNameInRow="DistXYZ" msprop:Generator_ColumnPropNameInTable="DistXYZColumn" msprop:Generator_UserColumnName="DistXYZ" type="xs:string" minOccurs="0" />
+              <xs:element name="DistZ" msprop:Generator_ColumnVarNameInTable="columnDistZ" msprop:Generator_ColumnPropNameInRow="DistZ" msprop:Generator_ColumnPropNameInTable="DistZColumn" msprop:Generator_UserColumnName="DistZ" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Index">
+      <xs:selector xpath=".//mstns:Points" />
+      <xs:field xpath="mstns:Item" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

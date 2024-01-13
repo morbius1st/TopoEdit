@@ -1,9 +1,4 @@
-﻿// Solution:     TopoEdit
-// Project:       TopoEdit
-// File:             Extensions.cs
-// Created:      -- ()
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -72,25 +67,7 @@ namespace TopoEdit.Util
 		}
 	}
 
-	static class DoubleExtensions
-	{
-		public static bool IsZero(this Double d, double tolerance)
-		{
-			return tolerance > Math.Abs(d);
-		}
-
-		public static bool IsZero(this Double d)
-		{
-			return Double.Epsilon > Math.Abs(d);
-		}
-
-		public static bool Equals(this Double d1, double d2)
-		{
-			return d1.Equals(d2);
-		}
-	}
-
-	static class IListExtensions
+	static class PointIListExtensions
 	{
 		public static bool ContainsPoint(this IList<XYZ> list, XYZ point)
 		{
@@ -111,12 +88,23 @@ namespace TopoEdit.Util
 		}
 	}
 
-	static class XYZExtensions
+	/*
+	static class XYZExtensionsx
 	{
 		public static XYZ Multiply(this XYZ point, XYZ multiplier)
 		{
-			
 			return new XYZ(point.X * multiplier.X, point.Y * multiplier.Y, point.Z * multiplier.Z);
 		}
+		
+		public static double DistanceXY(this XYZ point, XYZ point2)
+		{
+			return point.DistanceTo(new XYZ(point2.X, point2.Y, point.Z));
+		}
+		
+		public static double DistanceZ(this XYZ point, XYZ point2)
+		{
+			return point.DistanceTo(new XYZ(point.X, point.Y, point2.Z));
+		}
 	}
+	*/
 }

@@ -1,86 +1,103 @@
-﻿#region Using directives
+﻿#region + Using Directives
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
-using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using TopoEdit.RaiseOrLower;
-using TopoEdit.Util;
+using Jack.Util.Revit;
+using Autodesk.Revit.UI;
+using Jack.Util.General;
 
 #endregion
 
-// itemname:	RaiseLowerPoints
-// username:	jeffs
-// created:		9/10/2017 2:16:29 PM
+// user name: jeffs
+// created:   12/23/2023 7:33:51 AM
 
-
-namespace TopoEdit.Main
+namespace Jack.Functions.PointsRaiseLower
 {
-	class PointsRaiseLower
+	public class PointsRaiseLowerProcess
 	{
-		internal static bool Process(UIDocument uiDoc, Document doc, 
-			TopographyEditScope topoEdit, TopographySurface topoSurface)
+		internal static bool Process(UIDocument uiDoc, Document doc,
+			TopographySurface topoSurface)
 		{
 			bool again = true;
 			bool success;
 
-			FormRaiseLowerPoints form = new FormRaiseLowerPoints();
+			PointsRaiseLower win;
 
 			TransactionGroupStack tgStack = new TransactionGroupStack();
 
 			while (again)
 			{
-				DialogResult result = form.ShowDialog();
+				win = new PointsRaiseLower();
+				win.ShowDialog();
+
+				Data.DialogReturn result = win.DialogReturn;
 
 				switch (result)
-					{
-					case DialogResult.OK:
+				{
 
-						if (form.RaiseLowerDistance != 0)
+				// chose apply
+				case Data.DialogReturn.DR_PROCEED:
+					{
+						if (win.RaiseLowerLength != 0)
 						{
 							tgStack.Start(new TransactionGroup(doc, "Raise-Lower Points"));
 
 							success = RaiseLowerPts(uiDoc, doc,
-								topoSurface, form.RaiseLowerDistance);
+								topoSurface, win.RaiseLowerLength);
 
-							if (success) form.btnRaiseLowerUndo.Enabled = true;
+							if (success) win.CanUndo = true;
 						}
 
 						break;
-					case DialogResult.Retry:
+					}
+
+				// chose undo / one step
+				case Data.DialogReturn.DR_UNDO_ONE:
+					{
 						tgStack.RollBack();
 
-						if (tgStack.IsEmpty) form.btnRaiseLowerUndo.Enabled = false;
+						if (tgStack.IsEmpty) win.CanUndo = false;
 
 						break;
-					case DialogResult.Yes:
+					}
+
+				// when null / apply
+				case Data.DialogReturn.DR_DONE:
+					{
 						// must process the whole list of TransactionGroups
 						// held by the stack
 						while (tgStack.HasItems)
 						{
 							tgStack.Commit();
 						}
+
+						tgStack = null;
+
 						again = false;
 						break;
+					}
 				}
 			}
 
 			return true;
 		}
 
-		
+
 		// raise lower points by the given distance
-		static bool RaiseLowerPts(UIDocument uiDoc, Document doc, 
+		static bool RaiseLowerPts(UIDocument uiDoc, Document doc,
 			TopographySurface topoSurface, double distance)
 		{
 			PickedBox2 picked;
 
 			try
 			{
-				picked = Utils.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
+				picked = Select.GetPickedBox(uiDoc, PickBoxStyle.Enclosing, "select points");
 			}
 			catch (Exception e)
 			{
@@ -107,6 +124,12 @@ namespace TopoEdit.Main
 			}
 
 			return true;
+		}
+
+
+		public override string ToString()
+		{
+			return $"this is {nameof(PointsRaiseLowerProcess)}";
 		}
 	}
 }
