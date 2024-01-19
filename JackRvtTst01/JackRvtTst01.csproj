@@ -79,12 +79,13 @@
     <!--   <SubType>Designer</SubType> -->
     <!-- </ApplicationDefinition> -->
     <Compile Include="Functions\ReqElements\GetElements.cs" />
-    <Compile Include="Functions\ReqElements\ReqElemExtEvtRequests\RE_RequestHandler.cs" />
-    <Compile Include="Functions\ReqElements\ReqElemExtEvtRequests\RE_RequestMake.cs" />
+    <Compile Include="Functions\ReqElements\ReqElementReqHandller.cs" />
     <Compile Include="Functions\ReqElements\RequestElements.xaml.cs">
       <DependentUpon>RequestElements.xaml</DependentUpon>
     </Compile>
     <Compile Include="Functions\RequestPoint.cs" />
+    <Compile Include="Requests\RequestId.cs" />
+    <Compile Include="Windows\ExtEventRequests\MainWinReqHandller.cs" />
     <Compile Include="Windows\ExtEventRequests\RequestHandler.cs" />
     <Compile Include="Windows\ExtEventRequests\RequestMake.cs" />
     <Compile Include="Settings\AppSettings.cs" />
@@ -108,8 +109,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Functions\PathSelectManager.cs" />
-    <Compile Include="W.cs" />
-    <Compile Include="Windows\IWindow.cs" />
     <Compile Include="Windows\Support\IWin.cs" />
     <Compile Include="Windows\Support\RE_M.cs" />
     <Compile Include="Windows\Support\M.cs" />
@@ -131,7 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".Linked\" />
-    <Folder Include="Requests\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\information16.png" />

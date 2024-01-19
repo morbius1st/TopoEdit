@@ -21,7 +21,9 @@ using SharedCode.ShRevit;
 using SharedCode.ShUtil;
 using ShCollections;
 using Application = System.Windows.Application;
-
+using SharedCode.ShCollections.PointCollection;
+using UtilityLibrary;
+using JackTests01.Support2;
 
 #endregion
 
@@ -36,8 +38,10 @@ namespace JackTests01.Windows
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window, INotifyPropertyChanged, IWin
+	public partial class MainWindow : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+		
 		// faux revit items
 		// private static Document doc = new Document();
 
@@ -48,6 +52,7 @@ namespace JackTests01.Windows
 
 		public static Dictionary<string, PathSegment> Segments2 { get; } = ListBoxData01.CreateData();
 
+		public static PointCollectionManager PtCollMgrStat { get; }
 
 		// public static ListBoxData02 lb2S { get; private set; } = new ListBoxData02(doc);
 		// public static ListBoxData02 lb2 { get; private set; } = new ListBoxData02(doc);
@@ -65,20 +70,27 @@ namespace JackTests01.Windows
 
 	#region ctor
 
+		static MainWindow()
+		{
+			PtCollMgrStat = new PointCollectionManager();
+
+			PtCollMgrStat.DefPoints = ListBoxData02.CreateDef();
+			PtCollMgrStat.PathPoints = ListBoxData02.CreatePath();
+			PtCollMgrStat.NewPoints = ListBoxData02.CreateNew();
+
+		}
+
 		public MainWindow()
 		{
 			InitializeComponent();
 
+			Me = this;
 			M.Win = this;
 
-			MM.Main.Win = this;
-			
 			R.rvt_UiApp = new Autodesk.Revit.UI.UIApplication();
 			R.rvt_UiDoc = R.rvt_UiApp.ActiveUIDocument;
 			R.rvt_App =   R.rvt_UiApp.Application;
 			R.rvt_Doc = R.rvt_UiDoc.Document;
-
-			// pm = new PathManager(R.rvt_Doc);
 
 		}
 
@@ -121,6 +133,14 @@ namespace JackTests01.Windows
 	#endregion
 
 	#region public methods
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+	//
 
 	#endregion
 
@@ -186,7 +206,7 @@ namespace JackTests01.Windows
 
 			apd.ShowDialog();
 
-			M.WriteLine("\nmade it back");
+			M.WriteLine(Me, "\nmade it back");
 
 			showReferences(pm.Selector.References);
 
@@ -211,11 +231,11 @@ namespace JackTests01.Windows
 
 				if (e is DetailCurve)
 				{
-					M.WriteLine("got detail curve");
+					M.WriteLine(Me, "got detail curve");
 				}
 				else
 				{
-					M.WriteLine($"not detail curve| eid| {e.GetType().Name}");
+					M.WriteLine(Me, $"not detail curve| eid| {e.GetType().Name}");
 				}
 
 			}

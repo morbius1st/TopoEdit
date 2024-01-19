@@ -36,8 +36,10 @@ namespace Jack.Functions.PointsAddViaPath
 	/// <summary>
 	/// Interaction logic for PathSelection.xaml
 	/// </summary>
-	public partial class PathSelection : Window, INotifyPropertyChanged
+	public partial class PathSelection : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+
 		internal const ObjectSnapTypes SNAPS = ObjectSnapTypes.Centers | ObjectSnapTypes.Endpoints | 
 			ObjectSnapTypes.Intersections | ObjectSnapTypes.Midpoints |  ObjectSnapTypes.Perpendicular |
 			ObjectSnapTypes.Quadrants; // | ObjectSnapTypes.Tangents;
@@ -55,6 +57,8 @@ namespace Jack.Functions.PointsAddViaPath
 		public PathSelection(WinModifyTopo w)
 		{
 			InitializeComponent();
+
+			Me = this;
 
 			this.w = w;
 
@@ -123,9 +127,6 @@ namespace Jack.Functions.PointsAddViaPath
 
 			Enable = true;
 		}
-
-
-
 
 
 		public void GetPathPointElement()
@@ -207,6 +208,14 @@ namespace Jack.Functions.PointsAddViaPath
 			uidoc.Selection.SetElementIds(coll);
 		}
 
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+		
 		
 
 	#region events
@@ -463,7 +472,7 @@ namespace Jack.Functions.PointsAddViaPath
 			}
 			catch (Exception e)
 			{
-				M.WriteLine($"got exception| {e.Message}");
+				M.WriteLine(Me, $"got exception| {e.Message}");
 			}
 		
 			Enable = true;

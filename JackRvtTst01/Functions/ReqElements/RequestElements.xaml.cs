@@ -20,32 +20,45 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using JetBrains.Annotations;
-using JackRvtTst01.Functions.ReqElements.ReqElemExtEvtRequests;
+using JackRvtTst01.Requests;
 using JackRvtTst01.Windows.Support;
+using SharedCode.ShRevit;
+using SharedCode.ShUtil;
 
 namespace JackRvtTst01.Functions.ReqElements
 {
 	/// <summary>
 	/// Interaction logic for RequestElements.xaml
 	/// </summary>
-	public partial class RequestElements : Window, INotifyPropertyChanged, IWindow, IWin
+	public partial class RequestElements : Window, INotifyPropertyChanged, IW
 	{
-		public const string MY_NAME = "ReqElements_RvtTst01";
+		public static IW Me { get; private set; }
 
 		private string message;
 
-		private RE_RequestHandler handler;
+		private RequestHandler handler;
 		private ExternalEvent eEvent;
 		private bool isEnabledGrdMain;
 
-		public RequestElements(ExternalEvent eEvent, RE_RequestHandler handle)
+		static RequestElements()
+		{
+			Me=new RequestElements();
+		}
+
+		public RequestElements()
 		{
 			InitializeComponent();
 
-			RE_M.Win = this;
+			// RequestMake.MakeMainRequest(RequestId.RID_MAKE_HANDLER);
+			//
+			// bool a = MainWindow.handler.Equals(RequestMake.mainReqHandler);
+			// bool b = MainWindow.eEvent.Equals(RequestMake.mainEvent);
 
-			this.eEvent = eEvent;
-			this.handler = handle;
+
+			// this.handler = RequestHandler.eHandler;
+			// handler.ReqHdlrDel = ReqElementReqHandller.HandleRequest;
+			// this.eEvent = RequestHandler.eEvent;
+			this.Owner = R.RevitWindow;
 		}
 
 
@@ -71,9 +84,9 @@ namespace JackRvtTst01.Functions.ReqElements
 			}
 		}
 
-		public void MakeRequest(RE_RequestId  requestId)
+		public void MakeRequest(RequestId  requestId)
 		{
-			handler.RE_RequestMake.Make(requestId);
+			handler.RequestMake.Make(requestId);
 			eEvent.Raise();
 			DisableMe();
 		}
@@ -88,6 +101,16 @@ namespace JackRvtTst01.Functions.ReqElements
 			IsEnabledGrdMain = true;
 		}
 
+		public void ShowMe()
+		{
+			this.Show();
+		}
+
+		public void HideMe()
+		{
+			this.Hide();
+		}
+
 		private void BtnExit_Click(object sender, RoutedEventArgs e)
 		{
 			Close();
@@ -99,10 +122,11 @@ namespace JackRvtTst01.Functions.ReqElements
 
 			// base.OnClosing(e);
 
-			W.HideWin(MY_NAME);
+			Hide();
 
-			W.ShowWin(MainWindow.MY_NAME);
-			W.EnableWin(MainWindow.MY_NAME);
+			// MainWindow.Me.ShowMe();
+			// MainWindow.Me.EnableMe();
+
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -128,6 +152,11 @@ namespace JackRvtTst01.Functions.ReqElements
 			GetElements ge = new GetElements();
 			ge.GetPathElements();
 
+		}
+
+		private void RequestElements_OnInitialized(object sender, EventArgs e)
+		{
+			EnableMe();
 		}
 	}
 }

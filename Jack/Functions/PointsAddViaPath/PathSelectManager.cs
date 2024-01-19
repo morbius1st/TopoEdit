@@ -10,6 +10,7 @@ using Autodesk.Revit.DB;
 using SharedApp.Windows.ShSupport;
 using System.Windows.Shapes;
 using Autodesk.Revit.UI.Selection;
+using Jack.Functions.PointsAddViaPath;
 using Jack.Windows;
 using SharedCode.ShUtil;
 using ShCollections;
@@ -80,7 +81,7 @@ namespace SharedCode.ShRevit
 			}
 			catch (Exception e)
 			{
-				M.WriteLine($"got exception| {e.Message}");
+				M.WriteLine(PathSelection.Me, $"got exception| {e.Message}");
 				return false;
 			}
 
@@ -118,7 +119,7 @@ namespace SharedCode.ShRevit
 			}
 			catch (Exception e)
 			{
-				M.WriteLine($"{nameof(GetPathPoint)} got exception| {e.Message}");
+				M.WriteLine(PathSelection.Me, $"{nameof(GetPathPoint)} got exception| {e.Message}");
 				return false;
 			}
 

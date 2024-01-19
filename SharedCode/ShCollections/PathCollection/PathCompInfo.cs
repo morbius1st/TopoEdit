@@ -1,54 +1,16 @@
-﻿// Solution:     TopoEdit
+﻿using System.Xml.Linq;
+using UtilityLibrary;
+
+// Solution:     TopoEdit
 // Project:       JackTests01
 // File:             Info.cs
 // Created:      2023-12-28 (7:55 PM)
 
-using System.Xml.Linq;
-using UtilityLibrary;
 
 namespace SharedCode.ShCollections.PathCollection
 {
 	
-	// pseudo enum class
-	public class PointtCollType : CsEnumBase<PointtCollType, int, int>
-	{
-		public enum PtCollType
-		{
-			PCT_Path,
-			PCT_Plan_Region,
-			PCT_Plan_Group,
-			PCT_Vert_Path
-		}
 
-		private PointtCollType(PtCollType p, int idx, string descShort, string descLong) : base(p, idx)
-		{
-			Index = idx;
-			DescShort = descShort;
-			DescLong = descLong;
-		}
-
-		public int Index { get; }
-		public string DescShort { get; }
-		public string DescLong { get; }
-
-		public override string ToString() => Name;
-
-		public static readonly PointtCollType PCT_PATH        = 
-			new PointtCollType (PtCollType.PCT_Path, -1, "Path Collection", 
-				"Points, in a Plan view, that represent a new path");
-
-		public static readonly PointtCollType PCT_PLAN_REGION = 
-			new PointtCollType (PtCollType.PCT_Plan_Region, -1, "Plan Region Collection", 
-				"Points, in a Plan view, that ara a general region");
-
-		public static readonly PointtCollType PCT_PLAN_GROUP  = 
-			new PointtCollType (PtCollType.PCT_Plan_Group, -1, "Plan Group Collection", 
-				"Points, in a Plan view, that are related to a subject (e.g. curb points");
-		// 
-		public static readonly PointtCollType PCT_VERT_PATH  = 
-			new PointtCollType (PtCollType.PCT_Vert_Path, -1, "Vertical Path Collection", 
-				"Points, in a Vertical view, that are a path");
-	}
 
 
 

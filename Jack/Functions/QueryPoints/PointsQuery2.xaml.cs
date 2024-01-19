@@ -27,8 +27,10 @@ namespace Jack.Functions.PointsQuery
 	/// <summary>
 	/// Interaction logic for QueryPoints.xaml
 	/// </summary>
-	public partial class PointsQuery2 : Window, INotifyPropertyChanged
+	public partial class PointsQuery2 : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+		
 		private string infoTextBox;
 
 	#region private fields
@@ -42,13 +44,15 @@ namespace Jack.Functions.PointsQuery
 			InitializeComponent();
 
 			Parent = parent;
+			
+			Me = this;
 		}
 
 	#endregion
 
 	#region public properties
 
-		public string InfoTextBox
+		public string MessageBox
 		{
 			get => infoTextBox;
 			set

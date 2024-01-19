@@ -1,4 +1,5 @@
 ﻿<Window x:Class="Jack.Functions.PointsQuery.PointsQuery"
+		x:Name="PointsQuery_Jack"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -70,7 +71,7 @@
 				FontFamily="Consolas"
 				Background="Transparent"
 				Foreground="White"
-				Text="{Binding InfoTextBox,
+				Text="{Binding MessageBox,
 											 Mode=OneWay,
 											 FallbackValue='information here'}"
 				/>

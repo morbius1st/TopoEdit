@@ -21,6 +21,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedCodeNoRevit", "Shared
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{91A60D9C-4FE6-4EFE-9A9A-928F59204D17}"
 	ProjectSection(SolutionItems) = preProject
+		Method List.txt = Method List.txt
 		modeless dialog notes.txt = modeless dialog notes.txt
 		Notes.txt = Notes.txt
 	EndProjectSection

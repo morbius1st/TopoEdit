@@ -52,7 +52,7 @@ namespace Jack.Functions.QueryPoints
 
 			Reference rf = ri.FindNearest(point, vector).GetReference();
 
-			M.WriteLine($"{ptIdx++: ####0}| {Formatting.FormatAPoint(rf.GlobalPoint)}");
+			M.WriteLine(PointsQuery.PointsQuery.Me, $"{ptIdx++: ####0}| {Formatting.FormatAPoint(rf.GlobalPoint)}");
 
 			return rf.GlobalPoint;
 		}

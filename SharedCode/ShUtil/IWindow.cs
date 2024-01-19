@@ -6,26 +6,28 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Grid = Autodesk.Revit.DB.Grid;
+
 
 #endregion
 
 // user name: jeffs
 // created:   1/7/2024 3:39:02 PM
 
-namespace JackRvtTst01.Windows
+namespace SharedCode.ShUtil
 {
+	public interface IW : IWindow, IWin { }
+
 	public interface IWindow
 	{
+		string Name { get; }
+
 		bool IsEnabledGrdMain { get; set; }
 
-		void Show();
-		void Hide();
+		void ShowMe();
+		void HideMe();
 		void DisableMe();
 		void EnableMe();
 	}
-
-
 
 	public abstract class AWindow : Window
 	{
@@ -54,4 +56,13 @@ namespace JackRvtTst01.Windows
 
 		protected abstract void OnPropertyChanged([CallerMemberName] string memberName = "");
 	}
+
+	// temp interface methods
+	// public bool IsEnabledGrdMain { get; set; }
+	// public void Show() { }
+	// public void Hide() { }
+	// public void DisableMe() { }
+	// public void EnableMe() { }
+	//
+
 }

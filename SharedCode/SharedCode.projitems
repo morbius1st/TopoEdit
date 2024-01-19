@@ -12,12 +12,22 @@
     <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PathCollection\PathCompInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PathCollection\PathDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PathCollection\PathComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\APointCollectionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\APointCollectionInt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointCollectionDef.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointCollectionManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointCollectionNew.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointCollectionPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointElements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PointCollection\PointInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShRevit\R.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShUtil\FormatNumber.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShCollections\PathManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShUtil\Identifiers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShUtil\IWin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShUtil\IWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShUtil\M.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShUtil\W.cs" />
     <Compile Include="\\CRONOS\Users\jeffs\Documents\Programming\VisualStudioProjects\UtilityLibrary\UtilityLibrary\CsMath.cs">
       <Link>.Linked\CsMath.cs</Link>
     </Compile>

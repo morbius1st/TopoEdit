@@ -19,8 +19,10 @@ namespace SharedApp.Windows
 	/// <summary>
 	/// Interaction logic for SharedAppWin.xaml
 	/// </summary>
-	public partial class SharedAppWin : Window, INotifyPropertyChanged, IWin
+	public partial class SharedAppWin : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+		
 		#region private fields
 
 			private string messageBox;
@@ -35,9 +37,11 @@ namespace SharedApp.Windows
 		public SharedAppWin()
 		{
 			InitializeComponent();
+			
+			Me = this;
 
-			si01 = new ShowInfoApp();
-			tst01 = new TestApp();
+			si01 = new ShowInfoApp(Me);
+			tst01 = new TestApp(Me);
 		}
 
 		#endregion
@@ -64,18 +68,26 @@ namespace SharedApp.Windows
 
 			public void FunctionComplete(){}
 
+		// temp interface methods
+			public bool IsEnabledGrdMain { get; set; }
+			public void ShowMe() { }
+			public void HideMe() { }
+			public void DisableMe() { }
+			public void EnableMe() { }
+		//
+
 		#endregion
 
 		#region private methods
 
 			private bool? Test01()
 			{
-				return tst01.Tst01();
+				return tst01.Tst01(Me);
 			}
 
 			private bool? ShowInfo01()
 			{
-				return si01.Show01();
+				return si01.Show01(Me);
 			}
 
 		#endregion

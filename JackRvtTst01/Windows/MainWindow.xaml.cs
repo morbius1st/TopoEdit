@@ -14,10 +14,13 @@ using JackRvtTst01.Windows.Support;
 using JetBrains.Annotations;
 
 using UtilityLibrary;
+using SharedCode.ShUtil;
+using SharedCode.ShRevit;
 
 
 using static JackRvtTst01.Windows.MainWindow;
 using Grid = System.Windows.Controls.Grid;
+using JackRvtTst01.Requests;
 
 #endregion
 
@@ -31,33 +34,47 @@ namespace JackRvtTst01.Windows
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window, INotifyPropertyChanged, IWindow, IWin
+	public partial class MainWindow : Window, INotifyPropertyChanged, IW
 	{
-		public const string MY_NAME = "MainWin_RvtTst01";
-
+		// public static IW Me { get; private set; }
+		
 
 	#region private fields
 
 		private string message;
 		private bool isEnabled;
 
-		private RequestHandler handler;
-		private ExternalEvent eEvent;
+		public static RequestHandler handler;
+		public static ExternalEvent eEvent;
+
 		private bool isEnabledGrdMain;
 
 	#endregion
 
 	#region ctor
 
-		public MainWindow(ExternalEvent eEvent, RequestHandler handler)
+		static MainWindow()
+		{
+			// Me=new MainWindow(null, null);
+		}
+
+		public MainWindow(ExternalEvent ee, RequestHandler rh)
 		{
 			InitializeComponent();
 
 			M.Win = this;
 
-			this.handler = handler;
-			this.eEvent = eEvent;
+			eEvent = ee;
+			handler = rh;
 
+			// handler = new RequestHandler();
+			// handler.ReqHdlrDel = MainWinReqHandller.HandleRequest;
+			// eEvent = ExternalEvent.Create(handler);
+
+			// RequestMake.mainReqHandler = handler;
+			// RequestMake.mainEvent = eEvent;
+
+			this.Owner = R.RevitWindow;
 
 		}
 
@@ -115,26 +132,36 @@ namespace JackRvtTst01.Windows
 
 		public void WakeUp()
 		{
-			M.WriteLine("wakeing up");
+			M.WriteLine(null, "wakeing up");
 			IsEnabled = true;
 		}
 
 		public void DozeOff()
 		{
-			M.WriteLine("doze off");
+			M.WriteLine(null, "doze off");
 			IsEnabled = false;
 		}
 
 		public void EnableMe()
 		{
-			M.WriteLine("enable me");
+			M.WriteLine(null, "enable me");
 			IsEnabledGrdMain = true;
 		}
 
 		public void DisableMe()
 		{
-			M.WriteLine("disable me");
+			M.WriteLine(null, "disable me");
 			IsEnabledGrdMain = true;
+		}
+
+		public void ShowMe()
+		{
+			this.Show();
+		}
+
+		public void HideMe()
+		{
+			this.Hide();
 		}
 
 	#endregion
@@ -179,24 +206,25 @@ namespace JackRvtTst01.Windows
 
 		private void BtnRequestPoints_OnClick(object sender, RoutedEventArgs e)
 		{
-			MakeRequest(RequestId.POINTS);
+			MakeRequest(RequestId.RID_GETPOINTS);
 		}
 
 		private void BtnStopPoints_OnClick(object sender, RoutedEventArgs e)
 		{
-			// MakeRequest(RequestId.STOP_POINTS);
-			// eEvent.Dispose();
-			W.ActivateRevitWin();
-			// RequestPoint.StopGetPoints();
+			MakeRequest(RequestId.RID_STOPPOINTS);
+			eEvent.Dispose();
+
+			R.ActivateRevit();
+
 			User32dll.SendKeyCode(0x01);
 		}
 
 		private void BtnRequestElements_OnClick(object sender, RoutedEventArgs e)
 		{
-			W.HideWin(MY_NAME);
+			// Me.HideMe();
 
-			W.ShowWin(RequestElements.MY_NAME);
-			W.EnableWin(RequestElements.MY_NAME);
+			RequestElements.Me.ShowMe();
+			RequestElements.Me.EnableMe();
 		}
 
 		private void BtnExit_OnClick(object sender, RoutedEventArgs e)
@@ -205,6 +233,9 @@ namespace JackRvtTst01.Windows
 		}
 
 
-
+		private void MainWindow_OnInitialized(object sender, EventArgs e)
+		{
+			EnableMe();
+		}
 	}
 }

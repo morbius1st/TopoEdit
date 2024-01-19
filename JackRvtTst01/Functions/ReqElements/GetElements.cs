@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+using JackRvtTst01.Windows;
 using JackRvtTst01.Windows.Support;
 using SharedCode.ShRevit;
+using SharedCode.ShUtil;
 
 #endregion
 
@@ -40,7 +42,7 @@ namespace JackRvtTst01.Functions.ReqElements
 			}
 			catch (Exception e)
 			{
-				M.WriteLine($"got exception| {e.Message}");
+				M.WriteLine(null, $"got exception| {e.Message}");
 
 				return;
 			}
@@ -73,7 +75,7 @@ namespace JackRvtTst01.Functions.ReqElements
 
 			if (e is DetailLine)
 			{
-				RE_M.WriteLine("element is detail line");
+				M.WriteLine(RequestElements.Me, "element is detail line");
 				DetailLine dl = e as DetailLine;
 				Curve c = (Curve) dl.GeometryCurve;
 				Line l = (Line) c;
@@ -82,7 +84,7 @@ namespace JackRvtTst01.Functions.ReqElements
 			else
 			if (e is DetailArc)
 			{
-				RE_M.WriteLine("element is a detail arc");
+				M.WriteLine(RequestElements.Me, "element is a detail arc");
 				// Curve c1 =  ((Curve) e.GetGeometryObjectFromReference(r));
 
 				DetailArc dl = e as DetailArc;
@@ -92,7 +94,7 @@ namespace JackRvtTst01.Functions.ReqElements
 			else
 			if (e.Name.Equals(PATH_POINT_SYMBOL_NAME))
 			{
-				RE_M.WriteLine("got point");
+				M.WriteLine(RequestElements.Me, "got point");
 				XYZ ipe = (e.Location as LocationPoint).Point;
 
 

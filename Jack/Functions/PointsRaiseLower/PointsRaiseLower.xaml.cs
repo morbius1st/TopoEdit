@@ -19,20 +19,25 @@ using Jack.Util.Revit;
 
 using JetBrains.Annotations;
 using SettingsManager;
+using SharedCode.ShUtil;
 
 namespace Jack.Functions.PointsRaiseLower
 {
 	/// <summary>
 	/// Interaction logic for PointsRaiseLower.xaml
 	/// </summary>
-	public partial class PointsRaiseLower : Window, INotifyPropertyChanged
+	public partial class PointsRaiseLower : Window, INotifyPropertyChanged, IWindow
 	{
+		public static IWindow Me { get; private set; }
+		
 		private static double raiseLowerLength = 0.0;
 		private static bool canUndo = false;
 
 		public PointsRaiseLower()
 		{
 			InitializeComponent();
+			
+			Me = this;
 
 			OnPropertyChanged(nameof(RaiseLowerDistance));
 			OnPropertyChanged(nameof(CanApply));
@@ -75,6 +80,14 @@ namespace Jack.Functions.PointsRaiseLower
 
 		public Data.DialogReturn DialogReturn { get; private set; }
 
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+	//
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{

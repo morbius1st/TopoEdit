@@ -73,7 +73,8 @@ namespace JackRvtTst01
 
 			try
 			{
-				W.ShowWin(MainWindow.MY_NAME);
+				AppRibbon.win.Show();
+				// MainWindow.Me.ShowMe();
 			}
 			catch (Exception e)
 			{

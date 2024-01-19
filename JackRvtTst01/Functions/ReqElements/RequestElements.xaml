@@ -1,4 +1,4 @@
-﻿<Window x:Name="reqEleWin"
+﻿<Window x:Name="RequestElements_JackRctTst01"
 		x:Class="JackRvtTst01.Functions.ReqElements.RequestElements"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,6 +12,7 @@
 		DataContext="{Binding ElementName=reqEleWin}"
 		mc:Ignorable="d"
 		Background="{DynamicResource Normal.Window.Background}"
+		Initialized="RequestElements_OnInitialized"
 		Closing="RequestElements_OnClosing"
 		Closed="RequestElements_OnClosed"
 		>

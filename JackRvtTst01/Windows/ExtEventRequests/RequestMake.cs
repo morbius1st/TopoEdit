@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Autodesk.Revit.UI;
+
+using JackRvtTst01.Requests;
 
 #endregion
 
@@ -14,18 +17,32 @@ namespace JackRvtTst01.Windows.ExtEventRequests
 {
 	public enum RequestId : int
 	{
-		NONE = 0,
-		POINTS = 1,
-		STOP_POINTS = 2
+		RID_NONE = 0,
+		RID_GETPOINTS = 1,
+		RID_STOPPOINTS = 2,
+		RID_MAKE_HANDLER
 	}
 
 	public class RequestMake
 	{
-		private int requestId = (int) RequestId.NONE;
+		// public static RequestHandler mainReqHandler { get; set; }
+		// public static ExternalEvent mainEvent { get; set; }
+
+		// public static void MakeMainRequest( RequestId requestI)
+		// {
+		// 	bool a = MainWindow.handler.Equals(RequestMake.mainReqHandler);
+		// 	bool b = MainWindow.eEvent.Equals(RequestMake.mainEvent);
+		//
+		// 	mainReqHandler.RequestMake.Make(requestI);
+		// 	mainEvent.Raise();
+		// }
+
+
+		private int requestId = (int) RequestId.RID_NONE;
 
 		public RequestId Take()
 		{
-			return (RequestId) Interlocked.Exchange(ref requestId, (int) RequestId.NONE);
+			return (RequestId) Interlocked.Exchange(ref requestId, (int) RequestId.RID_NONE);
 		}
 
 		public void Make(RequestId request)
@@ -35,7 +52,7 @@ namespace JackRvtTst01.Windows.ExtEventRequests
 
 		public override string ToString()
 		{
-			return $"this is {nameof(RequestMake)}";
+			return $"this is {requestId}";
 		}
 	}
 }

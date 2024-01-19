@@ -12,6 +12,7 @@
 		mc:Ignorable="d"
 		Background="{DynamicResource Normal.Window.Background}"
 		DataContext="{Binding ElementName=mainWin}"
+		Initialized="MainWindow_OnInitialized"
 		Closing="MainWindow_OnClosing"
 		>
 	<Window.Resources>

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 using UtilityLibrary;
 
 #endregion
@@ -16,12 +16,28 @@ using UtilityLibrary;
 // namespace JackRvtTst01.Windows.Support
 namespace SharedCode.ShUtil
 {
-	public static class M 
+	public static class M
 	{
+		private static string deferred;
+
 		private static int marginSize = 0;
 		private static int marginSpaceSize = 2;
+		private static IWin win;
 
-		public static IWin Win { get; set; }
+		public static IWin Win
+		{
+			get => win;
+			set
+			{
+				win = value;
+		
+				if (!deferred.IsVoid())
+				{
+					sendMessage(win, deferred);
+					deferred = string.Empty;
+				}
+			}
+		}
 
 		public static string NL => Environment.NewLine;
 
@@ -29,10 +45,9 @@ namespace SharedCode.ShUtil
 
 		public static int ColumnWidth { get; set; } = 30;
 
-
-		public static void Clr()
+		public static void Clr(IWin win)
 		{
-			Win.MessageBox = "";
+			(win ?? Win).MessageBox = "";
 		}
 
 		public static void MarginClr()
@@ -52,34 +67,34 @@ namespace SharedCode.ShUtil
 			if (marginSize < 0) marginSize = 0;
 		}
 
-		public static void WriteAligned(string msg1, string msg2 = "", string loc = "", string spacer = " ")
+		public static void WriteAligned(IWin winName, string msg1, 
+			string msg2 = "", string loc = "", string spacer = " ")
 		{
-			writeMsg(msg1, msg2, spacer);
+			writeMsg(winName, msg1, msg2, spacer);
 		}
 
-		public static void WriteLineAligned(string msg1, string msg2 = "", string loc = "", string spacer = " ")
+		public static void WriteLineAligned(IWin winName, string msg1, 
+			string msg2 = "", string loc = "", string spacer = " ")
 		{
-			writeMsg(msg1, msg2 + "\n", spacer);
+			writeMsg(winName, msg1, msg2 + "\n", spacer);
 		}
 
-		public static void Write(string msg1, string msg2 = "", string loc = "")
+		public static void Write(IWin winName, string msg1, 
+			string msg2 = "", string loc = "")
 		{
-			writeMsg(msg1, msg2);
+			writeMsg(winName, msg1, msg2);
 		}
 		
-		public static void WriteLine(string msg1, string msg2 = "", string loc = "")
+		public static void WriteLine(IWin winName, string msg1, 
+			string msg2 = "", string loc = "")
 		{
-			writeMsg(msg1, msg2 + "\n");
+			writeMsg(winName, msg1, msg2 + "\n");
 		}
 
-		// public void ShowMsg()
-		// {
-		// 	OnPropertyChanged("MessageBoxText");
-		// }
-
-		public static void WriteLineDebug(string msgA, string msgB, string msgD, string loc = "", int colWidth = -1)
+		public static void WriteLineDebug(IWin winName, string msgA, 
+			string msgB, string msgD, string loc = "", int colWidth = -1)
 		{
-			writeMsg(msgA, msgB, colWidth);
+			writeMsg(winName, msgA, msgB, colWidth);
 			Debug.WriteLine(fmtMsg(msgA, msgD));
 
 		}
@@ -87,6 +102,20 @@ namespace SharedCode.ShUtil
 	#endregion
 
 	#region private methods
+
+		
+		private static void sendMessage(IWin win, string msg)
+		{
+			if (win != null || Win!=null)
+			{
+				(win ?? Win).MessageBox += msg;
+			}
+			else
+			{
+				deferred += msg;
+			}
+		}
+
 
 		private static string margin(string spacer)
 		{
@@ -103,14 +132,14 @@ namespace SharedCode.ShUtil
 			return partA + partB;
 		}
 
-		private static void writeMsg(    string msg1, string msg2, string spacer, int colWidth = -1)
+		private static void writeMsg(IWin winName, string msg1, string msg2, string spacer, int colWidth = -1)
 		{
-			Win.MessageBox += margin(spacer) + fmtMsg(msg1, msg2, colWidth);
+			sendMessage(winName, margin(spacer) + fmtMsg(msg1, msg2, colWidth));
 		}
 
-		private static void writeMsg(   string msg1, string msg2, int colWidth = -1)
+		private static void writeMsg(IWin winName, string msg1, string msg2, int colWidth = -1)
 		{
-			Win.MessageBox += fmtMsg(msg1, msg2, colWidth);
+			sendMessage(winName, fmtMsg(msg1, msg2, colWidth));
 		}
 
 	#endregion
@@ -189,6 +218,7 @@ namespace SharedCode.ShUtil
 	#endregion
 
 	#region private methods
+
 
 		private string margin(string spacer)
 		{

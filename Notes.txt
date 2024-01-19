@@ -1,4 +1,81 @@
-Code locations
+SELECTION USE CASES
+
+*** create points
+** needs min (2) points (beg & end) 
+** + (optional) 1+ intermediate points
+* path by selection of path elements
+  > 1 point (line) or 1 point [end] + 1 point [cen] + rad (arc) point that define a path
+  > line = defined point + point from next element
+  > arc = defined point & rad + point from next element
+* path by selection of points
+
+** needs min (3) points
+* region by selection of path elements - per side
+* region by selection of multiple points
+
+** modify existing points
+* multiple points in plan (general)
+* multiple points in vertical view
+* multiple points in plan (related / group  [e.g. sidewalk edge])
+
+
+
+
+* point (heirarcaial - 1+ rows (of points))
+* collection type (path, region, group, etc.)
+* type (root & beg, path end, corner start/end, corner intermediate, row)
+* prior point
+* next point
+> root point 
+	* is also path begin and first row point
+	* path is stored as row 1 and there are no other rows
+> point
+	* has existing point & new point
+	> existing point
+		* when path, the points from the selected elements
+		* when new region, the points that define the region
+		* when modify, the selected points
+	> new point
+		* when path, the new vertical location for the existing point
+		* when new region, the new vertical location of the existing point
+		* when modify, the new location (vertical & or horizontal) for the existing point
+
+
+
+
+** point collections
+	* point selection collection
+		> points that the user provides
+		> collection types
+			* path, region by selection, etc, etc.
+		> point types
+			* root (beg, corner), path intermediate, path end, corner intermediate, corner end
+		> point status
+			* definition
+
+	* point definition collection
+		> new points to create - &/or -
+		> existing points to revise
+		> collection types
+			* path, rows
+		> point types
+			* root (beg, corner, row)
+			* row (beg)
+			* intermediate
+			* term (end, corner, row)
+			* row (end)
+		> point status
+			* existing or new
+
+	* point functional usage
+		* user provides the point selection collection
+			> determined by user selected function
+		* user provides the modification parameters
+		* pgm creates the point definition collection
+
+
+
+CODE LOCATIONS
 
 Shared Code
 * Code that can be used by a revit or non-revit project
@@ -32,109 +109,6 @@ current versions
 * shCode \ ... \ PathDataManager.cs -> PathDataManager
 * ShCode \ ... \ PathManager.cs -> PathManager
 
-
-
-
-Code reorg / moves / locations
-
-() class
-[] struct
-{} field or property const
-// enum
-
-* Library
-> RevitExtensions
-	(XYZextensions)
-	** XYZ Multiply                      - multiply the point by an XYZ (i.e. X * X, etc.)
-	* ToUV                               - convert an XYZ to a UV
-	* ToXYZ                              - convert a UV to an XYZ
-	* DistanceXY                         - calculate the planar distance between two XYZ points
-	* DistanceZ                          - calculate the Z delta between two points
-
-> RevitView
-	[ViewType]                           - Information about a Revit View
-	(RevitView)                          - Revit View Utilities * enums
-
-* in TopoEdit
-> BoundingCube file
-	(BoundingCube class)
-	** BoundingCube (list)               - list of points of a BoundingCube 
-	** IsWithinCube                      - determine if an XYZ point is within the cube
-	** IsWithinBox                       - determine if an XYZ point is within the plan of the cube
-
-> Extensions
-	(View Extensions class)
-	** IsElementVisibleInView            - Determine whether an element is visible in a view
-	
-	(PointIlistExtensions)
-	** ContainsPoint                     - determine if an XYZ point is within the IList of points
-
-> PickedBox2
-	(PickedBox2)                         - adjusts the points from "GetPickedBox" to be rational
-
-> PointMeasurement
-	[PointMeasurement struct]            - two points & the distances between them
-
-> Select
-	(Select)
-	** GetPickedBox                      - general routine to get points of a selection box
-	** GetPointsByLine                   - get two points by selecting a line
-	** GetPoint                          - Gets a point within the boundary of the topo surface
-	** GetStartPoint                     - using GetPoint - gets a start point (bool if OK)
-	** GetEndPoint                       - using GetPoint - gets an end point (bool if OK)
-	** GetLEndPoints                     - gets the start and end points  (bool if OK)
-
-> TopographyEditFailuresPreprocessor
-	* a TopographyEditFailuresPreprocessor that ignores errors
-	* a TopographyEditFailuresPreprocessor that lists errors in a task dialog
-
-> TopoSurfaceUtils
-	(TopoSurfaceUtils)
-	** GetTopoSurface                    - trys to automatically select the topo surface - if only one - got it else ask
-	** PickTopographySurface             - select a topo surface
-	** GetPointWithinTopo                - pick a point but must be within the boundary of the topo surface
-	** ProcessTriangles                  - get the boundary edges of a mesh (converted topo surface)
-	** SequenceVertices                  - get the list of boundary points
-	
-	(TopographySurfaceSelectionFilter)   - a selection filter for topo surfaces
-	
-	(TopoSurfaceExtension)
-	{BoundaryPointsValid}                - bool - is the boundary point valid
-	** GetName                           - gets the name of the topo surface
-	** GetTopoInfo                       - debug routine - lists all all of the elements in a topo surface
-	** IsInteriorPoint                   - determine if the selected point is an interior point
-	** FindCloseBoundaryPoints           - find the closest boundary point to the given point
-	** GetBoundaryPointsOrdered          - get a list of boundary points
-	** InvalidateBoundaryPoints          - flags the boundary point as invalid
-
-> TransactionGroupStack
-	(TransactionGroupStack)              - a transaction group IList
-
-> Utils
-	(Utils)
-	{snaps}                              - point selection snaps
-	{GLineStyles}                        - IList of Graphic Styles for lines
-	** DocUnits                          - create a units object set to decimal feet - OBSOLETE CODE
-	** GetBitmapImage                    - load an image from embeded resource
-	** RestrictValuetoMinMax             - restrict a double to between a max and min
-	** ParseUnitLength                   - parse a string that represents a distance and provide a double
-	** GetGeoElemInfo                    - debug routine - lists information about a geometry element
-	** GetAllElements                    - debug routine - get all elements in the DB and lists them
-	** DrawModelLine                     - draws a model line from start to end
-	** DrawDetailLine                    - draws a detail line from start to end
-	** GetLineStyles                     - create the list of Line styles
-	** GetReferencePlanes                - Get a list of reference planes and levels
-	** GetTemp3DView                     - not sure - finds the first 3D views?
-	** DistanceBetweenPointsXY           - distance between two points
-	** GetSurfacePoint                   - find a point on the face of a toposurface (will fail if topo surface is outside of the found 3D view)
-	** GetParameterAsString              - gets a string based the parameter information provided
-	** GetParameterAsElementId           - gets element Id based the parameter information provided
-	** SetParameterElementId             - sets element Id based the parameter information provided
-	** GetElementParameterInformation    - show the parameter information for the element
-	** GetParameterInformation           - show the parameter information for the parameter provided
-	** GetElementParameterMapInformation - show the parameter information for the element per the parameter map
-
-	(LineSelectFilter)                   - selection filter for "lines"
 
 
 

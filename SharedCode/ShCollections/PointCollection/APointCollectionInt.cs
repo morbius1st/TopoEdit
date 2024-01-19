@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 #endregion
 
 // user name: jeffs
-// created:   1/6/2024 3:29:01 PM
+// created:   1/14/2024 7:31:38 AM
 
-namespace JackRvtTst01.Windows.Support
+namespace SharedCode.ShCollections.PointCollection
 {
-	// public interface IWin
+	// public class APointCollectionInt : APointCollectionBase
 	// {
-	// 	string MessageBox { get; set; }
+	//
 	// }
 }

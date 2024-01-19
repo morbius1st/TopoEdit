@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+using JackRvtTst01.Windows;
 using JackRvtTst01.Windows.Support;
 using RevitLibrary;
 using SharedCode.ShRevit;
+using SharedCode.ShUtil;
 using ShUtil;
 
 #endregion
@@ -31,24 +33,24 @@ namespace JackRvtTst01.Functions
 
 			do
 			{
-				M.WriteLine("Please select a point");
+				M.WriteLine(null, "Please select a point");
 
 				try
 				{
 					if (!RvtLibrary.AddSketchPlaneToView(R.rvt_Doc, R.rvt_UiDoc.ActiveGraphicalView))
 					{
-						M.WriteLine($"could not use view");
+						M.WriteLine(null, $"could not use view");
 						return;
 					}
 
-					W.ActivateRevitWin();
+					R.ActivateRevit();
 
 					XYZ pt = selectPoint();
-					M.WriteLine($"got POINT| {FormatNumber.fmtXyz(pt)}\n");
+					M.WriteLine(null, $"got POINT| {FormatNumber.fmtXyz(pt)}\n");
 				}
 				catch (Exception e)
 				{
-					M.WriteLine($"got exception {e.Message}");
+					M.WriteLine(null, $"got exception {e.Message}");
 					repeat = 10;
 				}
 

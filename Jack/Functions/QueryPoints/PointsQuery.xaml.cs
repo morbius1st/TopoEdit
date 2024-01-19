@@ -19,14 +19,17 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using JetBrains.Annotations;
+using SharedCode.ShUtil;
 
 namespace Jack.Functions.PointsQuery
 {
 	/// <summary>
 	/// Interaction logic for QueryPoints.xaml
 	/// </summary>
-	public partial class PointsQuery : Window, INotifyPropertyChanged
+	public partial class PointsQuery : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+
 		private string infoTextBox;
 
 	#region private fields
@@ -38,13 +41,15 @@ namespace Jack.Functions.PointsQuery
 		public PointsQuery()
 		{
 			InitializeComponent();
+
+			Me = this;
 		}
 
 	#endregion
 
 	#region public properties
 
-		public string InfoTextBox
+		public string MessageBox
 		{
 			get => infoTextBox;
 			set
@@ -65,8 +70,16 @@ namespace Jack.Functions.PointsQuery
 
 		public void ResetText()
 		{
-			InfoTextBox = string.Empty;
+			MessageBox = string.Empty;
 		}
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+	//
 
 	#endregion
 

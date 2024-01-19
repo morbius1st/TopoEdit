@@ -15,6 +15,7 @@ using UtilityLibrary;
 
 namespace JackRvtTst01.Windows.Support
 {
+	/*
 	public static class M 
 	{
 		private static int marginSize = 0;
@@ -115,4 +116,5 @@ namespace JackRvtTst01.Windows.Support
 	#endregion
 
 	}
+	*/
 }

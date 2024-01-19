@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using SharedCode.ShUtil;
 using UtilityLibrary;
 
 #endregion
@@ -15,6 +15,7 @@ using UtilityLibrary;
 
 namespace JackRvtTst01.Windows.Support
 {
+	/*
 	public static class RE_M 
 	{
 		private static int marginSize = 0;
@@ -115,4 +116,5 @@ namespace JackRvtTst01.Windows.Support
 	#endregion
 
 	}
+	*/
 }

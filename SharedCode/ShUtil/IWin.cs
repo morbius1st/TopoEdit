@@ -16,5 +16,7 @@ namespace SharedCode.ShUtil
 	public interface IWin
 	{
 		string MessageBox { get; set; }
+
+		string Name { get; set; }
 	}
 }

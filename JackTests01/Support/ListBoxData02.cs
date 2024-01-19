@@ -8,9 +8,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
+using JackTests01.Windows;
 using JetBrains.Annotations;
-using SharedCode.ShCollections.PathCollection;
 using UtilityLibrary;
+
+using SharedCode.ShCollections.PointCollection;
+using SharedCode.ShUtil;
 
 #endregion
 
@@ -19,15 +22,16 @@ using UtilityLibrary;
 
 namespace JackTests01.Support2
 {
+
+
 	public class ListBoxData02 : INotifyPropertyChanged
 	{
+
 	#region private fields
 
+		private PointCollectionManager pcm = new PointCollectionManager();
+
 		private Document doc;
-
-		private static PathDataManager pathCompDataS= createPath();
-		private PathDataManager pathCompData;
-
 		private static double zadj = 0.5, zaa = 0.5;
 
 		private static double x = 10, xa = 5;
@@ -35,202 +39,18 @@ namespace JackTests01.Support2
 		private static double z = 10, za = 5;
 		private static double r = 20, ra = 2;
 
+		private static XYZ pt = new XYZ(x, y, z);
+		private static XYZ ptAdj = new XYZ(xa, ya, za);
+
+
 	#endregion
 
 	#region ctor
 
-		static ListBoxData02()
-		{
-			CreatePathS();
-			
-		}
-
 		public ListBoxData02(Document doc)
 		{
-			this.doc= doc;
+			
 		}
-
-	#endregion
-
-	#region public properties
-
-		
-		public static PathDataManager PathCompDataS { get; private set; }
-		// {
-		// 	get =>  pathCompDataS;
-		// 	set
-		// 	{
-		// 		pathCompDataS = value;
-		// 	}
-		// }
-
-		public PathDataManager PathCompData
-		{
-			get =>  pathCompData;
-			set => pathCompData = value;
-		}
-		
-
-	#endregion
-
-	#region private properties
-
-	#endregion
-
-	#region public methods
-
-		public bool AddReference(Reference r)
-		{
-			ElementId eid = r.ElementId;
-			DetailCurve el = doc.GetElement(eid) as DetailCurve;
-			Curve a = el.GeometryCurve;
-			Arc arc = a as Arc;
-
-			Arc ax = el.GeometryCurve as Arc;
-
-			return true;
-		}
-
-	#endregion
-
-	#region private methods
-
-	#endregion
-
-	#region sample data
-
-		public static void CreatePathS()
-		{
-			PathCompDataS = createPath();
-		}
-
-		public void CreatePath()
-		{
-			PathCompData = createPath();
-		}
-
-		private static PathDataManager createPath()
-		{
-			pathCompDataS = new PathDataManager();
-
-			double coordZ = 0.0;
-			double coordBeg = 100.0;
-			double coordEnd = 300.0;
-
-			PathComponent prior;
-
-			if (!pathCompDataS.Begin(out prior)) return null;
-
-			// first segment
-			prior = makePathComponent(PathCompType.PST_LINE, prior);
-			pathCompDataS.Add(prior);
-			// second segment
-			prior = makePathComponent(PathCompType.PST_POINT, prior);
-			pathCompDataS.Add(prior);
-			// third segment
-			prior = makePathComponent(PathCompType.PST_ARC, prior);
-			pathCompDataS.Add(prior);
-
-			return pathCompDataS;
-		}
-
-		private static PathComponent makePathComponent(PathCompType segType, PathComponent prior)
-		{
-			PathComponent component = null;
-			List<PathCompPoint> pathData;
-			double rad = -1;
-
-			switch (segType.E)
-			{
-			case PathCompType.PathComponentType.PST_Line:
-				{
-					pathData = MakeLinePathCompData();
-					component = PathComponent.MakePathComponentLine(pathData, prior);
-					component.UpdateParent();
-
-					break;
-				}
-
-			case PathCompType.PathComponentType.PST_Arc:
-				{
-					pathData = MakeArcPathCompData(out rad);
-					component = PathComponent.MakePathComponentArc(pathData, rad, prior);
-					component.UpdateParent();
-					break;
-				}
-
-			case PathCompType.PathComponentType.PST_Point:
-				{
-					pathData = MakePointPathCompData();
-					component = PathComponent.MakePathComponentPoint(pathData, prior);
-
-					// Debug.WriteLine($"Update parent for| {segment.SegmentNum}");
-
-					component.UpdateParent();
-					break;
-				}
-
-			case PathCompType.PathComponentType.PST_3PtArc:
-				{
-					break;
-				}
-			}
-
-			return component;
-		}
-
-		private static List<PathCompPoint> MakeLinePathCompData()
-		{
-			XYZ beg = new XYZ(x, y, z);
-			x += xa;
-			y += ya;
-			z += za;
-			XYZ end = new XYZ(x, y, z);
-
-			return PathCompPoint.LineComponent(beg, end);
-		}
-
-		private static List<PathCompPoint> MakeArcPathCompData(out double radius)
-		{
-			XYZ beg = new XYZ(x, y, z);
-			x += xa;
-			y += ya;
-
-			xa += 1;
-			ya += 2;
-
-			XYZ end = new XYZ(x, y, z);
-
-			radius = r;
-			r += ra;
-
-			// todo fix
-			XYZ cen = CsMath.CenterUVFrom2PtsAndRad(beg.ToUV(), end.ToUV(), radius, true).ToXYZ();
-			// XYZ cen = new XYZ();
-
-			return PathCompPoint.ArcComponent(beg, cen, end);
-		}
-
-		private static List<PathCompPoint> MakePointPathCompData()
-		{
-			x += xa;
-			y += ya;
-			z += za;
-
-			XYZ beg = new XYZ(x, y, z);
-
-			x += xa;
-			y += ya;
-			z += za;
-
-			return PathCompPoint.PointComponent(beg);
-		}
-
-		
-
-	#endregion
-
-	#region event consuming
 
 	#endregion
 
@@ -254,5 +74,139 @@ namespace JackTests01.Support2
 		}
 
 	#endregion
+
+		// create (3) sample data collections - point def, point path, point new
+
+		public static PointCollectionDef CreateDef()
+		{
+			M.WriteLine(MainWindow.Me, "Create Def");
+			PointCollectionDef x = new PointCollectionDef();
+			M.WriteLine(MainWindow.Me, $"A| got points| {x.HasPoints}| begun| {x.IsBegun}| terminated| {x.IsTerminated}");
+			
+			x.BeginDefPoint(defBegin());
+
+			M.WriteLine(MainWindow.Me, $"B| got points| {x.HasPoints}| begun| {x.IsBegun}| terminated| {x.IsTerminated}");
+
+			x.AddDefPoint(intPoint());
+			x.AddDefPoint(intPoint());
+			x.AddDefPoint(intPoint());
+			x.AddTermPoint(termPt());
+
+			M.WriteLine(MainWindow.Me, $"C| got points| {x.HasPoints}| begun| {x.IsBegun}| terminated| {x.IsTerminated}");
+
+			return x;
+		}
+
+		public static PointCollectionNew CreateNew()
+		{
+			PointCollectionNew x = new PointCollectionNew();
+
+			x.BeginNewPoint(newBegin());
+			x.AddNewPoint(intPoint());
+			x.AddNewPoint(intPoint());
+			x.EndNewRowPoint(newRowEnd());
+			x.BeginNewRowPoint(newRow());
+			x.AddNewPoint(intPoint());
+			x.AddNewPoint(intPoint());
+			x.EndNewRowPoint(newRowEnd());
+			x.AddTermPoint(termPt());
+
+			return x;
+		}
+
+		public static PointCollectionPath CreatePath()
+		{
+			PointCollectionPath x = new PointCollectionPath();
+
+			x.BeginPathPoint(pathBegin());
+			x.LinePathPoints(pathLine());
+			x.ArcPathPoints(pathArc());
+			x.LinePathPoints(pathLine());
+			x.LinePathPoints(pathLine());
+			x.ArcPathPoints(pathArc());
+			x.ArcPathPoints(pathArc());
+			x.LinePathPoints(pathLine());
+			x.AddTermPoint(termPt());
+
+			return x;
+		}
+
+		private static void incPoint()
+		{
+			pt = pt.Add(ptAdj);
+		}
+
+		/* path point collection */
+		private static PointRootPath pathBegin()
+		{
+			PointRootPath prp = new PointRootPath(pt, PointCollType.PCT_PATH, PointStatus.PS_EXIST);
+			return prp;
+		}
+
+		private static PointLinePath pathLine()
+		{
+			PointLinePath pbl = new PointLinePath(pt, pt.Add(ptAdj), PointStatus.PS_EXIST);
+			incPoint();
+			incPoint();
+			return pbl;
+		}
+
+		private static PointArcPath pathArc()
+		{
+			PointArcPath pba = new PointArcPath(pt, pt.Add(ptAdj), pt.Add(ptAdj), 100.0, PointStatus.PS_EXIST);
+			incPoint();
+			incPoint();
+			return pba;
+		}
+
+
+		/* new point collection */
+		private static PointRootRow newBegin()
+		{
+			PointRootRow prr = new PointRootRow(pt, PointCollType.PCT_PATH, PointStatus.PS_EXIST);
+			incPoint();
+			return prr;
+		}
+
+		private static PointBegRow newRow()
+		{
+			PointBegRow pbr = new PointBegRow(pt, PointStatus.PS_EXIST);
+			incPoint();
+			return pbr;
+		}
+
+		private static PointEndRow newRowEnd()
+		{
+			PointEndRow per = new PointEndRow(pt, PointStatus.PS_EXIST);
+			incPoint();
+			return per;
+		}
+
+
+		/* def point collection */
+		private static PointRoot defBegin()
+		{
+			PointRoot p = new PointRoot(pt, PointCollType.PCT_PATH, PointStatus.PS_EXIST);
+			incPoint();
+			return p;
+		}
+
+		private static PointInt intPoint()
+		{
+			PointInt pi = new PointInt(pt, PointStatus.PS_EXIST);
+			incPoint();
+			return pi;
+		}
+
+
+		/* all collections */
+		private static PointTerm termPt()
+		{
+			incPoint();
+			return new PointTerm(pt);
+		}
+
 	}
+
+	
 }

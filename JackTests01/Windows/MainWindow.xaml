@@ -10,9 +10,11 @@
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:shSup="clr-namespace:SharedApp.Windows.ShSupport"
 		xmlns:shPath="clr-namespace:SharedCode.ShCollections.PathCollection"
+		xmlns:shPoints="clr-namespace:SharedCode.ShCollections.PointCollection"
+		xmlns:rvtLib="clr-namespace:RevitLibrary"
 		Title="MainWindow"
-		Width="1100"
-		Height="750"
+		Width="1400"
+		Height="1150"
 		DataContext="{Binding ElementName=WinMain}"
 		mc:Ignorable="d"
 		Background="{DynamicResource Normal.Window.Background}"
@@ -26,497 +28,827 @@
 				<ResourceDictionary Source="ShSupport/ShCommon.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
-		<sys:Double x:Key="BtnWidth">84</sys:Double>
-		<sys:Double x:Key="BtnHeight">28</sys:Double>
+			<sys:Double x:Key="BtnWidth">84</sys:Double>
+			<sys:Double x:Key="BtnHeight">28</sys:Double>
 
-		<local:SegmentTempSelector x:Key="segmentTempSelector" />
-		<shSup:PassThroughConverter x:Key="PassThroughConverter" />
-		<shSup:InvertBool x:Key="InvertBool" />
-		<shSup:NotEqualsToBool x:Key="NotEqualsToBool" />
-		<shSup:EqualsToBool x:Key="EqualsToBool" />
+			<local:SegmentTempSelector x:Key="segmentTempSelector" />
+			<shSup:PassThroughConverter x:Key="PassThroughConverter" />
+			<shSup:InvertBool x:Key="InvertBool" />
+			<shSup:NotEqualsToBool x:Key="NotEqualsToBool" />
+			<shSup:EqualsToBool x:Key="EqualsToBool" />
+			<rvtLib:XYZtoCommaSepString x:Key="Xyz2Str" />
 
+			<!--#region > old - path components-->
 
-		<ContentControl x:Key="x"
-				x:Shared="False"
-				>
-			<DockPanel>
-				<TextBlock Width="70"
-						FontSize="10"
-						Text="{Binding PathSegTypeDesc}"
-						/>
-
-				<TextBlock Margin="10,0,0,0"
-						Width="140"
-						FontSize="10"
-						TextAlignment="Right"
-						Text="{Binding XyzCoordFmtd}"
-						/>
-
-				<TextBlock Margin="20,0,0,0"
-						Width="120"
-						FontSize="8"
-						TextAlignment="Right"
-						Text="{Binding PriorFmtd}"
-						/>
-
-
-				<TextBlock Margin="15,0,0,0"
-						Width="140"
-						FontSize="10"
-						TextAlignment="Left"
-						Text="{Binding DistanceDesc}"
-						>
-					<!-- removed
-					<TextBlock.Style>
-							<Style TargetType="TextBlock">
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding PointType}" Value="{x:Static sup:SegmentPointType.PDT_Beg}">
-										<Setter Property="Text" Value="{Binding DistanceDesc, StringFormat='{}{0} to prior pt'}"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding PointType}" Value="{x:Static sup:SegmentPointType.PDT_End}">
-										<Setter Property="Text" Value="{Binding DistanceDesc, StringFormat='{}{0} segment Length'}"/>
-									</DataTrigger>
-
-									<MultiDataTrigger>
-										<MultiDataTrigger.Conditions>
-											<Condition Binding="{Binding Parent.SegmentType}" Value="{x:Static sup:PathSegmentType.PST_ARC}"/>
-											<Condition Binding="{Binding PointType}" Value="{x:Static sup:SegmentPointType.PDT_End}"/>
-										</MultiDataTrigger.Conditions>
-										<MultiDataTrigger.Setters>
-											<Setter Property="Text" Value="{Binding DistanceDesc, StringFormat='{}{0} arc Length'}"/>
-										</MultiDataTrigger.Setters>
-									</MultiDataTrigger>
-
-
-								</Style.Triggers>
-							</Style>
-						</TextBlock.Style>
-					-->
-
-				</TextBlock>
-
-
-			</DockPanel>
-		</ContentControl>
-
-		<DataTemplate x:Key="Dt_PathSeg_Line"
-				DataType="sup:SegmentPoint"
-				>
-
-			<ContentControl Content="{StaticResource x}" />
-
-		</DataTemplate>
-
-
-		<!-- removed
-		<DataTemplate x:Key="Dt_PathSeg_Arc"
-				DataType="sup:SegmentDefPoint"
-				>
-
-			<ContentControl Content="{StaticResource x}" />
-		</DataTemplate>
-
-		<DataTemplate x:Key="Dt_PathSeg_Point"
-				DataType="sup:SegmentDefPoint"
-				>
-			
-			<ContentControl Content="{StaticResource x}" />
-
-		</DataTemplate>
-		
-		-->
-
-
-
-		<DataTemplate x:Key="dt_line_01"
-				DataType="{x:Type PathSegment}"
-				>
-			<ListBox Margin="20,0,0,0"
-					HorizontalAlignment="Stretch"
-					DataContext="{Binding DataContext,
-																RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
-					Background="#222222"
-					Foreground="White"
-					DockPanel.Dock="Bottom"
-					ItemsSource="{Binding SegmentData}"
-					ItemTemplate="{StaticResource Dt_PathSeg_Line}"
+			<ContentControl x:Key="cc_x"
+					x:Shared="False"
 					>
-
-			</ListBox>
-		</DataTemplate>
-
-
-		<!-- removed
-		<DataTemplate x:Key="dt_arc_01"
-				DataType="{x:Type PathSegment}"
-				>
-			<ListBox Margin="20,0,0,0"
-					HorizontalAlignment="Stretch"
-					DataContext="{Binding DataContext,
-																RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
-					Background="#222222"
-					Foreground="White"
-					DockPanel.Dock="Bottom"
-					ItemsSource="{Binding SegmentData}"
-					ItemTemplate="{StaticResource Dt_PathSeg_Arc}"
-					>
-
-			</ListBox>
-		</DataTemplate>
-
-		<DataTemplate x:Key="dt_point_01"
-				DataType="{x:Type PathSegment}"
-				>
-			<ListBox Margin="20,0,0,0"
-					HorizontalAlignment="Stretch"
-					DataContext="{Binding DataContext,
-																RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
-					Background="#222222"
-					Foreground="White"
-					DockPanel.Dock="Bottom"
-					ItemsSource="{Binding SegmentData}"
-					ItemTemplate="{StaticResource Dt_PathSeg_Point}"
-					>
-
-			</ListBox>
-		</DataTemplate>
-		
-		-->
-
-
-
-		<DataTemplate x:Key="DtPathSegment"
-				DataType="{x:Type sup:PathSegment}"
-				>
-			<DockPanel MinWidth="200"
-					HorizontalAlignment="Stretch"
-					>
-
-				<DockPanel.Style>
-					<Style TargetType="DockPanel">
-						<Style.Triggers>
-							<DataTrigger Value="true" Binding="{Binding SkipRow}">
-								<Setter Property="Visibility" Value="Collapsed">
-								</Setter>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</DockPanel.Style>
-
-
-
-				<DockPanel MinWidth="200"
-						HorizontalAlignment="Stretch"
-						DataContext="{Binding DataContext,
-																	RelativeSource={RelativeSource AncestorType={x:Type DockPanel}}}"
-						DockPanel.Dock="Top"
-						>
-
-					<TextBlock Width="20"
-							Text="{Binding SeqString,
-														 Mode=OneWay,
-														 FallbackValue='x'}"
+				<DockPanel>
+					<TextBlock Width="70"
+							FontSize="10"
+							Text="{Binding PathSegTypeDesc}"
 							/>
-
-
-					<TextBlock Text="{Binding SegmentNum, StringFormat='{}{0,-10}', Mode=OneWay, FallbackValue='  1'}" />
 
 					<TextBlock Margin="10,0,0,0"
-							Width="100"
-							Text="{Binding SegTypeDesc,
-														 Mode=OneWay,
-														 FallbackValue='xxx'}"
-							/>
-
-					<TextBlock Margin="0,0,0,0"
-							Width="30"
+							Width="140"
+							FontSize="10"
 							TextAlignment="Right"
-							Text="{Binding SlopeValue,
-														 Mode=OneWay,
-														 StringFormat='#0\\%',
-														 FallbackValue='5%'}"
+							Text="{Binding XyzCoordFmtd}"
 							/>
 
 					<TextBlock Margin="20,0,0,0"
-							Text="{Binding SlopeTypeDesc,
-														 Mode=OneWay,
-														 FallbackValue='xxx'}"
+							Width="120"
+							FontSize="8"
+							TextAlignment="Right"
+							Text="{Binding PriorFmtd}"
 							/>
 
 
-					<TextBlock Margin="20,0,0,0">
-						<TextBlock.Style>
-							<Style TargetType="TextBlock">
-								<Style.Triggers>
-									<DataTrigger Value="{x:Static sup:PathSegmentType.PST_ARC}" Binding="{Binding SegmentType, Converter={StaticResource PassThroughConverter}}">
-										<Setter Property="Text" Value="{Binding RadiusString, StringFormat='Radius {0}'}" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</TextBlock.Style>
-
+					<TextBlock Margin="15,0,0,0"
+							Width="140"
+							FontSize="10"
+							TextAlignment="Left"
+							Text="{Binding DistanceDesc}"
+							>
 					</TextBlock>
 
-					<TextBlock Margin="0,0,5,0"
-							Width="60"
-							HorizontalAlignment="Right"
-							DockPanel.Dock="Right"
-							TextAlignment="Right"
-							Text="{Binding PriorSegment.SegmentNum,
-														 Mode=OneWay,
-														 TargetNullValue='begining'}"
-							/>
-
-					<TextBlock Margin="0,0,5,0"
-							Width="60"
-							HorizontalAlignment="Right"
-							DockPanel.Dock="Right"
-							TextAlignment="Right"
-							Text="{Binding NextSegment.SegmentNum,
-														 Mode=OneWay,
-														 FallbackValue='none',
-														 TargetNullValue='begining'}"
-							/>
 
 				</DockPanel>
+			</ContentControl>
 
-				<ContentControl>
+			<DataTemplate x:Key="dt_PathSeg_Line"
+					DataType="sup:SegmentPoint"
+					>
 
-					<ContentControl.Style>
-						<Style TargetType="ContentControl">
+				<ContentControl Content="{StaticResource cc_x}" />
+
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_line_01"
+					DataType="{x:Type PathSegment}"
+					>
+				<ListBox Margin="20,0,0,0"
+						HorizontalAlignment="Stretch"
+						DataContext="{Binding DataContext,
+																	RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+						Background="#222222"
+						Foreground="White"
+						DockPanel.Dock="Bottom"
+						ItemsSource="{Binding SegmentData}"
+						ItemTemplate="{StaticResource dt_PathSeg_Line}"
+						>
+
+				</ListBox>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_PathSegment"
+					DataType="{x:Type sup:PathSegment}"
+					>
+				<DockPanel MinWidth="200"
+						HorizontalAlignment="Stretch"
+						>
+
+					<DockPanel.Style>
+						<Style TargetType="DockPanel">
 							<Style.Triggers>
-								<DataTrigger Value="False" Binding="{Binding SegmentType, Converter={StaticResource EqualsToBool}, ConverterParameter={x:Static sup:PathSegmentType.PST_ROOT}}">
-									<Setter Property="ContentTemplate" Value="{StaticResource dt_line_01}">
+								<DataTrigger Value="true" Binding="{Binding SkipRow}">
+									<Setter Property="Visibility" Value="Collapsed">
 									</Setter>
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>
-					</ContentControl.Style>
-
-				</ContentControl>
-
-			</DockPanel>
-
-		</DataTemplate>
+					</DockPanel.Style>
 
 
 
+					<DockPanel MinWidth="200"
+							HorizontalAlignment="Stretch"
+							DataContext="{Binding DataContext,
+																		RelativeSource={RelativeSource AncestorType={x:Type DockPanel}}}"
+							DockPanel.Dock="Top"
+							>
+
+						<TextBlock Width="20"
+								Text="{Binding SeqString,
+															 Mode=OneWay,
+															 FallbackValue='x'}"
+								/>
 
 
+						<TextBlock Text="{Binding SegmentNum, StringFormat='{}{0,-10}', Mode=OneWay, FallbackValue='  1'}" />
 
-		<ContentControl x:Key="z"
-				x:Shared="False"
-				>
-			<DockPanel>
-				<TextBlock Width="70"
-						FontSize="10"
-						Text="{Binding PathCompTypeDesc}"
-						/>
+						<TextBlock Margin="10,0,0,0"
+								Width="100"
+								Text="{Binding SegTypeDesc,
+															 Mode=OneWay,
+															 FallbackValue='xxx'}"
+								/>
 
-				<TextBlock Margin="10,0,0,0"
-						Width="140"
-						FontSize="10"
-						TextAlignment="Right"
-						Text="{Binding XyzCoordFmtd}"
-						/>
+						<TextBlock Margin="0,0,0,0"
+								Width="30"
+								TextAlignment="Right"
+								Text="{Binding SlopeValue,
+															 Mode=OneWay,
+															 StringFormat='#0\\%',
+															 FallbackValue='5%'}"
+								/>
 
-				<TextBlock Margin="20,0,0,0"
-						Width="120"
-						FontSize="8"
-						TextAlignment="Right"
-						Text="{Binding PriorFmtd}"
-						/>
-
-
-				<TextBlock Margin="15,0,0,0"
-						Width="140"
-						FontSize="10"
-						TextAlignment="Left"
-						Text="{Binding DistanceDesc}"
-						>
-				</TextBlock>
-			</DockPanel>
-		</ContentControl>
+						<TextBlock Margin="20,0,0,0"
+								Text="{Binding SlopeTypeDesc,
+															 Mode=OneWay,
+															 FallbackValue='xxx'}"
+								/>
 
 
+						<TextBlock Margin="20,0,0,0">
+							<TextBlock.Style>
+								<Style TargetType="TextBlock">
+									<Style.Triggers>
+										<DataTrigger Value="{x:Static sup:PathSegmentType.PST_ARC}" Binding="{Binding SegmentType}">
+											<Setter Property="Text" Value="{Binding RadiusString, StringFormat='Radius {0}'}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBlock.Style>
 
-		<DataTemplate x:Key="Dt_PathSeg_PathLine"
-				DataType="shPath:PathCompPoint"
-				>
-			<ContentControl Content="{StaticResource z}" />
+						</TextBlock>
 
-		</DataTemplate>
+						<TextBlock Margin="0,0,5,0"
+								Width="60"
+								HorizontalAlignment="Right"
+								DockPanel.Dock="Right"
+								TextAlignment="Right"
+								Text="{Binding PriorSegment.SegmentNum,
+															 Mode=OneWay,
+															 TargetNullValue='begining'}"
+								/>
 
-		<DataTemplate x:Key="dt_pathline_00"
-				DataType="{x:Type shPath:PathComponent}"
-				>
-			<StackPanel
-					Orientation="Horizontal"
+						<TextBlock Margin="0,0,5,0"
+								Width="60"
+								HorizontalAlignment="Right"
+								DockPanel.Dock="Right"
+								TextAlignment="Right"
+								Text="{Binding NextSegment.SegmentNum,
+															 Mode=OneWay,
+															 FallbackValue='none',
+															 TargetNullValue='begining'}"
+								/>
+
+					</DockPanel>
+
+					<ContentControl>
+
+						<ContentControl.Style>
+							<Style TargetType="ContentControl">
+								<Style.Triggers>
+									<DataTrigger Value="False" Binding="{Binding SegmentType, Converter={StaticResource EqualsToBool}, ConverterParameter={x:Static sup:PathSegmentType.PST_ROOT}}">
+										<Setter Property="ContentTemplate" Value="{StaticResource dt_line_01}">
+										</Setter>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ContentControl.Style>
+
+					</ContentControl>
+
+				</DockPanel>
+
+			</DataTemplate>
+
+			<ContentControl x:Key="cc_z"
+					x:Shared="False"
 					>
-				<TextBlock
-						Width="140"
-						Text="dt_pathline_00"
-						Foreground="White"
-						Background="Black" />
+				<DockPanel>
+					<TextBlock Width="70"
+							FontSize="10"
+							Text="{Binding PathCompTypeDesc}"
+							/>
 
-				<TextBlock
-						Margin="15,0,0,0"
-						Width="140"
-						FontSize="10"
-						TextAlignment="Left"
-						Text="{Binding DistanceDesc}" />
+					<TextBlock Margin="10,0,0,0"
+							Width="140"
+							FontSize="10"
+							TextAlignment="Right"
+							Text="{Binding XyzCoordFmtd}"
+							/>
+
+					<TextBlock Margin="20,0,0,0"
+							Width="120"
+							FontSize="8"
+							TextAlignment="Right"
+							Text="{Binding PriorFmtd}"
+							/>
+
+
+					<TextBlock Margin="15,0,0,0"
+							Width="140"
+							FontSize="10"
+							TextAlignment="Left"
+							Text="{Binding DistanceDesc}"
+							>
+					</TextBlock>
+				</DockPanel>
+			</ContentControl>
+
+			<DataTemplate x:Key="dt_PathSeg_PathLine"
+					DataType="shPath:PathCompPoint"
+					>
+				<ContentControl Content="{StaticResource cc_z}" />
+
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_pathline_00"
+					DataType="{x:Type shPath:PathComponent}"
+					>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Width="140"
+							Background="Black"
+							Foreground="White"
+							Text="dt_pathline_00"
+							/>
+
+					<TextBlock Margin="15,0,0,0"
+							Width="140"
+							FontSize="10"
+							TextAlignment="Left"
+							Text="{Binding DistanceDesc}"
+							/>
 
 
 				</StackPanel>
-		</DataTemplate>
+			</DataTemplate>
 
-
-		<DataTemplate x:Key="dt_pathline_01"
-				DataType="{x:Type shPath:PathComponent}"
-				>
-			<ListBox Margin="20,0,0,0"
-					HorizontalAlignment="Stretch"
-					DataContext="{Binding DataContext,
-																RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
-					Background="#222222"
-					Foreground="White"
-					DockPanel.Dock="Bottom"
-					ItemsSource="{Binding ComponentData}"
-					ItemTemplate="{StaticResource Dt_PathSeg_PathLine}"
+			<DataTemplate x:Key="dt_pathline_01"
+					DataType="{x:Type shPath:PathComponent}"
 					>
-
-			</ListBox>
-		</DataTemplate>
-
-
-		<DataTemplate x:Key="DtPathDataComponent"
-				DataType="{x:Type shPath:PathComponent}"
-				>
-			<DockPanel MinWidth="200"
-					HorizontalAlignment="Stretch"
-					>
-
-				<DockPanel.Style>
-					<Style TargetType="DockPanel">
-						<Style.Triggers>
-							<DataTrigger Value="true" Binding="{Binding SkipRow}">
-								<Setter Property="Visibility" Value="Collapsed">
-								</Setter>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</DockPanel.Style>
-
-
-
-				<DockPanel MinWidth="200"
+				<ListBox Margin="20,0,0,0"
 						HorizontalAlignment="Stretch"
 						DataContext="{Binding DataContext,
-																	RelativeSource={RelativeSource AncestorType={x:Type DockPanel}}}"
-						DockPanel.Dock="Top"
+																	RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+						Background="#222222"
+						Foreground="White"
+						DockPanel.Dock="Bottom"
+						ItemsSource="{Binding ComponentData}"
+						ItemTemplate="{StaticResource dt_PathSeg_PathLine}"
 						>
 
-					<TextBlock Width="20"
-							Text="{Binding SeqString,
-														 Mode=OneWay,
-														 FallbackValue='x'}"
-							/>
+				</ListBox>
+			</DataTemplate>
 
+			<DataTemplate x:Key="dt_PathDataComponent"
+					DataType="{x:Type shPath:PathComponent}"
+					>
+				<DockPanel MinWidth="200"
+						HorizontalAlignment="Stretch"
+						>
 
-					<TextBlock Text="{Binding ComponentNum, StringFormat='{}{0,-10}', Mode=OneWay, FallbackValue='  1'}" />
-
-					<TextBlock Margin="10,0,0,0"
-							Width="100"
-							Text="{Binding CompTypeDesc,
-														 Mode=OneWay,
-														 FallbackValue='xxx'}"
-							/>
-
-					<TextBlock Margin="0,0,0,0"
-							Width="30"
-							TextAlignment="Right"
-							Text="{Binding SlopeValue,
-														 Mode=OneWay,
-														 StringFormat='#0\\%',
-														 FallbackValue='5%'}"
-							/>
-
-					<TextBlock Margin="20,0,0,0"
-							Text="{Binding SlopeTypeDesc,
-														 Mode=OneWay,
-														 FallbackValue='xxx'}"
-							/>
-
-
-					<TextBlock Margin="20,0,0,0">
-						<TextBlock.Style>
-							<Style TargetType="TextBlock">
-								<Style.Triggers>
-									<DataTrigger Value="{x:Static shPath:PathCompType.PST_ARC}" Binding="{Binding CompType, Converter={StaticResource PassThroughConverter}}">
-										<Setter Property="Text" Value="{Binding RadiusString, StringFormat='Radius {0}'}" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</TextBlock.Style>
-
-					</TextBlock>
-
-					<TextBlock Margin="0,0,5,0"
-							Width="60"
-							HorizontalAlignment="Right"
-							DockPanel.Dock="Right"
-							TextAlignment="Right"
-							Text="{Binding PriorComponent.ComponentNum,
-														 Mode=OneWay,
-														 TargetNullValue='begining'}"
-							/>
-
-					<TextBlock Margin="0,0,5,0"
-							Width="60"
-							HorizontalAlignment="Right"
-							DockPanel.Dock="Right"
-							TextAlignment="Right"
-							Text="{Binding NextComponent.ComponentNum,
-														 Mode=OneWay,
-														 FallbackValue='none',
-														 TargetNullValue='begining'}"
-							/>
-
-				</DockPanel>
-
-				<ContentControl>
-
-					<ContentControl.Style>
-						<Style TargetType="ContentControl">
-							<Setter Property="ContentTemplate" Value="{StaticResource dt_pathline_00}"/>
+					<DockPanel.Style>
+						<Style TargetType="DockPanel">
 							<Style.Triggers>
-								<DataTrigger Value="False" Binding="{Binding CompType, Converter={StaticResource EqualsToBool}, ConverterParameter={x:Static shPath:PathCompType.PST_ROOT}}">
-									<Setter Property="ContentTemplate" Value="{StaticResource dt_pathline_01}">
+								<DataTrigger Value="true" Binding="{Binding SkipRow}">
+									<Setter Property="Visibility" Value="Collapsed">
 									</Setter>
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>
-					</ContentControl.Style>
+					</DockPanel.Style>
 
-				</ContentControl>
 
-			</DockPanel>
 
-		</DataTemplate>
+					<DockPanel MinWidth="200"
+							HorizontalAlignment="Stretch"
+							DataContext="{Binding DataContext,
+																		RelativeSource={RelativeSource AncestorType={x:Type DockPanel}}}"
+							DockPanel.Dock="Top"
+							>
+
+						<TextBlock Width="20"
+								Text="{Binding SeqString,
+															 Mode=OneWay,
+															 FallbackValue='x'}"
+								/>
+
+
+						<TextBlock Text="{Binding ComponentNum, StringFormat='{}{0,-10}', Mode=OneWay, FallbackValue='  1'}" />
+
+						<TextBlock Margin="10,0,0,0"
+								Width="100"
+								Text="{Binding CompTypeDesc,
+															 Mode=OneWay,
+															 FallbackValue='xxx'}"
+								/>
+
+						<TextBlock Margin="0,0,0,0"
+								Width="30"
+								TextAlignment="Right"
+								Text="{Binding SlopeValue,
+															 Mode=OneWay,
+															 StringFormat='#0\\%',
+															 FallbackValue='5%'}"
+								/>
+
+						<TextBlock Margin="20,0,0,0"
+								Text="{Binding SlopeTypeDesc,
+															 Mode=OneWay,
+															 FallbackValue='xxx'}"
+								/>
+
+
+						<TextBlock Margin="20,0,0,0">
+							<TextBlock.Style>
+								<Style TargetType="TextBlock">
+									<Style.Triggers>
+										<DataTrigger Value="{x:Static shPath:PathCompType.PST_ARC}" Binding="{Binding CompType}">
+											<Setter Property="Text" Value="{Binding RadiusString, StringFormat='Radius {0}'}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBlock.Style>
+
+						</TextBlock>
+
+						<TextBlock Margin="0,0,5,0"
+								Width="60"
+								HorizontalAlignment="Right"
+								DockPanel.Dock="Right"
+								TextAlignment="Right"
+								Text="{Binding PriorComponent.ComponentNum,
+															 Mode=OneWay,
+															 TargetNullValue='begining'}"
+								/>
+
+						<TextBlock Margin="0,0,5,0"
+								Width="60"
+								HorizontalAlignment="Right"
+								DockPanel.Dock="Right"
+								TextAlignment="Right"
+								Text="{Binding NextComponent.ComponentNum,
+															 Mode=OneWay,
+															 FallbackValue='none',
+															 TargetNullValue='begining'}"
+								/>
+
+					</DockPanel>
+
+					<ContentControl>
+
+						<ContentControl.Style>
+							<Style TargetType="ContentControl">
+								<Setter Property="ContentTemplate" Value="{StaticResource dt_pathline_00}" />
+								<Style.Triggers>
+									<DataTrigger Value="False" Binding="{Binding CompType, Converter={StaticResource EqualsToBool}, ConverterParameter={x:Static shPath:PathCompType.PST_ROOT}}">
+										<Setter Property="ContentTemplate" Value="{StaticResource dt_pathline_01}">
+										</Setter>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ContentControl.Style>
+
+					</ContentControl>
+
+				</DockPanel>
+
+			</DataTemplate>
+
+			<!--#endregion-->
+
+			<!-- header -->
+
+			<DataTemplate x:Key="dt_a_pt"
+					DataType="{x:Type shPoints:APointElement}"
+					>
+				<DockPanel 
+						HorizontalAlignment="Left"
+						DataContext="{Binding DataContext,
+																	RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}"
+						>
+					<TextBlock Width="50"
+							Text="{Binding SeqNumber}"
+					/>
+
+					<TextBlock Width="50"
+							Text="{Binding Id}"
+							/>
+
+					<TextBlock Width="110"
+							Text="{Binding PtType.DescShort}"
+							/>
+
+					<TextBlock Width="90"
+							Text="{Binding PtStatus.DescShort}"
+							/>
+
+					<TextBlock Text="prior " />
+
+					<TextBlock Width="65"
+							Text="{Binding PtPrior.Id, FallbackValue='(none)'}"
+
+							/>
+
+					<TextBlock Text="next " />
+
+					<TextBlock Width="65"
+							Text="{Binding PtNext.Id, FallbackValue='(none)'}"
+							/>
+
+					<DockPanel.Style>
+						<Style TargetType="DockPanel">
+						<Setter Property="Margin" Value="0,0,0,0"/>
+							<Style.Triggers>
+								<DataTrigger Value="{x:Static shPoints:PointType.PT_INT}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+									<Setter Property="Margin" Value="20,0,0,0"></Setter>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</DockPanel.Style>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+					</DockPanel.Resources>
+				</DockPanel>
+
+			</DataTemplate>
+
+			<!-- def points -->
+
+			<DataTemplate x:Key="dt_root_pt"
+					DataType="{x:Type shPoints:APointElement}"
+					>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+					<TextBlock Text="root " />
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+							/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_term_pt"
+					DataType="{x:Type shPoints:APointElement}"
+					>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+					<TextBlock Text="term " />
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+							/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_int_pt"
+					DataType="{x:Type shPoints:APointElement}"
+					>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+
+					<TextBlock Text="int " />
+
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+							/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_def_points"
+					DataType="{x:Type shPoints:APointElement}"
+					>
+				<DockPanel>
+					<DockPanel HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+							>
+						<ContentControl ContentTemplate="{StaticResource dt_a_pt}" />
+
+					</DockPanel>
+
+					<DockPanel Margin="50,0,0,0"
+							HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+							>
+						<ContentControl>
+							<ContentControl.Style>
+								<Style TargetType="ContentControl">
+									<Setter Property="ContentTemplate" Value="{StaticResource dt_int_pt}" />
+									<Style.Triggers>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_ROOT}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_root_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_TERM}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_term_pt}" />
+										</DataTrigger>
+									</Style.Triggers>
+
+								</Style>
+							</ContentControl.Style>
+						</ContentControl>
+
+					</DockPanel>
+
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+
+				</DockPanel>
+			</DataTemplate>
+
+			<!-- path points -->
+
+			<DataTemplate x:Key="dt_line_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+
+					<TextBlock Text="line beg " />
+
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+
+					<TextBlock Text="end " />
+
+					<TextBlock
+							Width="70"
+							Text="{Binding End,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+			
+			<DataTemplate x:Key="dt_arc_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+
+					<TextBlock Text="arc beg " />
+
+					<TextBlock Width="70"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+
+					<TextBlock Text="cen " />
+
+					<TextBlock
+							Width="70"
+							Text="{Binding Center,
+														 Converter={StaticResource Xyz2Str}}"
+							/>
+
+					<TextBlock Text="end " />
+
+					<TextBlock
+							Width="70"
+							Text="{Binding End,
+														 Converter={StaticResource Xyz2Str}}"
+							/>
+
+					<TextBlock Text="rad " />
+
+					<TextBlock
+							Width="40"
+							Text="{Binding Radius}"
+							/>
+
+
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_path_points"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel>
+					<DockPanel HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+					>
+						<ContentControl ContentTemplate="{StaticResource dt_a_pt}" />
+
+					</DockPanel>
+
+					<DockPanel Margin="50,0,0,0"
+							HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+					>
+						<ContentControl>
+							<ContentControl.Style>
+								<Style TargetType="ContentControl">
+									<Setter Property="ContentTemplate" Value="{StaticResource dt_line_pt}" />
+									<Style.Triggers>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_BEGARC}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_arc_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_ROOT}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_root_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_TERM}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_term_pt}" />
+										</DataTrigger>
+									</Style.Triggers>
+
+								</Style>
+							</ContentControl.Style>
+						</ContentControl>
+
+					</DockPanel>
+
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+					</DockPanel.Resources>
+
+				</DockPanel>
+			</DataTemplate>
+
+			<!-- new points -->
+
+			<DataTemplate x:Key="dt_root_row_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+					<TextBlock Text="root/beg row " />
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_beg_row_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+					<TextBlock Text="beg row " />
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_end_row_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+					<TextBlock Text="end row " />
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_row_int_pt"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+
+					<TextBlock Text="row int " />
+
+					<TextBlock Width="65"
+							Text="{Binding Point,
+														 Converter={StaticResource Xyz2Str}}"
+					/>
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+				</DockPanel>
+			</DataTemplate>
+
+			<DataTemplate x:Key="dt_new_points"
+					DataType="{x:Type shPoints:APointElement}"
+			>
+				<DockPanel>
+					<DockPanel HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+					>
+						<ContentControl ContentTemplate="{StaticResource dt_a_pt}" />
+
+					</DockPanel>
+
+					<DockPanel Margin="50,0,0,0"
+							HorizontalAlignment="Left"
+							DockPanel.Dock="Top"
+					>
+						<ContentControl>
+							<ContentControl.Style>
+								<Style TargetType="ContentControl">
+									<Setter Property="ContentTemplate" Value="{StaticResource dt_row_int_pt}" />
+									<Style.Triggers>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_ENDROW}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_beg_row_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_BEGROW}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_beg_row_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_ROOT}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_root_row_pt}" />
+										</DataTrigger>
+										<DataTrigger Value="{x:Static shPoints:PointType.PT_TERM}" Binding="{Binding PtType, Converter={StaticResource PassThroughConverter}}">
+											<Setter Property="ContentTemplate" Value="{StaticResource dt_term_pt}" />
+										</DataTrigger>
+									</Style.Triggers>
+
+								</Style>
+							</ContentControl.Style>
+						</ContentControl>
+
+					</DockPanel>
+
+					<DockPanel.Resources>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="FontSize" Value="9">
+							</Setter>
+						</Style>
+
+					</DockPanel.Resources>
+
+				</DockPanel>
+			</DataTemplate>
 
 
 
 		</ResourceDictionary>
+
 	</Window.Resources>
 
 	<Grid>
+
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="5*" />
+			<ColumnDefinition Width="4*" />
+			<ColumnDefinition Width="4*" />
 			<ColumnDefinition Width="3*" />
 			<ColumnDefinition Width="120" />
 		</Grid.ColumnDefinitions>
 
 		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="45" />
@@ -539,7 +871,7 @@
 					ScrollViewer.HorizontalScrollBarVisibility="Visible"
 					ItemsSource="{Binding Segments.Values,
 																Mode=OneWay}"
-					ItemTemplate="{StaticResource DtPathSegment}"
+					ItemTemplate="{StaticResource dt_PathSegment}"
 					>
 				<!--  ItemTemplate="{StaticResource dt_segment}"  -->
 
@@ -547,25 +879,22 @@
 
 		</DockPanel>
 
-
-
 		<DockPanel Grid.Column="0"
 				Grid.Row="1"
 				HorizontalAlignment="Stretch"
 				>
 			<ListBox Margin="0"
 					HorizontalContentAlignment="Stretch"
+					DataContext="{Binding PathManager}"
 					FontFamily="Consolas"
 					FontSize="11"
 					Background="Transparent"
 					Foreground="White"
-					DataContext="{Binding PathManager}"
-
 					DockPanel.Dock="top"
 					ScrollViewer.VerticalScrollBarVisibility="Visible"
 					ScrollViewer.HorizontalScrollBarVisibility="Visible"
 					ItemsSource="{Binding Data.PathCompData.Values}"
-					ItemTemplate="{StaticResource DtPathDataComponent}"
+					ItemTemplate="{StaticResource dt_PathDataComponent}"
 					>
 				<!--  d:DataContext="{x:Static local:MainWindow.pd2S}"  -->
 				<!--    -->
@@ -575,34 +904,109 @@
 
 		</DockPanel>
 
-
-
-
-		<TextBox Grid.Column="1"
+		<DockPanel x:Name="dp_def_points"
+				Grid.Column="1"
 				Grid.Row="0"
-				Background="Black"
-				Foreground="White"
-				Text="{Binding MessageBox}"
-				ScrollViewer.VerticalScrollBarVisibility="Visible"
-				ScrollViewer.HorizontalScrollBarVisibility="Visible"
-				/>
+				HorizontalAlignment="Stretch"
+				>
+			<ListBox Margin="0"
+					HorizontalContentAlignment="Stretch"
+					DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					d:DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					FontFamily="Consolas"
+					FontSize="11"
+					Background="Transparent"
+					Foreground="White"
+					d:ItemsSource="{Binding DefPoints.Points.Values}"
+					DockPanel.Dock="top"
+					ScrollViewer.VerticalScrollBarVisibility="Visible"
+					ScrollViewer.HorizontalScrollBarVisibility="Visible"
+					ItemsSource="{Binding DefPoints.Points.Values}"
+					ItemTemplate="{StaticResource dt_def_points}"
+					>
 
+			</ListBox>
 
-		<Button x:Name="BtnDebug"
-				Content="Debug"
-				Grid.Column="2"
+		</DockPanel>
+
+		<DockPanel x:Name="dp_path_points"
+				Grid.Column="1"
 				Grid.Row="1"
-				Margin="0,0,5,0"
-				Style="{StaticResource Btn.Std.Style}"
-				HorizontalAlignment="Right"
-				VerticalAlignment="Bottom"
-				Click="BtnDebug_OnClick"
-				/>
+				HorizontalAlignment="Stretch"
+				>
+			<ListBox Margin="0"
+					HorizontalContentAlignment="Stretch"
+					DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					d:DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					FontFamily="Consolas"
+					FontSize="11"
+					Background="Transparent"
+					Foreground="White"
+					d:ItemsSource="{Binding PathPoints.Points.Values}"
+					ItemsSource="{Binding PathPoints.Points.Values}"
+					DockPanel.Dock="top"
+					ScrollViewer.VerticalScrollBarVisibility="Visible"
+					ScrollViewer.HorizontalScrollBarVisibility="Visible"
+					ItemTemplate="{StaticResource dt_path_points}"
+					>
 
+			</ListBox>
+
+		</DockPanel>
+
+		<DockPanel x:Name="dp_new_points"
+				Grid.Column="1"
+				Grid.Row="2"
+				HorizontalAlignment="Stretch"
+				>
+			<ListBox Margin="0"
+					HorizontalContentAlignment="Stretch"
+					DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					d:DataContext="{x:Static local:MainWindow.PtCollMgrStat}"
+					FontFamily="Consolas"
+					FontSize="11"
+					Background="Transparent"
+					Foreground="White"
+					d:ItemsSource="{Binding NewPoints.Points.Values}"
+					ItemsSource="{Binding NewPoints.Points.Values}"
+					DockPanel.Dock="top"
+					ScrollViewer.VerticalScrollBarVisibility="Visible"
+					ScrollViewer.HorizontalScrollBarVisibility="Visible"
+					ItemTemplate="{StaticResource dt_new_points}"
+					>
+
+			</ListBox>
+
+		</DockPanel>
+
+		<DockPanel Grid.Column="2"
+				Grid.Row="0"
+				>
+			<TextBox Background="Black"
+					Foreground="White"
+					Text="{Binding MessageBox}"
+					ScrollViewer.VerticalScrollBarVisibility="Visible"
+					ScrollViewer.HorizontalScrollBarVisibility="Visible"
+					/>
+		</DockPanel>
+
+		<DockPanel Grid.Column="3"
+				Grid.Row="2"
+
+				>
+			<Button x:Name="BtnDebug"
+					Content="Debug"
+					Margin="0,0,5,0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Bottom"
+					Style="{StaticResource Btn.Std.Style}"
+					Click="BtnDebug_OnClick"
+					/>
+		</DockPanel>
 
 		<DockPanel Grid.Column="0"
-				Grid.Row="2"
-				Grid.ColumnSpan="3"
+				Grid.Row="3"
+				Grid.ColumnSpan="4"
 				Margin="5"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Bottom"
@@ -623,22 +1027,19 @@
 
 
 			<Button x:Name="BtnAdd"
-					Style="{StaticResource Btn.Std.Style}"
 					Content="Add"
 					Margin="0,0,10,0"
-
 					HorizontalAlignment="Left"
 					IsEnabled="{Binding pd2.IsCompleted,
 															Converter={StaticResource InvertBool},
 															TargetNullValue='true',
 															FallbackValue='true'}"
 					DockPanel.Dock="Left"
+					Style="{StaticResource Btn.Std.Style}"
 					Click="BtnAdd_OnClick"
-
 					/>
 
 			<Button x:Name="BtnComplete"
-					Style="{StaticResource Btn.Std.Style}"
 					Content="Complete"
 					Margin="0,0,10,0"
 					HorizontalAlignment="Left"
@@ -646,40 +1047,41 @@
 															TargetNullValue='false',
 															FallbackValue='false'}"
 					DockPanel.Dock="Left"
+					Style="{StaticResource Btn.Std.Style}"
 					/>
 
 
 			<Button x:Name="BtnInsert"
 					Content="Insert"
 					Margin="0,0,10,0"
-					Style="{StaticResource Btn.Std.Style}"
 					HorizontalAlignment="Left"
 					IsEnabled="{Binding pd2.HasItems,
 															TargetNullValue='false',
 															FallbackValue='false'}"
 					DockPanel.Dock="Left"
+					Style="{StaticResource Btn.Std.Style}"
 					/>
 
 			<Button x:Name="BtnMove"
 					Content="Move"
 					Margin="0,0,10,0"
-					Style="{StaticResource Btn.Std.Style}"
 					HorizontalAlignment="Left"
 					IsEnabled="{Binding pd2.HasItems,
 															TargetNullValue='false',
 															FallbackValue='false'}"
 					DockPanel.Dock="Left"
+					Style="{StaticResource Btn.Std.Style}"
 					/>
 
 			<Button x:Name="BtnRemove"
 					Content="Remove"
 					Margin="0,0,10,0"
-					Style="{StaticResource Btn.Std.Style}"
 					HorizontalAlignment="Left"
 					IsEnabled="{Binding pd2.HasItems,
 															TargetNullValue='false',
 															FallbackValue='false'}"
 					DockPanel.Dock="Left"
+					Style="{StaticResource Btn.Std.Style}"
 					/>
 
 
@@ -688,18 +1090,18 @@
 
 			<Button x:Name="BtnExit"
 					Content="Exit"
-					Style="{StaticResource Btn.Std.Style}"
 					HorizontalAlignment="Right"
 					DockPanel.Dock="Right"
+					Style="{StaticResource Btn.Std.Style}"
 					Click="BtnExit_OnClick"
 					/>
 
 			<Button x:Name="BtnTest"
 					Content="Test Data"
 					Margin="0,0,10,0"
-					Style="{StaticResource Btn.Std.Style}"
 					HorizontalAlignment="Right"
 					DockPanel.Dock="Right"
+					Style="{StaticResource Btn.Std.Style}"
 					Click="BtnTest_OnClick"
 					/>
 

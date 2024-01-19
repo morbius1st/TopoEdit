@@ -19,9 +19,9 @@ namespace SharedApp.ProcedureApp
 
 		#region ctor
 
-		public ShowInfoApp()
+		public ShowInfoApp(IW w)
 		{
-			M.WriteLine(nameof(ShowInfoApp), "Initialized");
+			M.WriteLine(w, nameof(ShowInfoApp), "Initialized");
 			// M.ShowMsg();
 		}
 
@@ -37,9 +37,9 @@ namespace SharedApp.ProcedureApp
 
 		#region public methods
 
-		public bool Show01()
+		public bool Show01(IW w)
 		{
-			M.WriteLine("Procedure ShowApp", "worked", "showApp@A");
+			M.WriteLine(w, "Procedure ShowApp", "worked", "showApp@A");
 			// W.ShowMsg();
 
 			return true;

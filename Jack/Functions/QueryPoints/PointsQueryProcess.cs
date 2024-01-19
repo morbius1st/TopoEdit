@@ -102,11 +102,11 @@ namespace Jack.Functions.QueryPoints
 				sb.AppendFormat("maximum Z | {0,12:F4}", maxZ).Append(Utils.nl);
 				sb.AppendFormat("average Z | {0,12:F4}", avgZ).Append(Utils.nl);
 
-				win.InfoTextBox = sb.ToString();
+				win.MessageBox = sb.ToString();
 			}
 			else
 			{
-				win.InfoTextBox = "no points selected";
+				win.MessageBox = "no points selected";
 			}
 
 			

@@ -12,10 +12,10 @@ using System.Windows;
 using JackRvtTst01.Functions.ReqElements;
 using JackRvtTst01.Windows.ExtEventRequests;
 using JackRvtTst01.Windows;
-
+using SharedCode.ShRevit;
 using UtilityLibrary;
 using Application = Autodesk.Revit.ApplicationServices.Application;
-using JackRvtTst01.Functions.ReqElements.ReqElemExtEvtRequests;
+using SharedCode.ShUtil;
 
 #endregion
 
@@ -59,6 +59,8 @@ namespace JackRvtTst01
 
 		internal UIApplication uiApp;
 
+		public static MainWindow win { get; private set; }
+
 		//		internal UIControlledApplication uiCtrlApp;
 
 		//		public static PulldownButton pb;
@@ -70,10 +72,8 @@ namespace JackRvtTst01
 			// thisApp = this;
 			// mainWin = null;
 
-
 			try
 			{
-				
 				//				uiCtrlApp = app;
 
 				app.ControlledApplication.ApplicationInitialized += OnAppInitalized;
@@ -173,37 +173,40 @@ namespace JackRvtTst01
 			return Result.Succeeded;
 		}
 
-
+		
 		private void registerWindows()
 		{
-			W.RevitWindow = revitWindow;
-
 			registerMainWin01();
-			registerReqElements();
+			// registerReqElements();
 		}
 
 		private void registerMainWin01()
 		{
 			RequestHandler handler = new RequestHandler();
 			ExternalEvent eEvent = ExternalEvent.Create(handler);
-			MainWindow win = new MainWindow(eEvent, handler);
-			win.Owner = revitWindow;
+			win = new MainWindow(eEvent, handler);
 
-			W.AddWin(MainWindow.MY_NAME, win);
-			W.EnableWin(MainWindow.MY_NAME);
+			// W.AddWin(MainWindow.MY_NAME, win);
+			// W.EnableWin(MainWindow.MY_NAME);
+
+			// win.Owner = revitWindow;
+			// MainWindow.RevitWindow = revitWindow;
+			win.EnableMe();
 		}
 
-		private void registerReqElements()
-		{
-			RE_RequestHandler handler = new RE_RequestHandler();
-			ExternalEvent eEvent = ExternalEvent.Create(handler);
-			RequestElements win = new RequestElements(eEvent, handler);
-			win.Owner = revitWindow;
-
-			W.AddWin(RequestElements.MY_NAME, win);
-			W.EnableWin(RequestElements.MY_NAME);
-		}
-
+		// private void registerReqElements()
+		// {
+		// 	RE_RequestHandler handler = new RE_RequestHandler();
+		// 	ExternalEvent eEvent = ExternalEvent.Create(handler);
+		// 	RequestElements win = new RequestElements(eEvent, handler);
+		// 	win.Owner = revitWindow;
+		//
+		// 	// W.AddWin(RequestElements.MY_NAME, win);
+		// 	// W.EnableWin(RequestElements.MY_NAME);
+		//
+		// 	win.DisableMe();
+		// }
+		
 
 
 		// public void ShowWin()
@@ -235,6 +238,7 @@ namespace JackRvtTst01
 			uiApp = new UIApplication(app);
 
 			revitWindow = RevitLibrary.RvtLibrary.WindowHandle(uiApp.MainWindowHandle);
+			R.RevitWindow = revitWindow;
 
 			registerWindows();
 		}

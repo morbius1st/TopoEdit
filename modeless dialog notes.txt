@@ -2,3 +2,22 @@
 * place the main window object into AppRibbon.  this object hangs around.  I think that command is transenient and is gone once it hits the return;
 * however, in command, load "R" and start the window 
 * in appribbon: 
+
+For Modeless to work:
+
+* The activated task will need to know to which window the task is associated.
+	* in general, there is a one-to-one relationship that is, the tasks are 
+		associated with a window.  however, sub-tasks will be common and cannot
+		know the specific window that started the task
+	* this means that a part of the task request / task handle system needs
+		to have the associated window get registered as the current window
+		and the prior current window needs to be pushed into a stack to allow
+		it to be poped out later.
+	* to assist with this, each subject window will get its own task 
+		request / task handler
+
+** configuration
+
+* app ribbon:
+> causes the handlers, per window, to be configured
+

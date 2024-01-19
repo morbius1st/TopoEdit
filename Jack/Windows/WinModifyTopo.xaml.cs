@@ -43,8 +43,10 @@ namespace Jack.Windows
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class WinModifyTopo : Window, INotifyPropertyChanged, IWin
+	public partial class WinModifyTopo : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+		public static Window RevitWindow { get; set; }
 
 	#region private fields
 
@@ -65,6 +67,7 @@ namespace Jack.Windows
 		{
 			InitializeComponent();
 
+			Me = this;
 			M.Win = this;
 		}
 
@@ -197,6 +200,14 @@ namespace Jack.Windows
 		{
 			this.ShowDialog();
 		}
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		// public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+	//
 
 	#endregion
 
@@ -373,7 +384,7 @@ namespace Jack.Windows
 
 		public void getAPoint()
 		{
-				M.WriteLine("please select a point");
+				M.WriteLine(this, "please select a point");
 			
 				try
 				{
@@ -381,7 +392,7 @@ namespace Jack.Windows
 				}
 				catch (Exception ex)
 				{
-					M.WriteLine($"got exception| {ex.Message}");
+					M.WriteLine(this, $"got exception| {ex.Message}");
 				}
 
 				BtnSelectPath_OnClick(null, null);

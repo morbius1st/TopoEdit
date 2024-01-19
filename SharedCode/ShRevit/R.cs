@@ -1,7 +1,9 @@
 ﻿#region + Using Directives
-using Autodesk.Revit.ApplicationServices;
+
+using System.Windows;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
+using Application = Autodesk.Revit.ApplicationServices.Application;
 
 #endregion
 
@@ -13,6 +15,8 @@ namespace SharedCode.ShRevit
 {
 	public static class R
 	{
+		public static Window RevitWindow { get; set; }
+
 		public static UIControlledApplication rvt_UiCtrlApp { get; set; }
 
 		public static UIApplication rvt_UiApp { get; set; }
@@ -21,5 +25,10 @@ namespace SharedCode.ShRevit
 		public static Document rvt_Doc{ get; set; }
 
 		static R() { }
+
+		public static void ActivateRevit()
+		{
+			RevitWindow.Activate();
+		}
 	}
 }

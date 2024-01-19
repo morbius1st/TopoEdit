@@ -209,7 +209,7 @@ namespace Jack.Functions
 		{
 			if (tgStack != null && tgStack.HasItems)
 			{
-				M.WriteLine($"has items| {tgStack.HasItems}| count| ({tgStack.Count})");
+				M.WriteLine(WinModifyTopo.Me, $"has items| {tgStack.HasItems}| count| ({tgStack.Count})");
 
 				while (tgStack.HasItems)
 				{

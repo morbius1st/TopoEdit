@@ -24,8 +24,10 @@ namespace JackTests01.Functions.SelectPath
 	/// <summary>
 	/// Interaction logic for AddPathDialog.xaml
 	/// </summary>
-	public partial class SelectPathDialog : Window, INotifyPropertyChanged, IWin
+	public partial class SelectPathDialog : Window, INotifyPropertyChanged, IW
 	{
+		public static IW Me { get; private set; }
+		
 		private MainWindow win;
 		private PathManager pm;
 
@@ -35,6 +37,8 @@ namespace JackTests01.Functions.SelectPath
 		public SelectPathDialog(PathManager pm, MainWindow win)
 		{
 			InitializeComponent();
+
+			Me = this;
 
 			this.win = win;
 			this.pm = pm;
@@ -56,6 +60,15 @@ namespace JackTests01.Functions.SelectPath
 		// public bool IsEnabledPickPoint => false;
 		// public bool IsEnabledPickPtElems => false;
 		public bool IsEnabledPicktElems => false;
+
+
+	// temp interface methods
+		public bool IsEnabledGrdMain { get; set; }
+		public void ShowMe() { }
+		public void HideMe() { }
+		public void DisableMe() { }
+		public void EnableMe() { }
+	//
 
 
 		public event PropertyChangedEventHandler PropertyChanged;

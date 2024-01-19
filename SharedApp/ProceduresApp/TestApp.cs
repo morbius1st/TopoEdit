@@ -20,10 +20,10 @@ namespace SharedApp.ProcedureApp
 
 		#region ctor
 
-		public TestApp()
+		public TestApp(IW w)
 		{
 
-			M.WriteLine(nameof(TestApp), "Initialized");
+			M.WriteLine(w, nameof(TestApp), "Initialized");
 			// M.ShowMsg();
 		}
 
@@ -39,9 +39,9 @@ namespace SharedApp.ProcedureApp
 
 		#region public methods
 
-		public bool Tst01()
+		public bool Tst01(IW w)
 		{
-			M.WriteLine("Procedure TstApp", "worked", "tstApp@A");
+			M.WriteLine(w, "Procedure TstApp", "worked", "tstApp@A");
 			// M.ShowMsg();
 
 			return true;
